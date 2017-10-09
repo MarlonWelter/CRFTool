@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E9ADFE92-6054-4916-874D-6DE3842E7850}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeBase</RootNamespace>
+    <AssemblyName>CodeBase</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\CRFToolApp\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BasicObjects\Cloneable.cs" />
+    <Compile Include="BasicObjects\Force.cs" />
+    <Compile Include="BasicObjects\GWList.cs" />
+    <Compile Include="CollectionPresentationLogic.cs" />
+    <Compile Include="Euklidian\QuboidPlace.cs" />
+    <Compile Include="Graph\AnalyseStandardGraphs.cs" />
+    <Compile Include="Graph\CategoryGraph.cs" />
+    <Compile Include="Graph\ClusterDetection.cs" />
+    <Compile Include="Graph\Graph3D.cs" />
+    <Compile Include="Graph\GraphAnalysisTechniques.cs" />
+    <Compile Include="Graph\GraphCSVParser.cs" />
+    <Compile Include="Graph\GraphPackageOne.cs" />
+    <Compile Include="Graph\GWGraphpackageOne.cs" />
+    <Compile Include="Graph\GWGraphPackageTwo.cs" />
+    <Compile Include="Graph\GWNode.cs" />
+    <Compile Include="Graph\SSPData.cs" />
+    <Compile Include="Graph\Wrap3D.cs" />
+    <Compile Include="InOut\ImportManager.cs" />
+    <Compile Include="InOut\FileX.cs" />
+    <Compile Include="Loading\TestGrids.cs" />
+    <Compile Include="Loading\TwoDGrid.cs" />
+    <Compile Include="Log\ConsoleLogger.cs" />
+    <Compile Include="Log\FileLogger.cs" />
+    <Compile Include="Graph\GridElement3D.cs" />
+    <Compile Include="Graph\GridGenerator.cs" />
+    <Compile Include="Graph\GridQuboid.cs" />
+    <Compile Include="Log\ILogWriter.cs" />
+    <Compile Include="BasicObjects\IGWObject.cs" />
+    <Compile Include="Math\ComputeMCC.cs" />
+    <Compile Include="ProgramBase\CommandKnowledge.cs" />
+    <Compile Include="ProgramBase\Commands.cs" />
+    <Compile Include="ProgramBase\DefaultMemory.cs" />
+    <Compile Include="ProgramBase\Program.cs" />
+    <Compile Include="Requests\GWCommands.cs" />
+    <Compile Include="Requests\GWManager.cs" />
+    <Compile Include="Requests\GWOrder.cs" />
+    <Compile Include="Requests\IRequestListener.cs" />
+    <Compile Include="LinkedListHandler.cs" />
+    <Compile Include="Log\LogCategory.cs" />
+    <Compile Include="Log\LogEntry.cs" />
+    <Compile Include="Log\LogMonitorVM.cs" />
+    <Compile Include="Log\LogRequest.cs" />
+    <Compile Include="Requests\Listener.cs" />
+    <Compile Include="Requests\MContext.cs" />
+    <Compile Include="BasicObjects\MEvent.cs" />
+    <Compile Include="BasicObjects\ProbabilityChooser.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Requests\NotifyUser.cs" />
+    <Compile Include="Requests\Provide.cs" />
+    <Compile Include="Requests\Request.cs" />
+    <Compile Include="Requests\StandardRequests.cs" />
+    <Compile Include="BasicObjects\Buffer.cs" />
+    <Compile Include="Euklidian\IQuboid.cs" />
+    <Compile Include="Euklidian\IQuboidPlace.cs" />
+    <Compile Include="Euklidian\LWQuboidPlace.cs" />
+    <Compile Include="Euklidian\LWTriangle.cs" />
+    <Compile Include="BasicObjects\MemoryDo.cs" />
+    <Compile Include="MethodExtension.cs" />
+    <Compile Include="BasicObjects\MITCell.cs" />
+    <Compile Include="BasicObjects\MultiStepComparer.cs" />
+    <Compile Include="BasicObjects\Producer.cs" />
+    <Compile Include="Euklidian\QudoidExtent.cs" />
+    <Compile Include="Requests\RefreshData.cs" />
+    <Compile Include="BasicObjects\SimpleObjectEventArgs.cs" />
+    <Compile Include="Requests\GeneralRequests.cs" />
+    <Compile Include="Requests\GetCriteria.cs" />
+    <Compile Include="Requests\ExecuteInUIThread.cs" />
+    <Compile Include="BasicObjects\IViewModel.cs" />
+    <Compile Include="Math\MathExtensions.cs" />
+    <Compile Include="Math\PrimeFactorisation.cs" />
+    <Compile Include="InOut\SimpleWriter.cs" />
+    <Compile Include="AlgorithmBase\ComputeAUCFromPoints.cs" />
+    <Compile Include="Graph\CountElements.cs" />
+    <Compile Include="Requests\Created.cs" />
+    <Compile Include="AlgorithmBase\AnalyzeClassification.cs" />
+    <Compile Include="CollectionExtention.cs" />
+    <Compile Include="Graph\DepthWalk.cs" />
+    <Compile Include="BasicObjects\GeneralInterfaces.cs" />
+    <Compile Include="Graph\GrowPatchLogic.cs" />
+    <Compile Include="Euklidian\ICoordinated.cs" />
+    <Compile Include="BasicObjects\IMarkable.cs" />
+    <Compile Include="AlgorithmBase\IClassificationResult.cs" />
+    <Compile Include="Graph\INode.cs" />
+    <Compile Include="Euklidian\IPlane.cs" />
+    <Compile Include="AlgorithmBase\IResult.cs" />
+    <Compile Include="BasicObjects\IScoreHolder.cs" />
+    <Compile Include="Graph\NormalizeEdges.cs" />
+    <Compile Include="BasicObjects\ObservableList.cs" />
+    <Compile Include="BasicObjects\Pair.cs" />
+    <Compile Include="Graph\Resample.cs" />
+    <Compile Include="Math\StepFunction.cs" />
+    <Compile Include="Graph\CreateGraphs.cs" />
+    <Compile Include="Graph\SimpleGraph2.cs" />
+    <Compile Include="Graph\SimpleTestGraph.cs" />
+    <Compile Include="InOut\ReadFromFile.cs" />
+    <Compile Include="Graph\TransformGraph.cs" />
+    <Compile Include="Graph\WidthWalk.cs" />
+    <Compile Include="Requests\WatchProgress.cs" />
+    <Compile Include="BasicObjects\Wrap.cs" />
+    <Compile Include="Stats\StatsVM.cs" />
+    <Compile Include="Temp\ICloneable.cs" />
+    <Compile Include="Utilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
