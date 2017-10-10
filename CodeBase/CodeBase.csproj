@@ -154,6 +154,7 @@
     <Compile Include="InOut\ReadFromFile.cs" />
     <Compile Include="Graph\TransformGraph.cs" />
     <Compile Include="Graph\WidthWalk.cs" />
+    <Compile Include="Requests\UserInput.cs" />
     <Compile Include="Requests\WatchProgress.cs" />
     <Compile Include="BasicObjects\Wrap.cs" />
     <Compile Include="Stats\StatsVM.cs" />

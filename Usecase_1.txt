@@ -1,0 +1,16 @@
+Usecase 1
+
+- Prerequisites:
+	- Graphstructure
+	- Training Data
+	- 2 Node Classifications
+	- n characteristics for each node
+
+- Step 1:
+	- discretize characteristics
+	- Use Training Pede
+
+- Step2:
+	- Create ROC Curve
+	- Give Maximum with Viterbi
+	- Give Sample with MCMC
