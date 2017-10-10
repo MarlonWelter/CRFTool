@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBase;
-using RASACRFGraph = CodeBase.IGWGraph<CRFBase.RASACRFNodeData, CRFBase.RASACRFEdgeData, CRFBase.ProteinCRFGraphData>;
+using RASACRFGraph = CodeBase.IGWGraph<CRFBase.RASACRFNodeData, CRFBase.RASACRFEdgeData, CodeBase.ProteinCRFGraphData>;
 
 namespace CRFBase
 {

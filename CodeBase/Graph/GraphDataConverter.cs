@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CRFBase;
-using CodeBase;
 
-namespace SoftwareGraphLearning
+namespace CodeBase
 {
-    class GraphDataConverter
+    public class GraphDataConverter
     {
         public static ICRFNodeData IGWNodeDataConvert(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> node)
         {

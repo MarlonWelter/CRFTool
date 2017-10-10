@@ -1,4 +1,4 @@
-﻿namespace SoftwareGraphLearning
+﻿namespace CodeBase
 {
     // in dieser Klasse werden alle von außen gegebenen Parameter gesammelt.
     public class SoftwareGraphLearningParameters

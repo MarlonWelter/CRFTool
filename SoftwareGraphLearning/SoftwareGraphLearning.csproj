@@ -51,16 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CategoryGraphCreator.cs" />
-    <Compile Include="ErdösGraphCreator.cs" />
-    <Compile Include="GraphDataConverter.cs" />
     <Compile Include="GraphView.cs" />
     <Compile Include="LocalResult.cs" />
-    <Compile Include="MHSamplerParameters.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SoftwareGraphLearningParameters.cs" />
-    <Compile Include="MHSampler.cs" />
     <Compile Include="WorkCycle.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,16 +1,14 @@
 ﻿
-using CodeBase;
-using CRFBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoftwareGraphLearning
+namespace CodeBase
 {
 
-    class ErdösGraphCreator
+    public class ErdösGraphCreator
     {
         private Random random = new Random();
 
@@ -91,7 +89,7 @@ namespace SoftwareGraphLearning
 
     }
 
-    class ErdösGraphCreationParameter
+    public class ErdösGraphCreationParameter
     {
         public ErdösGraphCreationParameter() { }
 

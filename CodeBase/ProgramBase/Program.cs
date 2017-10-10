@@ -51,5 +51,6 @@ namespace CodeBase
     public static class BaseProgram
     {
         public static MEvent Exit = new MEvent("Program.Exit");
+        public static Random Random = new Random();
     }
 }

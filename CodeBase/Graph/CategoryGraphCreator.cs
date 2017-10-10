@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CRFBase;
-using CodeBase;
-namespace SoftwareGraphLearning
+namespace CodeBase
 {
-    class CategoryGraphCreator
+    public class CategoryGraphCreator
     {
         private Random random = new Random();
         public void CreateCategoryGraph(GWGraph<SGLNodeData, SGLEdgeData, SGLGraphData> erdösGraph)

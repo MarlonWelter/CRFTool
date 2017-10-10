@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CodeBase;
-using CRFBase;
 
-namespace CRFBase
+namespace CodeBase
 {
     public class SGLNodeData : CRFNodeData
     {

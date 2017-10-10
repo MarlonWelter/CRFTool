@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBase;
-using CRFGraph = CodeBase.IGWGraph<CRFBase.ICRFNodeData, CRFBase.ICRFEdgeData, CRFBase.ICRFGraphData>;
+using CRFGraph = CodeBase.IGWGraph<CodeBase.ICRFNodeData, CodeBase.ICRFEdgeData, CodeBase.ICRFGraphData>;
 
 namespace CRFBase
 {

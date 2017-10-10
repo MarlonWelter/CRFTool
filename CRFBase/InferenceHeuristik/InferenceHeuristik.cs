@@ -7,7 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using CodeBase;
 using System.Diagnostics;
-using CRFGraph = CodeBase.IGWGraph<CRFBase.ICRFNodeData, CRFBase.ICRFEdgeData, CRFBase.ICRFGraphData>;
+using CRFGraph = CodeBase.IGWGraph<CodeBase.ICRFNodeData, CodeBase.ICRFEdgeData, CodeBase.ICRFGraphData>;
 using System.Collections;
 
 namespace CRFBase

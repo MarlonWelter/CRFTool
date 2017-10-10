@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBase;
 using CRFBase;
-using CRFGraph = CodeBase.IGWGraph<CRFBase.SGLNodeData, CRFBase.SGLEdgeData, CRFBase.SGLGraphData>;
+using CRFGraph = CodeBase.IGWGraph<CodeBase.SGLNodeData, CodeBase.SGLEdgeData, CodeBase.SGLGraphData>;
 
-namespace SoftwareGraphLearning
+namespace CRFBase
 {
-    class MHSampler
+    public class MHSampler
     {
 
         private List<CRFGraph> Chains { get; set; }

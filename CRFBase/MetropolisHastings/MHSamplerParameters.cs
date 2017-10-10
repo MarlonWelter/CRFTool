@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CRFGraph = CodeBase.IGWGraph<CRFBase.SGLNodeData, CRFBase.SGLEdgeData, CRFBase.SGLGraphData>;
+using CRFGraph = CodeBase.IGWGraph<CodeBase.SGLNodeData, CodeBase.SGLEdgeData, CodeBase.SGLGraphData>;
 
-namespace SoftwareGraphLearning
+namespace CRFBase
 {
 
 
@@ -18,7 +18,7 @@ namespace SoftwareGraphLearning
         public const double ToleranceVariance = 0.005;
         public const double ToleranceAutoCorrelation = 0.025;
     }
-    class MHSamplerParameters
+    public class MHSamplerParameters
     {
 
         public CRFGraph Graph { get; set; }

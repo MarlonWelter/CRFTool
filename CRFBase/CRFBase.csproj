@@ -42,6 +42,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -56,7 +59,6 @@
   <ItemGroup>
     <Compile Include="3DEmbedding\EmbedData.cs" />
     <Compile Include="Build.cs" />
-    <Compile Include="CGNodeData.cs" />
     <Compile Include="ComputeDiscretization.cs" />
     <Compile Include="ComputeKeys.cs" />
     <Compile Include="CRFResult.cs" />
@@ -75,6 +77,11 @@
     <Compile Include="IntervalValueMap.cs" />
     <Compile Include="IsingModel.cs" />
     <Compile Include="MCMCAsifRequest.cs" />
+    <Compile Include="MetropolisHastings\ExampleRunMH.cs" />
+    <Compile Include="MetropolisHastings\ExampleRunSoftwareGraphLearning.cs" />
+    <Compile Include="MetropolisHastings\LocalResult.cs" />
+    <Compile Include="MetropolisHastings\MHSampler.cs" />
+    <Compile Include="MetropolisHastings\MHSamplerParameters.cs" />
     <Compile Include="OLMEvaluationResult.cs" />
     <Compile Include="OLM\IsingMerkmal.cs" />
     <Compile Include="OLM\KeyuFeaturesOLM.cs" />
@@ -98,7 +105,6 @@
     <Compile Include="Assignment.cs" />
     <Compile Include="GibbsSampling\BasicGibbsSampling.cs" />
     <Compile Include="Combination.cs" />
-    <Compile Include="CRFNode.cs" />
     <Compile Include="DetermineBarrier.cs" />
     <Compile Include="GraphLibrary\Graphs.cs" />
     <Compile Include="QueueHeuristic\GreedyMinBorderQueueComputing.cs" />
@@ -106,7 +112,6 @@
     <Compile Include="OLM\WeightObservationUnit.cs" />
     <Compile Include="OLM\WOU_II.cs" />
     <Compile Include="SeedingMethodPatchCreation.cs" />
-    <Compile Include="SGLNodeData.cs" />
     <Compile Include="ShowOLMResult.cs" />
     <Compile Include="TrainingEvaluationCycle.cs" />
     <Compile Include="TrainingEvaluationCycleInputParameters.cs" />
@@ -129,6 +134,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
