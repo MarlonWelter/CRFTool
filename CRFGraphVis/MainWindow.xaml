@@ -1,0 +1,31 @@
+﻿<Window x:Class="CRFGraphVis.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CRFGraphVis"
+        xmlns:hlx="clr-namespace:HelixToolkit;assembly=HelixToolkit"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Window.Resources>
+        <local:Graph3DConverter  x:Key="viewConverter"/>
+    </Window.Resources>
+    <Grid>
+        <hlx:HelixViewport3D Name="viewport" Grid.ColumnSpan="5" Grid.RowSpan="3" IsHitTestVisible="True">
+            <hlx:HelixViewport3D.Children>
+                <!--<ModelVisual3D x:Uid="ModelVisual3D_1">
+                    <ModelVisual3D.Content>
+                        -->
+                <!--<AmbientLight x:Uid="AmbientLight_1" Color="WhiteSmoke"/>-->
+                <!--
+                    </ModelVisual3D.Content>
+                </ModelVisual3D>-->
+                <hlx:DefaultLights></hlx:DefaultLights>
+
+                <ModelUIElement3D x:Uid="placementModels" x:Name="placementModels" Model="{Binding Path=ViewModel.Graph, Converter={StaticResource viewConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                <!--<ModelUIElement3D x:Uid="placementModelscg" x:Name="placementModelscg" Model="{Binding Path=ViewModel, Converter={StaticResource cgConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>-->
+
+            </hlx:HelixViewport3D.Children>
+        </hlx:HelixViewport3D>
+    </Grid>
+</Window>

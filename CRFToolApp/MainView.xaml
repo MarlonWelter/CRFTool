@@ -1,0 +1,42 @@
+﻿<Window x:Class="CRFToolApp.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CRFToolApp"
+        xmlns:hlx="clr-namespace:HelixToolkit;assembly=HelixToolkit"
+        mc:Ignorable="d"
+        Title="MainView" Height="800" Width="1200">
+    <Window.Resources>
+        <local:Graph3DConverter  x:Key="viewConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="160"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <ImageBrush ImageSource="icons/wood1.jpg">
+            </ImageBrush>
+        </Grid.Background>
+        <StackPanel Grid.Row="0" Background="CadetBlue" Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Button Name="button1" Click="button1_Click" Height="120" Width="120" Margin="20, 10" Background="Transparent">
+                <Image Source="icons/download.png"></Image>
+            </Button>
+            <Button Name="button2" Click="button2_Click" Height="120" Width="120" Margin="20, 10" Background="Transparent">
+                <Image Source="icons/info.png"></Image></Button>
+            <Button Name="button3" Click="button3_Click" Height="120" Width="120" Margin="20, 10" Background="Transparent">
+                <Image Source="icons/action.png"></Image>
+            </Button>
+            <Button Name="button4" Click="button4_Click" Height="120" Width="120" Margin="20, 10" Background="Transparent">
+                <Image Source="icons/defense.png"></Image></Button>
+        </StackPanel>
+        <hlx:HelixViewport3D Margin="10"  Grid.Row="1" Name="viewport" IsHitTestVisible="True" Background="Bisque">
+            <hlx:HelixViewport3D.Children>
+                <hlx:DefaultLights></hlx:DefaultLights>
+                <ModelUIElement3D x:Uid="placementModels" x:Name="placementModels" Model="{Binding Path=Graph, Converter={StaticResource viewConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+               
+            </hlx:HelixViewport3D.Children>
+        </hlx:HelixViewport3D>
+    </Grid>
+</Window>

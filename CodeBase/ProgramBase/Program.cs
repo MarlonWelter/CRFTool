@@ -10,7 +10,7 @@ namespace CodeBase
 {
     public class Program
     {
-        public static void CommandIn(string[] args)
+        public static void Main(string[] args)
         {
             Build();
             var line = "";

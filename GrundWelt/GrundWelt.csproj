@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CB58CC0B-6946-40E2-90C7-3CACDD2C963C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GrundWelt</RootNamespace>
+    <AssemblyName>GrundWelt</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AgentControlable.cs" />
+    <Compile Include="GrundWeltAction.cs" />
+    <Compile Include="GameLogic.cs" />
+    <Compile Include="GreedyStrategy.cs" />
+    <Compile Include="NeuralNetwork\GWNeuralNetwork.cs" />
+    <Compile Include="OptimizationCenter\ActionHandling.cs" />
+    <Compile Include="OptimizationCenter\CheckPointManager.cs" />
+    <Compile Include="OptimizationCenter\CrossRoad.cs" />
+    <Compile Include="OptimizationCenter\GlobalParameters.cs" />
+    <Compile Include="OptimizationCenter\IHasFingerPrint.cs" />
+    <Compile Include="OptimizationCenter\IOptimizationControl.cs" />
+    <Compile Include="OptimizationCenter\GWActionEvaluatorCage.cs" />
+    <Compile Include="GWBranchingControlUnits.cs" />
+    <Compile Include="GWCell.cs" />
+    <Compile Include="GWOptimizationCenter.cs" />
+    <Compile Include="OptimizationCenter\GWPhalanxOptimizationCenter.cs" />
+    <Compile Include="OptimizationCenter\GWPosition.cs" />
+    <Compile Include="GWPotentialGraphStructure.cs" />
+    <Compile Include="GWProperties.cs" />
+    <Compile Include="GWRunnerCenter.cs" />
+    <Compile Include="OptimizationCenter\IOptimizationCenter.cs" />
+    <Compile Include="OptimizationCenter\MandatoryActionExecuter.cs" />
+    <Compile Include="OptimizationCenter\MultiEvaluation.cs" />
+    <Compile Include="OptimizationCenter\OptimizationMessage.cs" />
+    <Compile Include="OptimizationCenter\OptUnit.cs" />
+    <Compile Include="OptimizationCenter\PositionData.cs" />
+    <Compile Include="OptimizationCenter\RunItem.cs" />
+    <Compile Include="OptimizationCenter\RunnerPool.cs" />
+    <Compile Include="OptimizationCenter\TargetOptimizationCenter.cs" />
+    <Compile Include="RunnerControl\GWRunner.cs" />
+    <Compile Include="Individual.cs" />
+    <Compile Include="InputData.cs" />
+    <Compile Include="Examples\MinBorderProblem.cs" />
+    <Compile Include="League\Ladder.cs" />
+    <Compile Include="League\League.cs" />
+    <Compile Include="League\MultiLeague.cs" />
+    <Compile Include="League\Player.cs" />
+    <Compile Include="MatchingPlan.cs" />
+    <Compile Include="MultiEvaluation.cs" />
+    <Compile Include="MultiStrategyGreedyEngine.cs" />
+    <Compile Include="MultiStrategyRdmUnit.cs" />
+    <Compile Include="MultiUnitEngine.cs" />
+    <Compile Include="MUnit.cs" />
+    <Compile Include="PlayerMind.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="OptimizationCenter\ResultCenter.cs" />
+    <Compile Include="SimpleWorkStation.cs" />
+    <Compile Include="SingleStrategyGreedyUnit.cs" />
+    <Compile Include="TestArena\TestArena.cs" />
+    <Compile Include="TrackBestResultUnit.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CodeBase\CodeBase.csproj">
+      <Project>{e9adfe92-6054-4916-874d-6de3842e7850}</Project>
+      <Name>CodeBase</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

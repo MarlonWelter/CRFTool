@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="CRFToolApp.InitModel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CRFToolApp"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="400">
+    <StackPanel>
+        <Button Name="UserTrainingB" Height="150" Background="LightYellow" FontSize="32" Click="UserTrainingB_Click">User Training</Button>
+        <Button Name="LoadParametersetB" Height="150" Background="LightSalmon" FontSize="32" Click="LoadParametersetB_Click">Load Parameterset</Button>
+        <Button Name="ParametersetSGB" Height="150" Background="LightSteelBlue" FontSize="32" Click="ParametersetSGB_Click">Parameterset Software</Button>
+        <Button Name="ParametersetPGB" Height="150" Background="LightGreen" FontSize="32" Click="ParametersetPGB_Click">Parameterset Protein</Button>
+    </StackPanel>
+</UserControl>
