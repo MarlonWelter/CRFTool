@@ -16,8 +16,8 @@ namespace CRFToolAppBase
 
         public void Execute()
         {
-            //            -Prerequisites:
-            //	-Graphstructure
+            //    - Prerequisites:
+            //	  - Graphstructure
             //    - Training Data
             //    - 2 Node Classifications
             var testGraphs = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>();
@@ -36,17 +36,22 @@ namespace CRFToolAppBase
                 }
             }
 
-            //-Step 1:
+            //   - Step 1:
 
-            //   -discretize characteristics
+            //   - discretize characteristics
             #region Use Training Pede
             {
+                // these ising parameters are only starting values
                 var isingConformityParameter = 0.5;
                 var isingCorrelationParameter = 0.5;
                 var isingModel = new IsingModel(isingConformityParameter, isingCorrelationParameter);
+
+                // create features
+                var features = CreateFeatures(testGraphs);
+
                 var request = new OLMRequest(OLMVariant.Ising, testGraphs);
-                request.BasisMerkmale = new BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>[]
-                    { new IsingMerkmalNode(), new IsingMerkmalEdge() };
+                request.BasisMerkmale = features.ToArray();
+
                 //TODO: loss function auslagern
                 request.LossFunctionValidation = (a, b) =>
                 {
@@ -61,7 +66,6 @@ namespace CRFToolAppBase
                 request.Request();
 
                 var olmResult = request.Result;
-
 
                 // update Ising parameters in IsingModel
                 isingModel.ConformityParameter = olmResult.ResultingWeights[0];
@@ -80,6 +84,31 @@ namespace CRFToolAppBase
             //   -Create ROC Curve
             //   - Give Maximum with Viterbi
             //   - Give Sample with MCMC
+        }
+
+        private List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> CreateFeatures(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> testGraphs)
+        {
+            var features = new List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
+            var intervalsCount = 4;
+
+            // node-features
+            var allNodes = testGraphs.SelectMany(graph => graph.Nodes).ToList();
+            for (int characteristic = 0; characteristic < testGraphs.First().Data.Characteristics.Length; characteristic++)
+            {
+                var orderedNodes = allNodes.OrderBy(n => n.Data.Characteristics[characteristic]).ToList();
+                var intervals = orderedNodes.SplitToIntervals(intervalsCount);
+                for (int i = 0; i < intervalsCount; i++)
+                {
+                    features.Add(new CharacteristicFeature(characteristic, 0, i > double.MinValue ? intervals[i - 1].Last().Data.Characteristics[characteristic] : 0, i < intervalsCount - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
+
+                    features.Add(new CharacteristicFeature(characteristic, 1, i > double.MinValue ? intervals[i - 1].Last().Data.Characteristics[characteristic] : 0, i < intervalsCount - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
+                }
+            }
+
+            // edge-features
+            features.Add(new IsingMerkmalEdge());
+
+            return features;
         }
     }
     public class WorkflowOneDataset

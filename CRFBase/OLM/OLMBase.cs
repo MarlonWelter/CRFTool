@@ -241,7 +241,7 @@ namespace CRFBase
                 var specificity = tn / (tn + fp);
                 var mcc = (tp * tn + fp * fn) / Math.Sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn));
 
-               // Log.Post("MCC: "+mcc+"\n");
+                // Log.Post("MCC: "+mcc+"\n");
 
                 writer.WriteLine("" + tp + "_" + tn + "_" + fp + "_" + fn);
                 writer.WriteLine(sensitivity);
@@ -270,5 +270,45 @@ namespace CRFBase
         LastTwoMax,
         Test,
         Ising
+    }
+
+    public class CharacteristicFeature : BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>
+    {
+        public CharacteristicFeature(int characteristic, int classification, double lowerBound, double upperBound)
+        {
+            Characteristic = characteristic;
+            Classification = classification;
+            LowerBoundary = lowerBound;
+            UpperBoundary = upperBound;
+        }
+        public int Characteristic { get; set; }
+        public int Classification { get; set; }
+
+        public override int Count(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph, int[] labeling)
+        {
+            int counter = 0;
+            foreach (var node in graph.Nodes)
+            {
+                if (labeling[node.GraphId] == Classification && node.Data.Characteristics[Characteristic] >= LowerBoundary && node.Data.Characteristics[Characteristic] <= UpperBoundary)
+                {
+                    counter++;
+                }
+            }
+            return counter;
+        }
+
+        public override double Score(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> node, int label)
+        {
+            if (label == Classification && node.Data.Characteristics[Characteristic] >= LowerBoundary && node.Data.Characteristics[Characteristic] <= UpperBoundary)
+            {
+                return 1;
+            }
+            return 0;
+        }
+
+        public override double Score(IGWEdge<ICRFNodeData, ICRFEdgeData, ICRFGraphData> edge, int labelhead, int labelfoot)
+        {
+            return 0;
+        }
     }
 }

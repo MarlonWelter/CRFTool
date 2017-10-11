@@ -9,7 +9,7 @@ namespace CodeBase
 {
     public interface ICRFGraphData
     {
-
+        string[] Characteristics { get; set; }
         int[] ReferenceLabeling { get; set; }
         int[] AssginedLabeling { get; set; }
     }
@@ -18,6 +18,7 @@ namespace CodeBase
         public int NumberOfLabels { get; set; }
         public int[] ReferenceLabeling { get; set; }
         public int[] AssginedLabeling { get; set; }
+        public string[] Characteristics { get; set; }
         //wird momentan nicht wirklich benutzt, da auch der CRFNodeData eien observation enthält. Kann eventuell entfernt werden.
         //public int[] Observations { get; set; }
     }
@@ -27,6 +28,7 @@ namespace CodeBase
     }
     public interface ICRFNodeData : ICoordinated
     {
+        double[] Characteristics { get; set; }
         int UnchosenNeighboursTemp { get; set; }
         double[] Scores { get; set; }
         string Id { get; set; }
@@ -66,6 +68,7 @@ namespace CodeBase
         {
             Id = id;
         }
+        public double[] Characteristics { get; set; }
         public int UnchosenNeighboursTemp { get; set; }
         public double[] Scores { get; set; }
         public string Id { get; set; }
