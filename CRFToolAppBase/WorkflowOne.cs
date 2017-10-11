@@ -13,6 +13,7 @@ namespace CRFToolAppBase
     public class WorkflowOne
     {
         public string GraphDataFolder { get; set; }
+        public int NumberIntervals { get; set; } = 4;
 
         public void Execute()
         {
@@ -41,11 +42,6 @@ namespace CRFToolAppBase
             //   - discretize characteristics
             #region Use Training Pede
             {
-                // these ising parameters are only starting values
-                var isingConformityParameter = 0.5;
-                var isingCorrelationParameter = 0.5;
-                var isingModel = new IsingModel(isingConformityParameter, isingCorrelationParameter);
-
                 // create features
                 var features = CreateFeatures(testGraphs);
 
@@ -67,15 +63,27 @@ namespace CRFToolAppBase
 
                 var olmResult = request.Result;
 
-                // update Ising parameters in IsingModel
-                isingModel.ConformityParameter = olmResult.ResultingWeights[0];
-                isingModel.CorrelationParameter = olmResult.ResultingWeights[1];
-
                 // zugehörige Scores erzeugen für jeden Graphen (auch Evaluation)
-                //foreach (var graph in graphList)
-                //{
-                //    isingModel.CreateCRFScore(graph);
-                //}
+                foreach (var graph in testGraphs)
+                {
+                    foreach (var node in graph.Nodes)
+                    {
+                        node.Data.Scores = new double[2];
+                        for (int c = 0; c < graph.Data.Characteristics.Length; c++)
+                        {
+                            for (int i = 0; i < NumberIntervals; i++)
+                            {
+                                node.Data.Scores[0] += features[c * NumberIntervals + i].Score(node, 0) * olmResult.ResultingWeights[c * NumberIntervals + i];
+                                node.Data.Scores[1] += features[c * NumberIntervals + i].Score(node, 1) * olmResult.ResultingWeights[c * NumberIntervals + i];
+                            }
+                        }
+                    }
+                    var correlationParameter = olmResult.ResultingWeights.Last();
+                    foreach (var edge in graph.Edges)
+                    {
+                        edge.Data.Scores = new double[2, 2] { { correlationParameter, -correlationParameter }, { -correlationParameter, correlationParameter } };
+                    }
+                }
             }
             #endregion
 
@@ -89,19 +97,18 @@ namespace CRFToolAppBase
         private List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> CreateFeatures(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> testGraphs)
         {
             var features = new List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
-            var intervalsCount = 4;
 
             // node-features
             var allNodes = testGraphs.SelectMany(graph => graph.Nodes).ToList();
             for (int characteristic = 0; characteristic < testGraphs.First().Data.Characteristics.Length; characteristic++)
             {
                 var orderedNodes = allNodes.OrderBy(n => n.Data.Characteristics[characteristic]).ToList();
-                var intervals = orderedNodes.SplitToIntervals(intervalsCount);
-                for (int i = 0; i < intervalsCount; i++)
+                var intervals = orderedNodes.SplitToIntervals(NumberIntervals);
+                for (int i = 0; i < NumberIntervals; i++)
                 {
-                    features.Add(new CharacteristicFeature(characteristic, 0, i > double.MinValue ? intervals[i - 1].Last().Data.Characteristics[characteristic] : 0, i < intervalsCount - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
+                    features.Add(new CharacteristicFeature(characteristic, 0, i > double.MinValue ? intervals[i - 1].Last().Data.Characteristics[characteristic] : 0, i < NumberIntervals - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
 
-                    features.Add(new CharacteristicFeature(characteristic, 1, i > double.MinValue ? intervals[i - 1].Last().Data.Characteristics[characteristic] : 0, i < intervalsCount - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
+                    features.Add(new CharacteristicFeature(characteristic, 1, i > double.MinValue ? intervals[i - 1].Last().Data.Characteristics[characteristic] : 0, i < NumberIntervals - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
                 }
             }
 
