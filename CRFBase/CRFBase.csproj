@@ -64,7 +64,6 @@
     <Compile Include="CRFResult.cs" />
     <Compile Include="GibbsSampling\GibbsSamplingManager.cs" />
     <Compile Include="GibbsSampling\GiveProbableLabelings.cs" />
-    <Compile Include="GraphLibrary\GraphPackageOne.cs" />
     <Compile Include="InferenceHeuristik\InferenceHeuristikBinary.cs" />
     <Compile Include="InferenceHeuristik\InferenceManager.cs" />
     <Compile Include="InferenceHeuristik\SolveInference.cs" />
@@ -106,7 +105,6 @@
     <Compile Include="GibbsSampling\BasicGibbsSampling.cs" />
     <Compile Include="Combination.cs" />
     <Compile Include="DetermineBarrier.cs" />
-    <Compile Include="GraphLibrary\Graphs.cs" />
     <Compile Include="QueueHeuristic\GreedyMinBorderQueueComputing.cs" />
     <Compile Include="InferenceHeuristik\InferenceHeuristik.cs" />
     <Compile Include="OLM\WeightObservationUnit.cs" />

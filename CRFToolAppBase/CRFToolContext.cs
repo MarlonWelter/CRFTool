@@ -103,6 +103,11 @@ namespace CRFToolAppBase
 
         #region Testing Purposes
 
+        public void CreateTestGraphs()
+        {
+            CreateTestData.Execute();
+        }
+
         public GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> CreateTestGraphCRF()
         {
             var graph = GWGraphpackageOne.ThreeCoreElements<CRFNodeData, CRFEdgeData, CRFGraphData>(32);

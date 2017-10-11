@@ -55,6 +55,7 @@
     <Compile Include="Build.cs" />
     <Compile Include="Compute.cs" />
     <Compile Include="ConvertData.cs" />
+    <Compile Include="CreateTestData.cs" />
     <Compile Include="CRFToolContext.cs" />
     <Compile Include="CRFToolData.cs" />
     <Compile Include="FindMaxLabelingController.cs" />

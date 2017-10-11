@@ -117,8 +117,6 @@ namespace CodeBase
     {
         double Weight { get; set; }
 
-        int Ordinate { get; set; }
-
         double[,] Scores { get; set; }
     }
     public interface ICRFEdgeDataBinary
@@ -136,8 +134,6 @@ namespace CodeBase
     {
 
         public double Weight { get; set; }
-
-        public int Ordinate { get; set; }
 
         public double[,] Scores { get; set; }
     }
