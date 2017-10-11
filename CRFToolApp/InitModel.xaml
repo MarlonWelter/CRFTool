@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="400">
     <StackPanel>
-        <Button Name="UserTrainingB" Height="150" Background="LightYellow" FontSize="32" Click="UserTrainingB_Click">User Training</Button>
+        <Button Name="Workflow_I" Height="150" Background="LightYellow" FontSize="32" Click="UserTrainingB_Click">Workflow One</Button>
         <Button Name="LoadParametersetB" Height="150" Background="LightSalmon" FontSize="32" Click="LoadParametersetB_Click">Load Parameterset</Button>
         <Button Name="ParametersetSGB" Height="150" Background="LightSteelBlue" FontSize="32" Click="ParametersetSGB_Click">Parameterset Software</Button>
         <Button Name="ParametersetPGB" Height="150" Background="LightGreen" FontSize="32" Click="ParametersetPGB_Click">Parameterset Protein</Button>

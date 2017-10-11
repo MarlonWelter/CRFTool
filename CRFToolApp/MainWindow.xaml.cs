@@ -26,6 +26,7 @@ namespace CRFToolApp
             InitializeComponent();
             CRFToolAppBase.Build.Do();
             CRFBase.Build.Do();
+            Build.Do();
         }
 
     }

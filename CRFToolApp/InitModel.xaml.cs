@@ -61,10 +61,13 @@ namespace CRFToolApp
 
         private void UserTrainingB_Click(object sender, RoutedEventArgs e)
         {
-            var exampleGraph = UserTrainingX.ExampleData();
-            exampleGraph.SaveAsJSON("exampleGraph.txt", new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            var workflow = new WorkflowOne();
+            workflow.Execute();
 
-            var testgraph = UserTrainingX.ParseTrainingData("exampleGraph.txt");
+            //var exampleGraph = UserTrainingX.ExampleData();
+            //exampleGraph.SaveAsJSON("exampleGraph.txt", new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+
+            //var testgraph = UserTrainingX.ParseTrainingData("exampleGraph.txt");
         }
     }
 }

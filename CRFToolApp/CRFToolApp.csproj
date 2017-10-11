@@ -68,6 +68,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Build.cs" />
+    <Compile Include="UserInputManager.cs" />
     <Page Include="InitModel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
