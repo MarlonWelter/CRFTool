@@ -12,11 +12,11 @@ namespace CRFToolAppBase
     {
         public static void Execute()
         {
-            string folder = "\\Graphs\\";
+            string folder = "Graphs\\";
             int numberNodes = 100;
             int numberGraphs = 100;
             var random = new Random();
-            for (int i = 0; i < numberGraphs; i++)
+            for (int i = 0; i < 2 * numberGraphs; i++)
             {
                 var graph = GWGraphPackageTwo.CategoryGraph<CRFNodeData, CRFEdgeData, CRFGraphData>(numberNodes, 5);
 
@@ -38,7 +38,10 @@ namespace CRFToolAppBase
                     edge.Data = new CRFEdgeData();
                 }
                 Directory.CreateDirectory(folder);
-                graph.SaveAsJSON( "testGraph_" + i);
+                Directory.CreateDirectory(folder + "TestData\\");
+                Directory.CreateDirectory(folder + "EvaluationData\\");
+                if (i < numberGraphs) graph.SaveAsJSON(folder + "TestData\\testGraph_" + i + ".txt");
+                else graph.SaveAsJSON(folder + "EvaluationData\\testGraph_" + i + ".txt");
             }
         }
     }

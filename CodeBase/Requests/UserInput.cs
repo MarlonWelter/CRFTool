@@ -10,5 +10,6 @@ namespace CodeBase
     {
         public string UserText { get; set; }
         public string TextForUser { get; set; }
+        public string DefaultPath { get; set; }
     }
 }

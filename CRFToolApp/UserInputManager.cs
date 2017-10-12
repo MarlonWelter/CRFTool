@@ -13,7 +13,10 @@ namespace CRFToolApp
     {
         protected override void OnRequest(UserInput request)
         {
-            using (var fbd = new FolderBrowserDialog() { Description = request.TextForUser })
+            using (var fbd = new FolderBrowserDialog()
+            {
+                Description = request.TextForUser
+            })
             {
                 DialogResult result = fbd.ShowDialog();
 

@@ -31,6 +31,7 @@ namespace CRFToolAppBase
             //    -n characteristics for each node
             {
                 var request = new UserInput();
+                request.DefaultPath = "..\\..\\CRFToolApp\\bin\\Graphs";
                 request.TextForUser = "Please select the folder with your graph training data.";
                 request.Request();
                 GraphDataFolder = request.UserText;
@@ -49,6 +50,7 @@ namespace CRFToolAppBase
             {
                 // create features
                 Dataset.Features = CreateFeatures(TrainingData);
+                InitCRFScores(TrainingData);
 
                 var request = new OLMRequest(OLMVariant.Ising, TrainingData);
                 request.BasisMerkmale = Dataset.Features.ToArray();
@@ -98,6 +100,10 @@ namespace CRFToolAppBase
                 }
             }
 
+
+            //scores erzeugen
+            CreateCRFScores(EvaluationData, Dataset.Features, Dataset.TrainingResult);
+
             //   - Create ROC Curve
             {
             }
@@ -108,13 +114,12 @@ namespace CRFToolAppBase
                     var request = new SolveInference(graph, null, 2);
                     request.Request();
                     graph.Data.AssginedLabeling = request.Solution.Labeling;
+                    Dataset.GraphDatas = Dataset.GraphDatas ?? new List<CRFGraphData>();
                     Dataset.GraphDatas.Add(graph.Data);
                 }
             }
             //   - Give Sample with MCMC
             {
-                //scores erzeugen
-                CreateCRFScores(EvaluationData, Dataset.Features, Dataset.TrainingResult);
 
                 foreach (var graph in EvaluationData)
                 {
@@ -125,26 +130,26 @@ namespace CRFToolAppBase
                     parameters.NumberCategories = 4;
                     parameters.IntraConnectivityDegree = 0.15;
                     parameters.InterConnectivityDegree = 0.01;
-                
+
 
                     //sample parameters
                     var samplerParameters = new MHSamplerParameters();
                     var sglGraph = graph.Convert((nodeData) => new SGLNodeData() { }, (edgeData) => new SGLEdgeData(), (graphData) => new SGLGraphData());
-                    
+
                     samplerParameters.Graph = sglGraph;
-                    samplerParameters.NumberChains = 1;                    
+                    samplerParameters.NumberChains = 1;
 
                     //sampler starten
                     var gibbsSampler = new MHSampler();
                     gibbsSampler.Do(samplerParameters);
-                    
+
                 }
             }
         }
 
-        private void CreateCRFScores(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> trainingData, List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> features, OLMRequestResult olmResult)
+        private void CreateCRFScores(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> data, List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> features, OLMRequestResult olmResult)
         {
-            foreach (var graph in TrainingData)
+            foreach (var graph in data)
             {
                 foreach (var node in graph.Nodes)
                 {
@@ -165,6 +170,25 @@ namespace CRFToolAppBase
                 }
             }
         }
+        private void InitCRFScores(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> data)
+        {
+            var random = new Random();
+            foreach (var graph in data)
+            {
+                foreach (var node in graph.Nodes)
+                {
+                    node.Data.Scores = new double[2];
+                    node.Data.Scores[0] = random.NextDouble() - 0.5;
+                    node.Data.Scores[1] = random.NextDouble() - 0.5;
+
+                }
+                var correlationParameter = 0.1;
+                foreach (var edge in graph.Edges)
+                {
+                    edge.Data.Scores = new double[2, 2] { { correlationParameter, -correlationParameter }, { -correlationParameter, correlationParameter } };
+                }
+            }
+        }
 
         private List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> CreateFeatures(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> testGraphs)
         {
@@ -178,9 +202,9 @@ namespace CRFToolAppBase
                 var intervals = orderedNodes.SplitToIntervals(NumberIntervals);
                 for (int i = 0; i < NumberIntervals; i++)
                 {
-                    features.Add(new CharacteristicFeature(characteristic, 0, i > double.MinValue ? intervals[i - 1].Last().Data.Characteristics[characteristic] : 0, i < NumberIntervals - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
+                    features.Add(new CharacteristicFeature(characteristic, 0, i > 0 ? intervals[i - 1].Last().Data.Characteristics[characteristic] : double.MinValue, i < NumberIntervals - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
 
-                    features.Add(new CharacteristicFeature(characteristic, 1, i > double.MinValue ? intervals[i - 1].Last().Data.Characteristics[characteristic] : 0, i < NumberIntervals - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
+                    features.Add(new CharacteristicFeature(characteristic, 1, i > 0 ? intervals[i - 1].Last().Data.Characteristics[characteristic] : double.MinValue, i < NumberIntervals - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
                 }
             }
 
