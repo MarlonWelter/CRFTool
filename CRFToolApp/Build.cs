@@ -11,6 +11,7 @@ namespace CRFToolApp
         public static void Do()
         {
             new UserInputManager();
+            new UserDecisionManager();
         }
     }
 }

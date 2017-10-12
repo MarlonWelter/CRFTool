@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,21 +16,23 @@ using System.Windows.Shapes;
 namespace CRFToolApp
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaktionslogik für Workflow_I_1.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Workflow_I_1 : UserControl
     {
-        public MainWindow()
+        public Workflow_I_1()
         {
             InitializeComponent();
-            CRFToolAppBase.Build.Do();
-            CRFBase.Build.Do();
-            Build.Do();
-
-            userDecisionUI.SetUserOptions( new string[] { "A", "B", "C"});
         }
 
+        private void UseTrainingData_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void LoadTrainingResult_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
-
-
 }
