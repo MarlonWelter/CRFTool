@@ -110,6 +110,7 @@
     <Compile Include="OLM\WeightObservationUnit.cs" />
     <Compile Include="OLM\WOU_II.cs" />
     <Compile Include="SeedingMethodPatchCreation.cs" />
+    <Compile Include="ShowGraphs.cs" />
     <Compile Include="ShowOLMResult.cs" />
     <Compile Include="TrainingEvaluationCycle.cs" />
     <Compile Include="TrainingEvaluationCycleInputParameters.cs" />

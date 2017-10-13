@@ -24,7 +24,7 @@ namespace CRFToolApp
     /// </summary>
     public partial class MainView : Window
     {
-        MainViewViewModel ViewModel { get; set; }
+        public MainViewViewModel ViewModel { get; set; }
         public MainView()
         {
             InitializeComponent();
@@ -36,24 +36,24 @@ namespace CRFToolApp
         { // load data
             var request = new LoadCRFGraph();
             request.Request();
-            ViewModel.Graph = request.Graph;
+            ViewModel.Graphs.Add(request.Graph);
             Embed();
         }
         public void Embed()
         {
-           var  EmbeddingControl = EmbeddingX.CreateDefaultEmbeddingControl();
+            var EmbeddingControl = EmbeddingX.CreateDefaultEmbeddingControl();
             var timer = new Timer((obj) => ViewModel.NotifyPropertyChanged("Graph"));
             timer.Change(0, 25);
-            
+
             EmbeddingControl.Graph = ViewModel.Graph?.Convert((n) => new EDND(1.0, "default", n.Data, 0), (edge) => new EDED(1.0), (g) => new EDGD());
-            
+
 
             EmbeddingControl?.Start();
         }
 
         private void button2_Click(object sender, RoutedEventArgs e)
         {
-            var graph =ViewModel.Graph;
+            var graph = ViewModel.Graph;
             if (graph == null) return;
             var request = new SolveInference(graph, null, graph.Data.NumberOfLabels);
             request.Request();
@@ -66,27 +66,51 @@ namespace CRFToolApp
 
         private void button3_Click(object sender, RoutedEventArgs e)
         {
-
+            Embed();
         }
 
         private void button4_Click(object sender, RoutedEventArgs e)
         {
 
         }
+
+        private void buttonLeft_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.GraphIndex--;
+        }
+
+        private void buttonRight_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.GraphIndex++;
+        }
     }
 
-    class MainViewViewModel : INotifyPropertyChanged
+    public class MainViewViewModel : INotifyPropertyChanged
     {
-        private IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph;
+        private ObservableList<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs = new ObservableList<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>();
+
+        public ObservableList<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> Graphs
+        {
+            get { return graphs; }
+        }
+
+        private int graphIndex;
+
+        public int GraphIndex
+        {
+            get { return graphIndex; }
+            set
+            {
+                graphIndex = value;
+                NotifyPropertyChanged("Graph");
+            }
+        }
+
+
 
         public IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> Graph
         {
-            get { return graph; }
-            set
-            {
-                graph = value;
-                NotifyPropertyChanged("Graph");
-            }
+            get { return Graphs.NotNullOrEmpty() ? Graphs[graphIndex % Graphs.Count] : null; }
         }
 
         #region INotifyPropertyChanged

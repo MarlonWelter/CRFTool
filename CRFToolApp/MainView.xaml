@@ -15,11 +15,16 @@
             <RowDefinition Height="160"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="80"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
         <Grid.Background>
             <ImageBrush ImageSource="icons/wood1.jpg">
             </ImageBrush>
         </Grid.Background>
-        <StackPanel Grid.Row="0" Background="CadetBlue" Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Background="CadetBlue" Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Button Name="button1" Click="button1_Click" Height="120" Width="120" Margin="20, 10" Background="Transparent">
                 <Image Source="icons/download.png"></Image>
             </Button>
@@ -31,12 +36,19 @@
             <Button Name="button4" Click="button4_Click" Height="120" Width="120" Margin="20, 10" Background="Transparent">
                 <Image Source="icons/defense.png"></Image></Button>
         </StackPanel>
-        <hlx:HelixViewport3D Margin="10"  Grid.Row="1" Name="viewport" IsHitTestVisible="True" Background="Bisque">
+        
+        <hlx:HelixViewport3D   Grid.Row="1" Grid.ColumnSpan="3" Name="viewport" IsHitTestVisible="True" Background="Bisque">
             <hlx:HelixViewport3D.Children>
                 <hlx:DefaultLights></hlx:DefaultLights>
                 <ModelUIElement3D x:Uid="placementModels" x:Name="placementModels" Model="{Binding Path=Graph, Converter={StaticResource viewConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
                
             </hlx:HelixViewport3D.Children>
         </hlx:HelixViewport3D>
+        <Button Click="buttonLeft_Click" Name="buttonLeft" Grid.Row="1" Background="Transparent">
+            <Image Source="icons/arrow-left.png"></Image>
+        </Button>
+        <Button Click="buttonRight_Click" Name="buttonRight" Grid.Row="1" Grid.Column="2" Background="Transparent">
+            <Image Source="icons/arrow-right.png"></Image>
+        </Button>
     </Grid>
 </Window>

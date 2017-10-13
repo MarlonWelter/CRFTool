@@ -12,6 +12,7 @@ namespace CRFToolApp
         {
             new UserInputManager();
             new UserDecisionManager();
+            new ShowGraphsManager();
         }
     }
 }

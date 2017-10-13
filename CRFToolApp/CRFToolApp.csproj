@@ -69,6 +69,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Build.cs" />
+    <Compile Include="ShowGraphsManager.cs" />
     <Compile Include="UserDecisionUI.xaml.cs">
       <DependentUpon>UserDecisionUI.xaml</DependentUpon>
     </Compile>
@@ -179,6 +180,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icons\wood1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\arrow-left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\arrow-right.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
