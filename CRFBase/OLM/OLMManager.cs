@@ -15,7 +15,7 @@ namespace CRFBase.OLM
             {
                 case OLMVariant.Default:
                     var olm = new OLM_III<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF, request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 0.02, "OLM_Default");
-                    olm.Do(request.BasisMerkmale.Length, request.Graphs, request.MaxIterations, request);
+                    olm.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);
                     request.Result = new OLMRequestResult(olm.ResultingWeights.ToArray());
                     break;
                 case OLMVariant.AverageDistCriteria:
@@ -27,7 +27,7 @@ namespace CRFBase.OLM
                     break;
                 case OLMVariant.Ising:
                     var olmIsing = new OLM_Ising_I<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF, request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 0.02, "OLM_Default");
-                    olmIsing.Do(request.BasisMerkmale.Length, request.Graphs, request.MaxIterations, request);
+                    olmIsing.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);
                     request.Result = new OLMRequestResult(olmIsing.ResultingWeights.ToArray());
                     break;
                 default:

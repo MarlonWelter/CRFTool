@@ -14,21 +14,21 @@ namespace CRFBase
         where EdgeData : ICRFEdgeData
         where GraphData : ICRFGraphData
     {
-        public OLM_Ising_I(int labels, int bufferSizeInference, BasisMerkmal<NodeData, EdgeData, GraphData>[] basisMerkmale, Func<int[], int[], double> lossfunctionIteration, Func<int[], int[], double> lossfunctionValidation, double sensitivityFactor, string name)
+        public OLM_Ising_I(int labels, int bufferSizeInference, IList<BasisMerkmal<NodeData, EdgeData, GraphData>> basisMerkmale, Func<int[], int[], double> lossfunctionIteration, Func<int[], int[], double> lossfunctionValidation, double sensitivityFactor, string name)
         {
             Name = name;
             Labels = labels;
             BufferSizeInference = bufferSizeInference;
             LossFunctionIteration = lossfunctionIteration;
             LossFunctionValidation = lossfunctionValidation;
-            BasisMerkmale = basisMerkmale;
+            BasisMerkmale = basisMerkmale.ToArray();
         }
 
         private const double eps = 0.01;
         // mittlerer Fehler
         private double middev = 0;
         // realer Fehler
-        private double realdev = 2*eps;
+        private double realdev = 2 * eps;
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
         {
 

@@ -27,7 +27,7 @@ namespace CRFBase.OLM
         public int NumberLabels { get; set; } = OLMDefaultValues.NumberLabels;
         public int BufferSizeCRF { get; set; } = OLMDefaultValues.BufferSizeCRF;
         public int MaxIterations { get; set; } = OLMDefaultValues.OLMMaxIterations;
-        public BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>[] BasisMerkmale { get; set; }
+        public List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> BasisMerkmale { get; set; } = new List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
         public Func<int[], int[], double> LossFunctionIteration { get; set; }
         public Func<int[], int[], double> LossFunctionValidation { get; set; }
         public List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> Graphs { get; set; }

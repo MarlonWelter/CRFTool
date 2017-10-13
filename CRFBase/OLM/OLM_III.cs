@@ -13,14 +13,14 @@ namespace CRFBase
         where EdgeData : ICRFEdgeData
         where GraphData : ICRFGraphData
     {
-        public OLM_III(int labels, int bufferSizeInference, BasisMerkmal<NodeData, EdgeData, GraphData>[] basisMerkmale, Func<int[], int[], double> lossfunctionIteration, Func<int[], int[], double> lossfunctionValidation, double sensitivityFactor, string name)
+        public OLM_III(int labels, int bufferSizeInference, IList<BasisMerkmal<NodeData, EdgeData, GraphData>> basisMerkmale, Func<int[], int[], double> lossfunctionIteration, Func<int[], int[], double> lossfunctionValidation, double sensitivityFactor, string name)
         {
             Name = name;
             Labels = labels;
             BufferSizeInference = bufferSizeInference;
             LossFunctionIteration = lossfunctionIteration;
             LossFunctionValidation = lossfunctionValidation;
-            BasisMerkmale = basisMerkmale;
+            BasisMerkmale = basisMerkmale.ToArray();
         }
 
         protected override bool CheckCancelCriteria()

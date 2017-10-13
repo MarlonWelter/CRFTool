@@ -287,8 +287,7 @@ namespace CRFBase.MetropolisHastings
             }
 
             var req = new OLMRequest(OLMVariant.Default, graphs);
-            req.BasisMerkmale = new BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>[]
-                { new IsingMerkmalNode(), new IsingMerkmalEdge() };
+            req.BasisMerkmale.AddRange(new IsingMerkmalNode(), new IsingMerkmalEdge());
             req.LossFunctionValidation = LossFunction;
             req.MaxIterations = 100;
 

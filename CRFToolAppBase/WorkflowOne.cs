@@ -55,11 +55,12 @@ namespace CRFToolAppBase
                 #region Use Training Pede
                 {
                     // create features
-                    Dataset.Features = CreateFeatures(TrainingData);
+                    CreateFeatures(Dataset, TrainingData);
                     InitCRFScores(TrainingData);
 
                     var request = new OLMRequest(OLMVariant.Ising, TrainingData);
-                    request.BasisMerkmale = Dataset.Features.ToArray();
+                    request.BasisMerkmale.AddRange(Dataset.NodeFeatures);
+                    request.BasisMerkmale.AddRange(Dataset.EdgeFeatures);
 
                     //TODO: loss function auslagern
                     request.LossFunctionValidation = (a, b) =>
@@ -75,7 +76,7 @@ namespace CRFToolAppBase
                     request.Request();
 
                     // zugehörige Scores erzeugen für jeden Graphen (auch Evaluation)
-                    CreateCRFScores(TrainingData, Dataset.Features, request.Result.ResultingWeights);
+                    CreateCRFScores(TrainingData, Dataset.NodeFeatures, request.Result.ResultingWeights);
 
                     // store trained Weights
                     Dataset.NumberIntervals = NumberIntervals;
@@ -114,7 +115,7 @@ namespace CRFToolAppBase
 
 
             //scores erzeugen
-            CreateCRFScores(EvaluationData, Dataset.Features, Dataset.Weights);
+            CreateCRFScores(EvaluationData, Dataset.NodeFeatures, Dataset.Weights);
 
             //   - Create ROC Curve
             {
@@ -157,7 +158,7 @@ namespace CRFToolAppBase
             }
         }
 
-        private void CreateCRFScores(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> data, List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> features, double[] weights)
+        private void CreateCRFScores(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> data, List<CharacteristicFeature> nodefeatures, double[] weights)
         {
             foreach (var graph in data)
             {
@@ -168,8 +169,8 @@ namespace CRFToolAppBase
                     {
                         for (int i = 0; i < NumberIntervals; i++)
                         {
-                            node.Data.Scores[0] += features[c * NumberIntervals + i].Score(node, 0) * weights[c * NumberIntervals + i];
-                            node.Data.Scores[1] += features[c * NumberIntervals + i].Score(node, 1) * weights[c * NumberIntervals + i];
+                            node.Data.Scores[0] += nodefeatures[c * NumberIntervals + i].Score(node, 0) * weights[c * NumberIntervals + i];
+                            node.Data.Scores[1] += nodefeatures[c * NumberIntervals + i].Score(node, 1) * weights[c * NumberIntervals + i];
                         }
                     }
                 }
@@ -200,9 +201,8 @@ namespace CRFToolAppBase
             }
         }
 
-        private List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> CreateFeatures(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> testGraphs)
+        private void CreateFeatures(WorkflowOneDataset dataset, List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> testGraphs)
         {
-            var features = new List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
 
             // node-features
             var allNodes = testGraphs.SelectMany(graph => graph.Nodes).ToList();
@@ -212,22 +212,21 @@ namespace CRFToolAppBase
                 var intervals = orderedNodes.SplitToIntervals(NumberIntervals);
                 for (int i = 0; i < NumberIntervals; i++)
                 {
-                    features.Add(new CharacteristicFeature(characteristic, 0, i > 0 ? intervals[i - 1].Last().Data.Characteristics[characteristic] : double.MinValue, i < NumberIntervals - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
+                    dataset.NodeFeatures.Add(new CharacteristicFeature(characteristic, 0, i > 0 ? intervals[i - 1].Last().Data.Characteristics[characteristic] : double.MinValue, i < NumberIntervals - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
 
-                    features.Add(new CharacteristicFeature(characteristic, 1, i > 0 ? intervals[i - 1].Last().Data.Characteristics[characteristic] : double.MinValue, i < NumberIntervals - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
+                    dataset.NodeFeatures.Add(new CharacteristicFeature(characteristic, 1, i > 0 ? intervals[i - 1].Last().Data.Characteristics[characteristic] : double.MinValue, i < NumberIntervals - 1 ? intervals[i].Last().Data.Characteristics[characteristic] : double.MaxValue));
                 }
             }
 
             // edge-features
-            features.Add(new IsingMerkmalEdge());
+            dataset.EdgeFeatures.Add(new IsingMerkmalEdge());
 
-            return features;
         }
     }
     public class WorkflowOneDataset
     {
-
-        public List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> Features { get; set; }
+        public List<CharacteristicFeature> NodeFeatures { get; set; } = new List<CharacteristicFeature>();
+        public List<IsingMerkmalEdge> EdgeFeatures { get; set; } = new List<IsingMerkmalEdge>();
 
         public int NumberIntervals { get; set; }
         public string[] Characteristics { get; set; }

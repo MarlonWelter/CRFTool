@@ -42,7 +42,7 @@ namespace CRFBase
 
 
             #region Schritt 1: Referenzlabelings erzeugen.
-            
+
             int[][] referenceLabelings = new int[inputParameters.NumberOfGraphInstances][];
             for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
             {
@@ -112,8 +112,7 @@ namespace CRFBase
                 #region Schritt 4.1: Training der OLM-Variante
                 {
                     var request = new OLMRequest(trainingVariant, testGraphs);
-                    request.BasisMerkmale = new BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>[]
-                        { new IsingMerkmalNode(), new IsingMerkmalEdge() };
+                    request.BasisMerkmale.AddRange(new IsingMerkmalNode(), new IsingMerkmalEdge());
                     //TODO: loss function auslagern
                     request.LossFunctionValidation = (a, b) =>
                     {
@@ -166,7 +165,7 @@ namespace CRFBase
                     // einfügen in Dictionary -> Liste
                     evaluationResults[trainingVariant].GraphResults.Add(result);
 
-                }                
+                }
 
                 // Berechnen der Average-Werte
                 foreach (OLMVariant variant in evaluationResults.Keys)
@@ -174,8 +173,8 @@ namespace CRFBase
 
                 // debug output
                 Log.Post("Average Values");
-                Log.Post("Sensitivity: "+evaluationResults[trainingVariant].AverageSensitivity + 
-                    "\t Specificy: " + evaluationResults[trainingVariant].AverageSpecificity + 
+                Log.Post("Sensitivity: " + evaluationResults[trainingVariant].AverageSensitivity +
+                    "\t Specificy: " + evaluationResults[trainingVariant].AverageSpecificity +
                     "\t MCC: " + evaluationResults[trainingVariant].AverageMCC +
                     //"\t Accuracy: " + evaluationResults[trainingVariant].AverageAccuracy +
                     "\t TotalTP: " + evaluationResults[trainingVariant].TotalTP + "\n");
@@ -200,7 +199,7 @@ namespace CRFBase
             var olmPresentationRequest = new ShowOLMResult(evaluationResults.Values.ToList());
             //foreach (var variant in evaluationResults.Keys)
             //{
-                
+
             //    //foreach (var graphresult in evaluationResults[variant].GraphResults)
             //    //{
             //    //    //var graph = graphresult.Graph;
