@@ -8,6 +8,10 @@ namespace CodeBase
 {
     public class UserDecision : GWRequest<UserDecision>
     {
+        public  UserDecision(params string[] options)
+        {
+            Options = options;
+        }
         public string[] Options { get; set; }
         public int Decision { get; set; }
     }

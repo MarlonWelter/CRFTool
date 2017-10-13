@@ -28,67 +28,79 @@ namespace CRFToolAppBase
             TrainingData = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>();
             EvaluationData = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>();
 
-            //    -n characteristics for each node
+            // decision wether user wants to train or load pre-trained data
+            var requestTraining = new UserDecision("Use Training.", "Load Training Result.");
+            requestTraining.Request();
+
+            if (requestTraining.Decision == 0)
             {
-                var request = new UserInput();
-                request.DefaultPath = "..\\..\\CRFToolApp\\bin\\Graphs";
-                request.TextForUser = "Please select the folder with your graph training data.";
-                request.Request();
-                GraphDataFolder = request.UserText;
-
-                foreach (var file in Directory.EnumerateFiles(GraphDataFolder))
+                //    -n characteristics for each node
                 {
-                    var graph = JSONX.LoadFromJSON<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>(file);
-                    TrainingData.Add(graph);
-                }
-            }
+                    var request = new UserInput(UserInputLookFor.Folder);
+                    request.DefaultPath = "..\\..\\CRFToolApp\\bin\\Graphs";
+                    request.TextForUser = "Please select the folder with your graph training data.";
+                    request.Request();
+                    GraphDataFolder = request.UserText;
 
-            //   - Step 1:
-
-            //   - discretize characteristics
-            #region Use Training Pede
-            {
-                // create features
-                Dataset.Features = CreateFeatures(TrainingData);
-                InitCRFScores(TrainingData);
-
-                var request = new OLMRequest(OLMVariant.Ising, TrainingData);
-                request.BasisMerkmale = Dataset.Features.ToArray();
-
-                //TODO: loss function auslagern
-                request.LossFunctionValidation = (a, b) =>
-                {
-                    var loss = 0.0;
-                    for (int i = 0; i < a.Length; i++)
+                    foreach (var file in Directory.EnumerateFiles(GraphDataFolder))
                     {
-                        loss += a[i] != b[i] ? 1 : 0;
+                        var graph = JSONX.LoadFromJSON<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>(file);
+                        TrainingData.Add(graph);
                     }
-                    return loss / a.Length;
-                };
+                }
 
-                request.Request();
+                //   - Step 1:
 
-                Dataset.TrainingResult = request.Result;
+                //   - discretize characteristics
+                #region Use Training Pede
+                {
+                    // create features
+                    Dataset.Features = CreateFeatures(TrainingData);
+                    InitCRFScores(TrainingData);
 
-                // zugehörige Scores erzeugen für jeden Graphen (auch Evaluation)
-                CreateCRFScores(TrainingData, Dataset.Features, Dataset.TrainingResult);
+                    var request = new OLMRequest(OLMVariant.Ising, TrainingData);
+                    request.BasisMerkmale = Dataset.Features.ToArray();
 
-                // store trained Weights
-                var results = new UserTrainingWorkflowOne();
-                results.NumberIntervals = NumberIntervals;
-                results.Characteristics = TrainingData.First().Data.Characteristics.ToArray();
-                results.EdgeCharacteristic = "IsingEdgeCharacteristic";
-                results.Weights = Dataset.TrainingResult.ResultingWeights;
-                results.SaveAsJSON("results.json");
+                    //TODO: loss function auslagern
+                    request.LossFunctionValidation = (a, b) =>
+                    {
+                        var loss = 0.0;
+                        for (int i = 0; i < a.Length; i++)
+                        {
+                            loss += a[i] != b[i] ? 1 : 0;
+                        }
+                        return loss / a.Length;
+                    };
+
+                    request.Request();
+
+                    // zugehörige Scores erzeugen für jeden Graphen (auch Evaluation)
+                    CreateCRFScores(TrainingData, Dataset.Features, request.Result.ResultingWeights);
+
+                    // store trained Weights
+                    Dataset.NumberIntervals = NumberIntervals;
+                    Dataset.Characteristics = TrainingData.First().Data.Characteristics.ToArray();
+                    Dataset.EdgeCharacteristic = "IsingEdgeCharacteristic";
+                    Dataset.Weights = request.Result.ResultingWeights;
+                    Dataset.SaveAsJSON("results.json");
+                }
+
+                #endregion
             }
-
-            #endregion
-
+            else
+            { // load pre-trained data
+                var request = new UserInput();
+                request.TextForUser = "Please select the training result file.";
+                request.Request();
+                var file = request.UserText;
+                var trainingResult = JSONX.LoadFromJSON<WorkflowOneDataset>(file);
+                Dataset = trainingResult;
+            }
             //- Step2:
 
             // User Choice here
             {
-                var request = new UserInput();
+                var request = new UserInput(UserInputLookFor.Folder);
                 request.TextForUser = "Please select the folder with your graph evaluation data.";
                 request.Request();
                 GraphDataFolder = request.UserText;
@@ -102,7 +114,7 @@ namespace CRFToolAppBase
 
 
             //scores erzeugen
-            CreateCRFScores(EvaluationData, Dataset.Features, Dataset.TrainingResult);
+            CreateCRFScores(EvaluationData, Dataset.Features, Dataset.Weights);
 
             //   - Create ROC Curve
             {
@@ -114,8 +126,6 @@ namespace CRFToolAppBase
                     var request = new SolveInference(graph, null, 2);
                     request.Request();
                     graph.Data.AssginedLabeling = request.Solution.Labeling;
-                    Dataset.GraphDatas = Dataset.GraphDatas ?? new List<CRFGraphData>();
-                    Dataset.GraphDatas.Add(graph.Data);
                 }
             }
             //   - Give Sample with MCMC
@@ -147,7 +157,7 @@ namespace CRFToolAppBase
             }
         }
 
-        private void CreateCRFScores(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> data, List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> features, OLMRequestResult olmResult)
+        private void CreateCRFScores(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> data, List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> features, double[] weights)
         {
             foreach (var graph in data)
             {
@@ -158,12 +168,12 @@ namespace CRFToolAppBase
                     {
                         for (int i = 0; i < NumberIntervals; i++)
                         {
-                            node.Data.Scores[0] += features[c * NumberIntervals + i].Score(node, 0) * olmResult.ResultingWeights[c * NumberIntervals + i];
-                            node.Data.Scores[1] += features[c * NumberIntervals + i].Score(node, 1) * olmResult.ResultingWeights[c * NumberIntervals + i];
+                            node.Data.Scores[0] += features[c * NumberIntervals + i].Score(node, 0) * weights[c * NumberIntervals + i];
+                            node.Data.Scores[1] += features[c * NumberIntervals + i].Score(node, 1) * weights[c * NumberIntervals + i];
                         }
                     }
                 }
-                var correlationParameter = olmResult.ResultingWeights.Last();
+                var correlationParameter = weights.Last();
                 foreach (var edge in graph.Edges)
                 {
                     edge.Data.Scores = new double[2, 2] { { correlationParameter, -correlationParameter }, { -correlationParameter, correlationParameter } };
@@ -216,11 +226,12 @@ namespace CRFToolAppBase
     }
     public class WorkflowOneDataset
     {
-        public string Folder { get; set; }
-
-        public List<CRFGraphData> GraphDatas { get; set; }
 
         public List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> Features { get; set; }
-        public OLMRequestResult TrainingResult { get; set; }
+
+        public int NumberIntervals { get; set; }
+        public string[] Characteristics { get; set; }
+        public string EdgeCharacteristic { get; set; }
+        public double[] Weights { get; set; }
     }
 }

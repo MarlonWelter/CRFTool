@@ -11,7 +11,9 @@ namespace CRFToolApp
     {
         protected override void OnRequest(UserDecision request)
         {
-            throw new NotImplementedException();
+            var window = new UserDecisionUI();
+            window.SetUserOptions(request);
+            window.ShowDialog();
         }
     }
 }

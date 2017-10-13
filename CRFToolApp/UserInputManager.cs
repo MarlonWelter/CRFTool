@@ -13,19 +13,32 @@ namespace CRFToolApp
     {
         protected override void OnRequest(UserInput request)
         {
-            using (var fbd = new FolderBrowserDialog()
+            if (request.LookFor == UserInputLookFor.Folder)
             {
-                Description = request.TextForUser
-            })
-            {
-                DialogResult result = fbd.ShowDialog();
-
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                using (var fbd = new FolderBrowserDialog()
                 {
-                    request.UserText = fbd.SelectedPath;
-                    //string[] files = Directory.GetFiles(fbd.SelectedPath);
+                    Description = request.TextForUser
+                })
+                {
+                    DialogResult result = fbd.ShowDialog();
 
-                    //System.Windows.Forms.MessageBox.Show("Files found: " + files.Length.ToString(), "Message");
+                    if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                    {
+                        request.UserText = fbd.SelectedPath;
+                        //string[] files = Directory.GetFiles(fbd.SelectedPath);
+
+                        //System.Windows.Forms.MessageBox.Show("Files found: " + files.Length.ToString(), "Message");
+                    }
+                }
+            }
+            else if (request.LookFor == UserInputLookFor.File)
+            {
+                OpenFileDialog openFileDialog1 = new OpenFileDialog();
+                openFileDialog1.Title = request.TextForUser;
+
+                if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    request.UserText = openFileDialog1.FileName;
                 }
             }
         }

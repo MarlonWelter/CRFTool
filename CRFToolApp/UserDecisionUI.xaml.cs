@@ -1,6 +1,7 @@
 ﻿using CodeBase;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,8 @@ namespace CRFToolApp
     /// <summary>
     /// Interaktionslogik für UserDecision.xaml
     /// </summary>
-    public partial class UserDecisionUI : UserControl
+
+    public partial class UserDecisionUI : Window
     {
         private UserDecisionViewModel viewModel;
 
@@ -40,23 +42,32 @@ namespace CRFToolApp
             ViewModel = new UserDecisionViewModel();
         }
 
-        public void SetUserOptions(string[] options)
+        public void SetUserOptions(UserDecision request)
         {
-            ViewModel.Options = options;
+            foreach (var item in request.Options)
+            {
+                ViewModel.Options.Add(item);
+            }
+            ViewModel.Request = request;
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            viewModel.Request.Decision = listBox.SelectedIndex;
+            this.DialogResult = true;
+        }
     }
     public class UserDecisionViewModel : INotifyPropertyChanged
     {
-        private string[] options = new string[] { "no options found." };
+        public UserDecision Request { get; set; }
+        private ObservableCollection<string> options = new ObservableCollection<string>();
 
-        public string[] Options
+        public ObservableCollection<string> Options
         {
             get { return options; }
             set
             {
                 options = value;
-                NotifyPropertyChanged("Options");
             }
         }
 

@@ -28,7 +28,7 @@ namespace CRFToolApp
             CRFBase.Build.Do();
             Build.Do();
 
-            userDecisionUI.SetUserOptions( new string[] { "A", "B", "C"});
+            //userDecisionUI.SetUserOptions( new string[] { "A", "B", "C"});
         }
 
     }

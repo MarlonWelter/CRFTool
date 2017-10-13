@@ -48,10 +48,13 @@ namespace CRFToolApp
 
         private void ParametersetSGB_Click(object sender, RoutedEventArgs e)
         {
-            CRFToolData.IsingData = new SoftwareGraphIsing();
+            var request = new UserDecision();
+            request.Options = new string[] { "A", "B", "C" };
+            request.Request();
+            //CRFToolData.IsingData = new SoftwareGraphIsing();
 
-            var window = new MainView();
-            window.Show();
+            //var window = new MainView();
+            //window.Show();
         }
 
         private void ParametersetPGB_Click(object sender, RoutedEventArgs e)

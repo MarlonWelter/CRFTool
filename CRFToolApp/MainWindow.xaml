@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="400">
     <Grid>
-        <!--<local:InitModel></local:InitModel>-->
-        <local:UserDecisionUI x:Name="userDecisionUI"></local:UserDecisionUI>        
+        <local:InitModel></local:InitModel>
+        <!--<local:UserDecisionUI x:Name="userDecisionUI"></local:UserDecisionUI>-->        
     </Grid>
 </Window>
