@@ -69,6 +69,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Build.cs" />
+    <Compile Include="MainViewGraph3DConverter.cs" />
     <Compile Include="ShowGraphsManager.cs" />
     <Compile Include="UserDecisionUI.xaml.cs">
       <DependentUpon>UserDecisionUI.xaml</DependentUpon>
@@ -98,7 +99,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph3DConverter.cs" />
     <Compile Include="InitModel.xaml.cs">
       <DependentUpon>InitModel.xaml</DependentUpon>
     </Compile>

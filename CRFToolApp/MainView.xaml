@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="MainView" Height="800" Width="1200">
     <Window.Resources>
-        <local:Graph3DConverter  x:Key="viewConverter"/>
+        <local:MainViewGraph3DConverter  x:Key="viewConverter"/>
         <local:GraphCountConverter x:Key="graphCountConverter"></local:GraphCountConverter>
     </Window.Resources>
     <Grid>
@@ -43,7 +43,7 @@
         <hlx:HelixViewport3D   Grid.Row="1" Grid.ColumnSpan="3" Name="viewport" IsHitTestVisible="True" Background="Bisque">
             <hlx:HelixViewport3D.Children>
                 <hlx:DefaultLights></hlx:DefaultLights>
-                <ModelUIElement3D x:Uid="placementModels" x:Name="placementModels" Model="{Binding Path=Graph, Converter={StaticResource viewConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                <ModelUIElement3D x:Uid="placementModels" x:Name="placementModels" Model="{Binding Path=ViewModel, Converter={StaticResource viewConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
 
             </hlx:HelixViewport3D.Children>
         </hlx:HelixViewport3D>
@@ -54,7 +54,7 @@
             <Image Source="icons/arrow-right.png"></Image>
         </Button>
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="10" HorizontalAlignment="Right">
-            <ComboBox Name="viewOptionComboBox" Background="BlanchedAlmond" ItemsSource="{Binding Path=ViewOptions}" SelectionChanged="ComboBox_SelectionChanged">
+            <ComboBox Name="viewOptionComboBox" Background="BlanchedAlmond" ItemsSource="{Binding Path=ViewModel.ViewOptions, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="ComboBox_SelectionChanged">
             </ComboBox>
             <StackPanel Orientation="Horizontal" Visibility="{Binding ViewModel.ViewItemOne}">
                 <Ellipse  Height="20" Width="20" Fill="Green"/>

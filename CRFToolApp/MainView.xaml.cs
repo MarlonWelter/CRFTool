@@ -96,7 +96,7 @@ namespace CRFToolApp
     {
         public MainViewViewModel()
         {
-            viewOptions.AddRange("Prediction", "Reference");
+            UpdateViewOptions();
         }
         private ObservableList<string> viewOptions = new ObservableList<string>();
 
@@ -106,7 +106,34 @@ namespace CRFToolApp
             get { return viewOptions; }
             set { viewOptions = value; }
         }
-        private ObservableList<string> viewItems = new ObservableList<string>();
+        private List<string> viewItems = new List<string>();
+
+        private int viewOptionIndex;
+        public int ViewOptionIndex
+        {
+            get { return viewOptionIndex; }
+            set
+            {
+                viewOptionIndex = value;
+                NotifyPropertyChanged("ViewOption");
+            }
+        }
+        void UpdateViewOptions()
+        {
+            viewOptions.Clear();
+            viewOptions.AddRange("Prediction", "Reference");
+            if (Graph != null)
+            {
+                foreach (var characteristic in Graph.Data.Characteristics)
+                {
+                    viewOptions.Add("Characteristic_" + characteristic);
+                }
+            }
+            NotifyPropertyChanged("ViewOptions");
+        }
+
+        public string ViewOption => viewOptions.NullOrEmpty() ? "" : viewOptions[viewOptionIndex];
+
 
         public void ChangeViewItems(string viewOption)
         {
@@ -122,9 +149,9 @@ namespace CRFToolApp
                 default:
                     break;
             }
-            NotifyPropertyChanged("ViewItems");
+            ViewOptionIndex = ViewOptions.IndexOf(viewOption);
         }
-        public ObservableList<string> ViewItems
+        public List<string> ViewItems
 
         {
             get { return viewItems; }
@@ -162,6 +189,7 @@ namespace CRFToolApp
                 graphIndex = value;
                 if (Graphs.NotNullOrEmpty())
                     graphIndex = (graphIndex + Graphs.Count) % Graphs.Count;
+                UpdateViewOptions();
                 NotifyPropertyChanged("Graph");
             }
         }
