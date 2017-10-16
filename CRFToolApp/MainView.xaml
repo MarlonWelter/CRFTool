@@ -9,6 +9,7 @@
         Title="MainView" Height="800" Width="1200">
     <Window.Resources>
         <local:Graph3DConverter  x:Key="viewConverter"/>
+        <local:GraphCountConverter x:Key="graphCountConverter"></local:GraphCountConverter>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -29,19 +30,21 @@
                 <Image Source="icons/download.png"></Image>
             </Button>
             <Button Name="button2" Click="button2_Click" Height="120" Width="120" Margin="20, 10" Background="Transparent">
-                <Image Source="icons/info.png"></Image></Button>
+                <Image Source="icons/info.png"></Image>
+            </Button>
             <Button Name="button3" Click="button3_Click" Height="120" Width="120" Margin="20, 10" Background="Transparent">
                 <Image Source="icons/action.png"></Image>
             </Button>
             <Button Name="button4" Click="button4_Click" Height="120" Width="120" Margin="20, 10" Background="Transparent">
-                <Image Source="icons/defense.png"></Image></Button>
+                <Image Source="icons/defense.png"></Image>
+            </Button>
         </StackPanel>
-        
+
         <hlx:HelixViewport3D   Grid.Row="1" Grid.ColumnSpan="3" Name="viewport" IsHitTestVisible="True" Background="Bisque">
             <hlx:HelixViewport3D.Children>
                 <hlx:DefaultLights></hlx:DefaultLights>
                 <ModelUIElement3D x:Uid="placementModels" x:Name="placementModels" Model="{Binding Path=Graph, Converter={StaticResource viewConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-               
+
             </hlx:HelixViewport3D.Children>
         </hlx:HelixViewport3D>
         <Button Click="buttonLeft_Click" Name="buttonLeft" Grid.Row="1" Background="Transparent">
@@ -50,5 +53,29 @@
         <Button Click="buttonRight_Click" Name="buttonRight" Grid.Row="1" Grid.Column="2" Background="Transparent">
             <Image Source="icons/arrow-right.png"></Image>
         </Button>
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="10" HorizontalAlignment="Right">
+            <ComboBox Name="viewOptionComboBox" Background="BlanchedAlmond" ItemsSource="{Binding Path=ViewOptions}" SelectionChanged="ComboBox_SelectionChanged">
+            </ComboBox>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding ViewModel.ViewItemOne}">
+                <Ellipse  Height="20" Width="20" Fill="Green"/>
+                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionOne}"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"  Visibility="{Binding ViewModel.ViewItemTwo}">
+                <Ellipse  Height="20" Width="20" Fill="Blue"/>
+                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionTwo}"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding ViewModel.ViewItemThree}">
+                <Ellipse  Height="20" Width="20" Fill="Yellow"/>
+                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionThree}"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding ViewModel.ViewItemFour}">
+                <Ellipse  Height="20" Width="20" Fill="Red"/>
+                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionFour}"></Label>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="10">
+            <Label Content="{Binding Path=ViewModel, Converter={StaticResource graphCountConverter}}"  FontSize="20" FontWeight="Bold"></Label>
+            <Label Content="{Binding Path=Graph.Name}"  FontSize="20" FontWeight="Bold"></Label>
+        </StackPanel>
     </Grid>
 </Window>

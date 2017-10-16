@@ -16,6 +16,7 @@ using CRFBase;
 using CodeBase;
 using System.ComponentModel;
 using System.Threading;
+using System.Globalization;
 
 namespace CRFToolApp
 {
@@ -83,10 +84,67 @@ namespace CRFToolApp
         {
             ViewModel.GraphIndex++;
         }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //var viewOption = ComboBox
+            ViewModel.ChangeViewItems(viewOptionComboBox.SelectedValue as string);
+        }
     }
 
     public class MainViewViewModel : INotifyPropertyChanged
     {
+        public MainViewViewModel()
+        {
+            viewOptions.AddRange("Prediction", "Reference");
+        }
+        private ObservableList<string> viewOptions = new ObservableList<string>();
+
+        public ObservableList<string> ViewOptions
+
+        {
+            get { return viewOptions; }
+            set { viewOptions = value; }
+        }
+        private ObservableList<string> viewItems = new ObservableList<string>();
+
+        public void ChangeViewItems(string viewOption)
+        {
+            ViewItems.Clear();
+            switch (viewOption)
+            {
+                case "Prediction":
+                    ViewItems.AddRange("True Positive", "True Negative", "False Positive", "False Negative");
+                    break;
+                case "Reference":
+                    ViewItems.AddRange("Classification 0", "Classification 1");
+                    break;
+                default:
+                    break;
+            }
+            NotifyPropertyChanged("ViewItems");
+        }
+        public ObservableList<string> ViewItems
+
+        {
+            get { return viewItems; }
+            set { viewItems = value; }
+        }
+        public bool HasViewOptionOne => ViewItems.NotNullOrEmpty();
+        public bool HasViewOptionTwo => (ViewItems.NotNullOrEmpty() && ViewItems.Count > 1);
+        public bool HasViewOptionThree => (ViewItems.NotNullOrEmpty() && ViewItems.Count > 2);
+        public bool HasViewOptionFour => (ViewItems.NotNullOrEmpty() && ViewItems.Count > 3);
+        public string ViewOptionOne => HasViewOptionOne ? ViewItems[0] : string.Empty;
+        public string ViewOptionTwo => HasViewOptionTwo ? ViewItems[1] : string.Empty;
+        public string ViewOptionThree => HasViewOptionThree ? ViewItems[2] : string.Empty;
+        public string ViewOptionFour => HasViewOptionFour ? ViewItems[3] : string.Empty;
+
+        public Visibility ViewItemOne => HasViewOptionOne ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility ViewItemTwo => HasViewOptionTwo ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility ViewItemThree => HasViewOptionThree ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility ViewItemFour => HasViewOptionFour ? Visibility.Visible : Visibility.Collapsed;
+
+
         private ObservableList<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs = new ObservableList<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>();
 
         public ObservableList<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> Graphs
@@ -102,15 +160,30 @@ namespace CRFToolApp
             set
             {
                 graphIndex = value;
+                if (Graphs.NotNullOrEmpty())
+                    graphIndex = (graphIndex + Graphs.Count) % Graphs.Count;
                 NotifyPropertyChanged("Graph");
             }
         }
 
+        private string graphName;
+
+        public string GraphName
+        {
+            get { return Graph.Name; }
+            set
+            {
+                graphName = value;
+                NotifyPropertyChanged("GraphName");
+            }
+        }
+
+        public MainViewViewModel ViewModel => this;
 
 
         public IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> Graph
         {
-            get { return Graphs.NotNullOrEmpty() ? Graphs[graphIndex % Graphs.Count] : null; }
+            get { return Graphs.NotNullOrEmpty() ? Graphs[graphIndex] : null; }
         }
 
         #region INotifyPropertyChanged
@@ -121,9 +194,31 @@ namespace CRFToolApp
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(info));
+                PropertyChanged(this, new PropertyChangedEventArgs("ViewModel"));
             }
         }
 
         #endregion
+    }
+    [ValueConversion(typeof(MainViewViewModel), typeof(string))]
+    class GraphCountConverter : IValueConverter
+    {
+        Color[] colors = new Color[] { Colors.Blue, Colors.Green, Colors.Yellow, Colors.Red, Colors.Orange, Colors.LightGreen, Colors.Black, Colors.WhiteSmoke, Colors.Brown, Colors.AliceBlue, Colors.Lavender, Colors.Indigo, Colors.Gray, Colors.Goldenrod, Colors.LightCyan, Colors.LightPink, Colors.Moccasin };
+
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            var vm = value as MainViewViewModel;
+            if (vm == null)
+                return null;
+
+
+            return vm.GraphIndex + "/" + vm.Graphs.Count;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
