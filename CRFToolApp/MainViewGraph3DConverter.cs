@@ -77,7 +77,7 @@ namespace CRFToolApp
                         break;
                 }
 
-                mesh.AddSphere(center, 3, 8, 4);
+                mesh?.AddSphere(center, 3, 8, 4);
 
             }
 

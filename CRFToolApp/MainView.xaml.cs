@@ -40,16 +40,28 @@ namespace CRFToolApp
             ViewModel.Graphs.Add(request.Graph);
             Embed();
         }
+        I3DEmbeddingControl embeddingControl;
+        Timer timer;
+        bool isRunning = false;
         public void Embed()
         {
-            var EmbeddingControl = EmbeddingX.CreateDefaultEmbeddingControl();
-            var timer = new Timer((obj) => ViewModel.NotifyPropertyChanged("Graph"));
-            timer.Change(0, 25);
+            if (!isRunning)
+            {
+                embeddingControl = EmbeddingX.CreateDefaultEmbeddingControl();
+                timer = new Timer((obj) => ViewModel.NotifyPropertyChanged("Graph"));
+                timer.Change(0, 25);
 
-            EmbeddingControl.Graph = ViewModel.Graph?.Convert((n) => new EDND(1.0, "default", n.Data, 0), (edge) => new EDED(1.0), (g) => new EDGD());
+                embeddingControl.Graph = ViewModel.Graph?.Convert((n) => new EDND(1.0, "default", n.Data, 0), (edge) => new EDED(1.0), (g) => new EDGD());
 
-
-            EmbeddingControl?.Start();
+                embeddingControl?.Start();
+                isRunning = true;
+            }
+            else
+            {
+                embeddingControl.Stop();
+                timer.Dispose();
+                isRunning = false;
+            }
         }
 
         private void button2_Click(object sender, RoutedEventArgs e)
@@ -78,17 +90,22 @@ namespace CRFToolApp
         private void buttonLeft_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.GraphIndex--;
+            if (isRunning)
+                Embed();
         }
 
         private void buttonRight_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.GraphIndex++;
+            if (isRunning)
+                Embed();
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //var viewOption = ComboBox
-            ViewModel.ChangeViewItems(viewOptionComboBox.SelectedValue as string);
+            if (viewOptionComboBox.SelectedValue != null)
+                ViewModel.ChangeViewItems(viewOptionComboBox.SelectedValue as string);
         }
     }
 
@@ -132,7 +149,7 @@ namespace CRFToolApp
             NotifyPropertyChanged("ViewOptions");
         }
 
-        public string ViewOption => viewOptions.NullOrEmpty() ? "" : viewOptions[viewOptionIndex];
+        public string ViewOption => (viewOptions.NullOrEmpty() || viewOptions.Count <= viewOptionIndex || viewOptionIndex < 0) ? "" : viewOptions[viewOptionIndex];
 
 
         public void ChangeViewItems(string viewOption)
