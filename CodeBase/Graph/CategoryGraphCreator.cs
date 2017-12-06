@@ -30,7 +30,6 @@ namespace CodeBase
 
             foreach (var node in erdösGraph.Nodes)
             {
-
                 int category = node.Data.Category;
                 categoryNodes[category].Data.NumberNodes++;
                 categoryNodes[category].Data.Nodes.Add(node);

@@ -32,7 +32,7 @@ namespace CRFToolAppBase
             var requestTraining = new UserDecision("Use Training.", "Load Training Result.");
             requestTraining.Request();
 
-            if (requestTraining.Decision == 0)
+            if (requestTraining.Decision == 0) // use training
             {
                 //    -n characteristics for each node
                 {
@@ -61,17 +61,8 @@ namespace CRFToolAppBase
                     var request = new OLMRequest(OLMVariant.Ising, TrainingData);
                     request.BasisMerkmale.AddRange(Dataset.NodeFeatures);
                     request.BasisMerkmale.AddRange(Dataset.EdgeFeatures);
-
-                    //TODO: loss function auslagern
-                    request.LossFunctionValidation = (a, b) =>
-                    {
-                        var loss = 0.0;
-                        for (int i = 0; i < a.Length; i++)
-                        {
-                            loss += a[i] != b[i] ? 1 : 0;
-                        }
-                        return loss / a.Length;
-                    };
+                    
+                    request.LossFunctionValidation = OLM.LossRatio;
 
                     request.Request();
 

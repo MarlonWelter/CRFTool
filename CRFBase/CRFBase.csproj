@@ -84,6 +84,7 @@
     <Compile Include="OLMEvaluationResult.cs" />
     <Compile Include="OLM\IsingMerkmal.cs" />
     <Compile Include="OLM\KeyuFeaturesOLM.cs" />
+    <Compile Include="OLM\OLM.cs" />
     <Compile Include="OLM\OLMBase.cs" />
     <Compile Include="OLM\OLMTracking.cs" />
     <Compile Include="OLM\OLMManager.cs" />
