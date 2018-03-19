@@ -104,6 +104,27 @@ namespace CRFToolAppBase
                 }
             }
 
+            // remove double edges
+            {
+                var edgesToRemove = new LinkedList<GWEdge<CRFNodeData, CRFEdgeData, CRFGraphData>>();
+                foreach (var graph in EvaluationData)
+                {
+                    foreach (var edge in graph.Edges.ToList())
+                    {
+                        if(graph.Edges.Any(e => (e != edge) && ((e.Foot == edge.Head && e.Head == edge.Foot && e.GWId.CompareTo(edge.GWId) < 0) || (e.Foot == edge.Foot && e.Head == edge.Head && e.GWId.CompareTo(edge.GWId) < 0))))
+                        {
+                            edgesToRemove.Add(edge);
+                            graph.Edges.Remove(edge);
+                        }
+                    }
+                }
+                foreach (var edge in edgesToRemove)
+                {
+                    edge.Foot.Edges.Remove(edge);
+                    edge.Head.Edges.Remove(edge);
+                }
+            }
+
 
             //scores erzeugen
             CreateCRFScores(EvaluationData, Dataset.NodeFeatures, Dataset.Weights);

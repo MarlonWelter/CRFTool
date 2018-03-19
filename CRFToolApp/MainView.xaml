@@ -39,13 +39,10 @@
                 <Image Source="icons/defense.png"></Image>
             </Button>
         </StackPanel>
+        <hlx:HelixViewport3D x:Name="viewport" Grid.Row="1" Grid.ColumnSpan="3" IsHitTestVisible="True" Background="Bisque">
+            <hlx:DefaultLights/>
+            <ModelUIElement3D x:Uid="placementModels" x:Name="placementModels" Model="{Binding ViewModel, Converter={StaticResource viewConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <hlx:HelixViewport3D   Grid.Row="1" Grid.ColumnSpan="3" Name="viewport" IsHitTestVisible="True" Background="Bisque">
-            <hlx:HelixViewport3D.Children>
-                <hlx:DefaultLights></hlx:DefaultLights>
-                <ModelUIElement3D x:Uid="placementModels" x:Name="placementModels" Model="{Binding Path=ViewModel, Converter={StaticResource viewConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-
-            </hlx:HelixViewport3D.Children>
         </hlx:HelixViewport3D>
         <Button Click="buttonLeft_Click" Name="buttonLeft" Grid.Row="1" Background="Transparent">
             <Image Source="icons/arrow-left.png"></Image>
