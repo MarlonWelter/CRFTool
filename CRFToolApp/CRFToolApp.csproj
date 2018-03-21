@@ -187,6 +187,21 @@
   <ItemGroup>
     <Resource Include="icons\arrow-right.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\collection.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\network.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\list.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\best.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\feature.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

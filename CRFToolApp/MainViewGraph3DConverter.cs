@@ -25,7 +25,7 @@ namespace CRFToolApp
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var vm = value as MainViewViewModel;
-            if (vm == null)
+            if (vm == null || vm.Graph == null)
                 return null;
 
             var graph = vm.Graph;

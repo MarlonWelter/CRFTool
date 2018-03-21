@@ -29,6 +29,9 @@ namespace CRFToolApp
         public MainView()
         {
             InitializeComponent();
+            CRFToolAppBase.Build.Do();
+            CRFBase.Build.Do();
+            Build.Do();
             ViewModel = new MainViewViewModel();
             DataContext = ViewModel;
         }
