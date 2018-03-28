@@ -42,7 +42,7 @@
   <ItemGroup>
     <Reference Include="HelixToolkit, Version=2011.10.1.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\HelixToolkit.dll</HintPath>
+      <HintPath>..\..\..\Workspaces\CRFTool\CRFToolApp\CRFToolApp\HelixToolkit.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -69,6 +69,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Build.cs" />
+    <Compile Include="graphDetailsList.xaml.cs">
+      <DependentUpon>graphDetailsList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="graphsList.xaml.cs">
+      <DependentUpon>graphsList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainViewGraph3DConverter.cs" />
     <Compile Include="ShowGraphsManager.cs" />
     <Compile Include="UserDecisionUI.xaml.cs">
@@ -76,9 +82,20 @@
     </Compile>
     <Compile Include="UserDecisionManager.cs" />
     <Compile Include="UserInputManager.cs" />
+    <Compile Include="View3D.xaml.cs">
+      <DependentUpon>View3D.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Workflow_I_1.xaml.cs">
       <DependentUpon>Workflow_I_1.xaml</DependentUpon>
     </Compile>
+    <Page Include="graphDetailsList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="graphsList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="InitModel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -115,6 +132,10 @@
     <Page Include="UserDecisionUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View3D.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Workflow_I_1.xaml">
       <SubType>Designer</SubType>

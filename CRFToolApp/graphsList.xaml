@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="CRFToolApp.graphsList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CRFToolApp"
+             mc:Ignorable="d" 
+             d:DesignHeight="649" d:DesignWidth="1080">
+    <Grid>
+        <DataGrid ItemsSource="{Binding Graphs}" AutoGenerateColumns="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name"  Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Type"  Binding="{Binding GraphStyle}"/>
+                <DataGridTextColumn Header="Nodes"  Binding="{Binding Nodes.Count}"/>
+                <DataGridTextColumn Header="Edges" Binding="{Binding Edges.Count}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

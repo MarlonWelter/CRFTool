@@ -9,7 +9,7 @@ namespace CodeBase
     public static class GWGraphPackageTwo
     {
         private static Random rdm = new Random();
-        public static GWGraph<NodeData, EdgeData, GraphData> CategoryGraph<NodeData, EdgeData, GraphData>(int numberNodes, int categorieCount)
+        public static GWGraph<NodeData, EdgeData, GraphData> CategoryGraph<NodeData, EdgeData, GraphData>(int numberNodes, int categorieCount, Func<NodeData> createNodeData = null)
         {
             var graph = new GWGraph<NodeData, EdgeData, GraphData>("CategoryGraph (" + numberNodes + "," + categorieCount + ")");
             for (int i = 0; i < numberNodes; i++)
@@ -18,6 +18,11 @@ namespace CodeBase
             }
 
             var nodes = graph.Nodes.ToList();
+
+            if(createNodeData != null)
+            {
+                nodes.ForEach(n => n.Data = createNodeData());
+            }
 
             var categories = new List<GWNode<NodeData, EdgeData, GraphData>>[categorieCount];
             var catsTemp = new int[nodes.Count];

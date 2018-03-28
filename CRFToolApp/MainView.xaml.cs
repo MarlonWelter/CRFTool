@@ -33,7 +33,12 @@ namespace CRFToolApp
             CRFBase.Build.Do();
             Build.Do();
             ViewModel = new MainViewViewModel();
+            ViewModel.Graphs.Add(GWGraphPackageTwo.CategoryGraph<CRFNodeData, CRFEdgeData, CRFGraphData>(50, 5, () => new CRFNodeData()));
+            ViewModel.ViewContent = ViewContent.GraphDetails;
             DataContext = ViewModel;
+            graphsListView.ViewModel = ViewModel;
+            view3DView.ViewModel = ViewModel;
+            graphDetailsView.ViewModel = ViewModel;
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
@@ -90,25 +95,33 @@ namespace CRFToolApp
 
         }
 
-        private void buttonLeft_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.GraphIndex--;
-            if (isRunning)
-                Embed();
+
+
+
+
+        private void buttonLeft1_Click(object sender, RoutedEventArgs e)
+        { // shpw graphs
+            ViewModel.ViewContent = ViewContent.GraphsList;
         }
 
-        private void buttonRight_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.GraphIndex++;
-            if (isRunning)
-                Embed();
+        private void buttonLeft2_Click(object sender, RoutedEventArgs e)
+        { // show 3D View
+            ViewModel.ViewContent = ViewContent.View3D;
         }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void buttonLeft3_Click(object sender, RoutedEventArgs e)
+        { // show sample
+            ViewModel.ViewContent = ViewContent.GraphDetails;
+        }
+
+        private void buttonLeft4_Click(object sender, RoutedEventArgs e)
+        { // show viterbi result
+
+        }
+
+        private void buttonLeft5_Click(object sender, RoutedEventArgs e)
         {
-            //var viewOption = ComboBox
-            if (viewOptionComboBox.SelectedValue != null)
-                ViewModel.ChangeViewItems(viewOptionComboBox.SelectedValue as string);
+
         }
     }
 
@@ -142,7 +155,7 @@ namespace CRFToolApp
         {
             viewOptions.Clear();
             viewOptions.AddRange("Prediction", "Reference");
-            if (Graph != null)
+            if (Graph?.Data?.Characteristics != null)
             {
                 foreach (var characteristic in Graph.Data.Characteristics)
                 {
@@ -225,6 +238,22 @@ namespace CRFToolApp
                 NotifyPropertyChanged("GraphName");
             }
         }
+        private ViewContent viewContent;
+
+        public ViewContent ViewContent
+        {
+            get { return viewContent; }
+            set
+            {
+                viewContent = value;
+                NotifyPropertyChanged("ViewContent");
+                NotifyPropertyChanged("GraphsListVisibility");
+                NotifyPropertyChanged("View3DVisibility");
+            }
+        }
+        public Visibility GraphsListVisibility => ViewContent == ViewContent.GraphsList ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility View3DVisibility => ViewContent == ViewContent.View3D ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility GraphDetailsVisibility => ViewContent == ViewContent.GraphDetails ? Visibility.Visible : Visibility.Collapsed;
 
         public MainViewViewModel ViewModel => this;
 
@@ -268,5 +297,11 @@ namespace CRFToolApp
             throw new NotImplementedException();
         }
 
+    }
+    public enum ViewContent
+    {
+        GraphsList,
+        View3D,
+        GraphDetails
     }
 }

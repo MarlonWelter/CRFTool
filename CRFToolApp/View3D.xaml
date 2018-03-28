@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="CRFToolApp.View3D"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:hlx="clr-namespace:HelixToolkit;assembly=HelixToolkit"
+             xmlns:local="clr-namespace:CRFToolApp"
+             mc:Ignorable="d" 
+             d:DesignHeight="649" d:DesignWidth="1080">
+    <UserControl.Resources>
+        <local:MainViewGraph3DConverter  x:Key="viewConverter"/>
+        <local:GraphCountConverter x:Key="graphCountConverter"></local:GraphCountConverter>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="80"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <hlx:HelixViewport3D  Grid.ColumnSpan="3" x:Name="viewport" IsHitTestVisible="True" Background="Bisque">
+            <hlx:DefaultLights/>
+            <ModelUIElement3D x:Uid="placementModels" x:Name="placementModels" Model="{Binding ViewModel, Converter={StaticResource viewConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </hlx:HelixViewport3D>
+        <Button Click="buttonLeft_Click" Name="buttonLeft"  Background="Transparent">
+            <Image Source="icons/arrow-left.png"></Image>
+        </Button>
+        <Button Grid.Column="2" Click="buttonRight_Click" Name="buttonRight"  Background="Transparent">
+            <Image Source="icons/arrow-right.png"></Image>
+        </Button>
+        <StackPanel Grid.Column="1" Margin="10" HorizontalAlignment="Right">
+            <ComboBox Name="viewOptionComboBox" Background="BlanchedAlmond" ItemsSource="{Binding Path=ViewModel.ViewOptions, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="ComboBox_SelectionChanged">
+            </ComboBox>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding ViewModel.ViewItemOne}">
+                <Ellipse  Height="20" Width="20" Fill="Green"/>
+                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionOne}"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"  Visibility="{Binding ViewModel.ViewItemTwo}">
+                <Ellipse  Height="20" Width="20" Fill="Blue"/>
+                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionTwo}"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding ViewModel.ViewItemThree}">
+                <Ellipse  Height="20" Width="20" Fill="Yellow"/>
+                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionThree}"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding ViewModel.ViewItemFour}">
+                <Ellipse  Height="20" Width="20" Fill="Red"/>
+                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionFour}"></Label>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel  Grid.Column="1" HorizontalAlignment="Left" Margin="10">
+            <Label Content="{Binding Path=ViewModel, Converter={StaticResource graphCountConverter}}"  FontSize="20" FontWeight="Bold"></Label>
+            <Label Content="{Binding Path=Graph.Name}"  FontSize="20" FontWeight="Bold"></Label>
+        </StackPanel >
+    </Grid>
+
+</UserControl>

@@ -4,12 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CRFToolApp"
-        xmlns:hlx="clr-namespace:HelixToolkit;assembly=HelixToolkit"
         mc:Ignorable="d"
         Title="MainView" Height="800" Width="1200">
     <Window.Resources>
         <local:MainViewGraph3DConverter  x:Key="viewConverter"/>
-        <local:GraphCountConverter x:Key="graphCountConverter"></local:GraphCountConverter>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -40,55 +38,30 @@
                 <Image Source="icons/defense.png"></Image>
             </Button>
         </StackPanel>
-        <hlx:HelixViewport3D x:Name="viewport" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" IsHitTestVisible="True" Background="Bisque">
-            <hlx:DefaultLights/>
-            <ModelUIElement3D x:Uid="placementModels" x:Name="placementModels" Model="{Binding ViewModel, Converter={StaticResource viewConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        </hlx:HelixViewport3D>
-        <Button Click="buttonLeft_Click" Name="buttonLeft" Grid.Column="1" Grid.Row="1" Background="Transparent">
-            <Image Source="icons/arrow-left.png"></Image>
-        </Button>
-        <Button Click="buttonRight_Click" Name="buttonRight" Grid.Row="1" Grid.Column="3" Background="Transparent">
-            <Image Source="icons/arrow-right.png"></Image>
-        </Button>
-        <StackPanel Grid.Row="1" Grid.Column="2" Margin="10" HorizontalAlignment="Right">
-            <ComboBox Name="viewOptionComboBox" Background="BlanchedAlmond" ItemsSource="{Binding Path=ViewModel.ViewOptions, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="ComboBox_SelectionChanged">
-            </ComboBox>
-            <StackPanel Orientation="Horizontal" Visibility="{Binding ViewModel.ViewItemOne}">
-                <Ellipse  Height="20" Width="20" Fill="Green"/>
-                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionOne}"></Label>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal"  Visibility="{Binding ViewModel.ViewItemTwo}">
-                <Ellipse  Height="20" Width="20" Fill="Blue"/>
-                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionTwo}"></Label>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Visibility="{Binding ViewModel.ViewItemThree}">
-                <Ellipse  Height="20" Width="20" Fill="Yellow"/>
-                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionThree}"></Label>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Visibility="{Binding ViewModel.ViewItemFour}">
-                <Ellipse  Height="20" Width="20" Fill="Red"/>
-                <Label FontSize="20" FontWeight="Bold" Content="{Binding ViewModel.ViewOptionFour}"></Label>
-            </StackPanel>
+        <StackPanel Name="ContentPanel" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3">
+            <local:View3D x:Name="view3DView" Height="649" Visibility="{Binding View3DVisibility}"></local:View3D>
+            <local:graphsList x:Name="graphsListView" Height="649"  Visibility="{Binding GraphsListVisibility}"></local:graphsList>
+            <local:graphDetailsList x:Name="graphDetailsView" Height="649"  Visibility="{Binding GraphDetailsVisibility}">
+            </local:graphDetailsList>
         </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" Margin="10">
-            <Label Content="{Binding Path=ViewModel, Converter={StaticResource graphCountConverter}}"  FontSize="20" FontWeight="Bold"></Label>
-            <Label Content="{Binding Path=Graph.Name}"  FontSize="20" FontWeight="Bold"></Label>
-        </StackPanel >
+        
+       
+        
         <StackPanel Grid.Row="1" Grid.Column="0" Background="Beige">
-            <Button Name="buttonLeft1" Background="Transparent" Padding="10">
+            <Button Name="buttonLeft1" Background="Transparent" Padding="10" Click="buttonLeft1_Click">
                 <Image Source="icons/collection.png"></Image>
             </Button>
-            <Button Name="buttonLeft2" Background="Transparent"  Padding="10">
+            <Button Name="buttonLeft2" Background="Transparent"  Padding="10" Click="buttonLeft2_Click">
                 <Image Source="icons/network.png"></Image>
             </Button>
-            <Button Name="buttonLeft3" Background="Transparent"  Padding="10">
+            <Button Name="buttonLeft3" Background="Transparent"  Padding="10" Click="buttonLeft3_Click">
                 <Image Source="icons/list.png"></Image>
             </Button>
-            <Button Name="buttonLeft4" Background="Transparent"  Padding="10">
+            <Button Name="buttonLeft4" Background="Transparent"  Padding="10" Click="buttonLeft4_Click">
                 <Image Source="icons/best.png"></Image>
             </Button>
-            <Button Name="buttonLeft5" Background="Transparent"  Padding="10">
+            <Button Name="buttonLeft5" Background="Transparent"  Padding="10" Click="buttonLeft5_Click">
                 <Image Source="icons/feature.png"></Image>
             </Button>
         </StackPanel>
