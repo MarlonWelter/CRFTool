@@ -6,6 +6,9 @@
             xmlns:local="clr-namespace:CRFToolApp"
              mc:Ignorable="d" 
              d:DesignHeight="649" d:DesignWidth="1080">
+    <UserControl.Resources>
+        <local:ArrayToStringConverter x:Key="arrayConverter"></local:ArrayToStringConverter>
+    </UserControl.Resources>
     <Grid>
         <DataGrid ItemsSource="{Binding Graph.Nodes}" AutoGenerateColumns="False" >
             <DataGrid.Columns>
@@ -13,8 +16,8 @@
                 <DataGridTextColumn Header="ReferenceLabel"  Binding="{Binding Data.ReferenceLabel}"/>
                 <DataGridTextColumn Header="AssignedLabel"  Binding="{Binding Data.AssignedLabel}"/>
                 <DataGridTextColumn Header="Observation"  Binding="{Binding Data.Observation}"/>
-                <DataGridTextColumn Header="Characteristic"  Binding="{Binding Data.Characteristic}"/>
-                <DataGridTextColumn Header="Scores"  Binding="{Binding Data.Scores}"/>
+                <DataGridTextColumn Header="Characteristic"  Binding="{Binding Data.Characteristics, Converter={ StaticResource arrayConverter}}"/>
+                <DataGridTextColumn Header="Scores"  Binding="{Binding Data.Scores, Converter={ StaticResource arrayConverter}}"/>
             </DataGrid.Columns>
         </DataGrid>
             

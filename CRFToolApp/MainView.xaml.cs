@@ -75,7 +75,7 @@ namespace CRFToolApp
         private void button2_Click(object sender, RoutedEventArgs e)
         {
             var graph = ViewModel.Graph;
-            if (graph == null) return;
+            if (graph?.Data == null) return;
             var request = new SolveInference(graph, null, graph.Data.NumberOfLabels);
             request.Request();
             foreach (var item in graph.Nodes)
@@ -92,12 +92,15 @@ namespace CRFToolApp
 
         private void button4_Click(object sender, RoutedEventArgs e)
         {
+            // add characteristic and score
 
+            var graph = ViewModel.Graph;
+            if (graph?.Data == null) return;
+            
+            RandomData.AddDefault(graph);
+
+            ViewModel.NotifyPropertyChanged("Graph");
         }
-
-
-
-
 
         private void buttonLeft1_Click(object sender, RoutedEventArgs e)
         { // shpw graphs
