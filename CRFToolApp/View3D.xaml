@@ -6,12 +6,13 @@
              xmlns:hlx="clr-namespace:HelixToolkit;assembly=HelixToolkit"
              xmlns:local="clr-namespace:CRFToolApp"
              mc:Ignorable="d" 
-             d:DesignHeight="649" d:DesignWidth="1080">
+             d:DesignHeight="649" d:DesignWidth="1080"
+             >
     <UserControl.Resources>
         <local:MainViewGraph3DConverter  x:Key="viewConverter"/>
         <local:GraphCountConverter x:Key="graphCountConverter"></local:GraphCountConverter>
     </UserControl.Resources>
-    <Grid>
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>

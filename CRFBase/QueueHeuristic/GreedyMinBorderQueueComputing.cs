@@ -100,8 +100,6 @@ namespace CRFBase
                         Console.WriteLine("Inkonsistenz in Queue-Berechnung!");
                     }
                 }
-
-
             }
             if (maximumBorder < 22)
             {

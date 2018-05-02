@@ -34,12 +34,18 @@ namespace CRFToolApp
             Build.Do();
             ViewModel = new MainViewViewModel();
             ViewModel.Graphs.Add(GWGraphPackageTwo.CategoryGraph<CRFNodeData, CRFEdgeData, CRFGraphData>(50, 5, () => new CRFNodeData()));
-            ViewModel.ViewContent = ViewContent.GraphDetails;
+            //ViewModel.ViewContent = ViewContent.GraphDetails;
             DataContext = ViewModel;
             graphsListView.ViewModel = ViewModel;
             view3DView.ViewModel = ViewModel;
             graphDetailsView.ViewModel = ViewModel;
+            settings.DataContext = ViewModel;
         }
+
+        private graphsList graphsListView = new graphsList();
+        private View3D view3DView = new View3D();
+        private graphDetailsList graphDetailsView = new graphDetailsList();
+        private Settings settings = new Settings();
 
         private void button1_Click(object sender, RoutedEventArgs e)
         { // load data
@@ -104,17 +110,26 @@ namespace CRFToolApp
 
         private void buttonLeft1_Click(object sender, RoutedEventArgs e)
         { // shpw graphs
-            ViewModel.ViewContent = ViewContent.GraphsList;
+         /*   ViewModel.ViewContent = ViewContent.GraphsList;*/
+            //contentBox.Content = graphsListView;
+            ContentPanel.Children.Clear();
+            ContentPanel.Children.Add(graphsListView);
         }
 
         private void buttonLeft2_Click(object sender, RoutedEventArgs e)
         { // show 3D View
-            ViewModel.ViewContent = ViewContent.View3D;
+            //ViewModel.ViewContent = ViewContent.View3D;
+            //contentBox.Content = view3DView;
+            ContentPanel.Children.Clear();
+            ContentPanel.Children.Add(view3DView);
         }
 
         private void buttonLeft3_Click(object sender, RoutedEventArgs e)
         { // show sample
-            ViewModel.ViewContent = ViewContent.GraphDetails;
+            //ViewModel.ViewContent = ViewContent.GraphDetails;
+            //contentBox.Content = graphDetailsView;
+            ContentPanel.Children.Clear();
+            ContentPanel.Children.Add(graphDetailsView);
         }
 
         private void buttonLeft4_Click(object sender, RoutedEventArgs e)
@@ -123,8 +138,11 @@ namespace CRFToolApp
         }
 
         private void buttonLeft5_Click(object sender, RoutedEventArgs e)
-        {
-
+        { // settings
+            //ViewModel.ViewContent = ViewContent.Settings;
+            //contentBox.Content = graphsListView;
+            ContentPanel.Children.Clear();
+            ContentPanel.Children.Add(settings);
         }
     }
 
@@ -241,22 +259,23 @@ namespace CRFToolApp
                 NotifyPropertyChanged("GraphName");
             }
         }
-        private ViewContent viewContent;
+        //private ViewContent viewContent;
 
-        public ViewContent ViewContent
-        {
-            get { return viewContent; }
-            set
-            {
-                viewContent = value;
-                NotifyPropertyChanged("ViewContent");
-                NotifyPropertyChanged("GraphsListVisibility");
-                NotifyPropertyChanged("View3DVisibility");
-            }
-        }
-        public Visibility GraphsListVisibility => ViewContent == ViewContent.GraphsList ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility View3DVisibility => ViewContent == ViewContent.View3D ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility GraphDetailsVisibility => ViewContent == ViewContent.GraphDetails ? Visibility.Visible : Visibility.Collapsed;
+        //public ViewContent ViewContent
+        //{
+        //    get { return viewContent; }
+        //    set
+        //    {
+        //        viewContent = value;
+        //        NotifyPropertyChanged("ViewContent");
+        //        NotifyPropertyChanged("GraphsListVisibility");
+        //        NotifyPropertyChanged("View3DVisibility");
+        //    }
+        //}
+        //public Visibility GraphsListVisibility => ViewContent == ViewContent.GraphsList ? Visibility.Visible : Visibility.Collapsed;
+        //public Visibility View3DVisibility => ViewContent == ViewContent.View3D ? Visibility.Visible : Visibility.Collapsed;
+        //public Visibility GraphDetailsVisibility => ViewContent == ViewContent.GraphDetails ? Visibility.Visible : Visibility.Collapsed;
+        //public Visibility SettingsVisibility => ViewContent == ViewContent.Settings ? Visibility.Visible : Visibility.Collapsed;
 
         public MainViewViewModel ViewModel => this;
 
@@ -305,6 +324,7 @@ namespace CRFToolApp
     {
         GraphsList,
         View3D,
-        GraphDetails
+        GraphDetails,
+        Settings
     }
 }
