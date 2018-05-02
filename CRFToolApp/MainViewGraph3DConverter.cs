@@ -60,7 +60,14 @@ namespace CRFToolApp
                 switch (vm.ViewOption)
                 {
                     case "Prediction":
-                        mesh = meshes[node.Data.AssignedLabel % colors.Length];
+                        if (node.Data.AssignedLabel == 1 && node.Data.ReferenceLabel == 1)
+                            mesh = meshes[0 % colors.Length];
+                        else if (node.Data.AssignedLabel == 0 && node.Data.ReferenceLabel == 0)
+                            mesh = meshes[1 % colors.Length];
+                        else if (node.Data.AssignedLabel == 0 && node.Data.ReferenceLabel == 1)
+                            mesh = meshes[2 % colors.Length];
+                        else
+                            mesh = meshes[3 % colors.Length];
                         break;
                     case "Reference":
                         mesh = meshes[node.Data.ReferenceLabel % colors.Length];

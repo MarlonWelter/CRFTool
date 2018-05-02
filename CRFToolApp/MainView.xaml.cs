@@ -144,6 +144,18 @@ namespace CRFToolApp
             ContentPanel.Children.Clear();
             ContentPanel.Children.Add(settings);
         }
+
+        private void buttonViterbi_Click(object sender, RoutedEventArgs e)
+        { // run viterbi
+            var request = new SolveInference(ViewModel.Graph, null, 2);
+            request.Request();
+
+            // assign viterbi result node.assignedlabel
+            foreach (var node in ViewModel.Graph.Nodes)
+            {
+                node.Data.AssignedLabel = request.Solution.Labeling[node.GraphId];
+            }
+        }
     }
 
     public class MainViewViewModel : INotifyPropertyChanged

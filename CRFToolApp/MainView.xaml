@@ -37,6 +37,9 @@
             <Button Name="button4" Click="button4_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent">
                 <Image Source="icons/defense.png"></Image>
             </Button>
+            <Button Name="buttonViterbi" Click="buttonViterbi_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent">
+                <Image Source="icons/action.png"></Image>
+            </Button>
         </StackPanel>
         <DockPanel
             Grid.Row="1"

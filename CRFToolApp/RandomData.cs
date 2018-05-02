@@ -14,6 +14,8 @@ namespace CRFToolApp
         {
             AddCharacteristic(graph);
             AddScore(graph);
+            AddObservation(graph);
+            AddReference(graph);
         }
         public static void AddCharacteristic(IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph)
         {
@@ -27,6 +29,24 @@ namespace CRFToolApp
             foreach (var node in graph.Nodes)
             {
                 node.Data.Scores = new double[] { random.NextDouble(), random.NextDouble() };
+            }
+            foreach (var edge in graph.Edges)
+            {
+                edge.Data.Scores = new double[,] { { random.NextDouble(), random.NextDouble() } , { random.NextDouble(), random.NextDouble() } };
+            }
+        }
+        public static void AddObservation(IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph)
+        {
+            foreach (var node in graph.Nodes)
+            {
+                node.Data.Observation = random.Next(2);
+            }
+        }
+        public static void AddReference(IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph)
+        {
+            foreach (var node in graph.Nodes)
+            {
+                node.Data.ReferenceLabel = random.Next(2);
             }
         }
     }
