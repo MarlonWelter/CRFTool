@@ -17,6 +17,7 @@ using CodeBase;
 using System.ComponentModel;
 using System.Threading;
 using System.Globalization;
+using System.IO;
 
 namespace CRFToolApp
 {
@@ -102,7 +103,7 @@ namespace CRFToolApp
 
             var graph = ViewModel.Graph;
             if (graph?.Data == null) return;
-            
+
             RandomData.AddDefault(graph);
 
             ViewModel.NotifyPropertyChanged("Graph");
@@ -110,8 +111,8 @@ namespace CRFToolApp
 
         private void buttonLeft1_Click(object sender, RoutedEventArgs e)
         { // shpw graphs
-         /*   ViewModel.ViewContent = ViewContent.GraphsList;*/
-            //contentBox.Content = graphsListView;
+          /*   ViewModel.ViewContent = ViewContent.GraphsList;*/
+          //contentBox.Content = graphsListView;
             ContentPanel.Children.Clear();
             ContentPanel.Children.Add(graphsListView);
         }
@@ -155,6 +156,13 @@ namespace CRFToolApp
             {
                 node.Data.AssignedLabel = request.Solution.Labeling[node.GraphId];
             }
+        }
+
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        { // save current graph.
+            Directory.CreateDirectory("Output\\");
+
+            JSONX.SaveAsJSON(ViewModel.Graph, "Output\\" + ViewModel.GraphName + ".json");
         }
     }
 

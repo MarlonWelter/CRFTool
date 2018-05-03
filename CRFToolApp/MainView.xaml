@@ -28,6 +28,9 @@
             <Button Name="button1" Click="button1_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent">
                 <Image Source="icons/download.png"></Image>
             </Button>
+            <Button Name="buttonSave" Click="buttonSave_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent">
+                <Image Source="icons/save.png"></Image>
+            </Button>
             <Button Name="button2" Click="button2_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent">
                 <Image Source="icons/info.png"></Image>
             </Button>
