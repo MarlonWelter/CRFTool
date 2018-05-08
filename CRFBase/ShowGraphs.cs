@@ -9,6 +9,6 @@ namespace CRFBase
 {
     public class ShowGraphs : GWRequest<ShowGraphs>
     {
-        public List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> Graphs { get; set; } = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>();
+        public List<GWGraph<SGLNodeData, SGLEdgeData, SGLGraphData>> Graphs { get; set; } = new List<GWGraph<SGLNodeData, SGLEdgeData, SGLGraphData>>();
     }
 }

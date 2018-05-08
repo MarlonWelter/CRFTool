@@ -143,9 +143,9 @@ namespace CRFToolAppBase
 
                 //show results in 3D Viewer
                 {
-                    var request = new ShowGraphs();
-                    request.Graphs = EvaluationData;
-                    request.Request();
+                    //var request = new ShowGraphs();
+                    //request.Graphs = EvaluationData;
+                    //request.Request();
                 }
             }
             //   - Give Sample with MCMC

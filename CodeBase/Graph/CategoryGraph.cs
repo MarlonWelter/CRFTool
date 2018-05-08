@@ -7,6 +7,15 @@ using System.Threading.Tasks;
 
 namespace CodeBase
 {
+
+    public interface ICategoryGraph
+    {
+        int NumberCategories { get; set; }
+    }
+    public interface ICategoryNodeData
+    {
+        int Category { get; set; }
+    }
     public class CategoryGraph : GWGraph<CGND, CGED, CGGD>
     {
     }

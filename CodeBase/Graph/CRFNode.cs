@@ -14,8 +14,9 @@ namespace CodeBase
         int[] ReferenceLabeling { get; set; }
         int[] AssginedLabeling { get; set; }
     }
-    public class CRFGraphData : ICRFGraphData
+    public class CRFGraphData : ICRFGraphData, ICategoryGraph
     {
+        public int NumberCategories { get; set; }
         public int NumberOfLabels { get; set; }
         public List<int[]> Sample { get; set; }
         public int[] ReferenceLabeling { get; set; }
@@ -29,7 +30,7 @@ namespace CodeBase
     {
         public int CoreResidues { get; set; }
     }
-    public interface ICRFNodeData : ICoordinated
+    public interface ICRFNodeData : ICoordinated, ICategoryNodeData
     {
         double[] Characteristics { get; set; }
         int UnchosenNeighboursTemp { get; set; }
@@ -91,6 +92,8 @@ namespace CodeBase
         public double Z { get; set; }
         public int CommunityId { get; set; }
         public int Labelling { get; set; }
+
+        public int Category { get; set; }
     }
     public class CRFNodeDataBinary : ICRFNodeDataBinary
     {

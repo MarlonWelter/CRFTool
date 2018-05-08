@@ -13,7 +13,7 @@ namespace CRFToolAppBase
     {
         protected override void OnRequest(LoadCRFGraph request)
         {
-            var graph = default(GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>);
+            var graph = default(IGWGraph<SGLNodeData, SGLEdgeData, SGLGraphData>);
 
             {
                 OpenFileDialog openFileDialog1 = new OpenFileDialog();
@@ -22,7 +22,7 @@ namespace CRFToolAppBase
 
                 if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    graph = JSONX.LoadFromJSON<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>(openFileDialog1.FileName);
+                    graph = JSONX.LoadFromJSON<GWGraph<SGLNodeData, SGLEdgeData, SGLGraphData>>(openFileDialog1.FileName);
                 }
             }
             int nodeCounter = 0;
@@ -38,6 +38,6 @@ namespace CRFToolAppBase
 
     public class LoadCRFGraph : GWRequest<LoadCRFGraph>
     {
-        public GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> Graph { get; set; }
+        public IGWGraph<SGLNodeData, SGLEdgeData, SGLGraphData> Graph { get; set; }
     }
 }

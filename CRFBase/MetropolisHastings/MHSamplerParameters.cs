@@ -37,4 +37,23 @@ namespace CRFBase
 
 
     }
+
+    public class MHSampler2Parameters
+    {
+
+        public CRFGraph Graph { get; set; }
+
+        public int NumberChains { get; set; } = MHSamplerDefaultValues.NumberChains;
+
+        public int PreRunLength { get; set; } = MHSamplerDefaultValues.PreRunLength;
+        public int RunLength { get; set; } = MHSamplerDefaultValues.PreRunLength;
+
+        public MHSampler2StartPoint MHSampler2StartPoint { get; set; } = MHSampler2StartPoint.Random;
+    }
+
+    public enum MHSampler2StartPoint
+    {
+        Random,
+        Viterbi
+    }
 }

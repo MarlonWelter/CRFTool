@@ -112,8 +112,6 @@ namespace CRFBase
                 }
             }
 
-
-
             //iterate over prerun
             for(int i = 0; i < parameters.PreRunLength; i++)
             {
@@ -122,9 +120,6 @@ namespace CRFBase
                     ChangePosition(chain, 0);
                 }
             }
-
-
-
 
             //test if chains are mixed
             bool chainsHaveMixed = false;

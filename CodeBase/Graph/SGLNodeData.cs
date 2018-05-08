@@ -8,7 +8,6 @@ namespace CodeBase
 {
     public class SGLNodeData : CRFNodeData
     {
-        public int Category { get; set; }
         public int LabelTemp { get; set; }
     }
     public class SGLEdgeData : CRFEdgeData, IEdge3DInfo
@@ -17,7 +16,7 @@ namespace CodeBase
     }
     public class SGLGraphData : CRFGraphData
     {
-        public int NumberCategories { get; set; }
+        public int NumberCategories { get; set; } = 1;
         public GWGraph<CGNodeData, CGEdgeData, CGGraphData> CategoryGraph { get; set; }
     }
 

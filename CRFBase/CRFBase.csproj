@@ -80,6 +80,7 @@
     <Compile Include="MetropolisHastings\ExampleRunSoftwareGraphLearning.cs" />
     <Compile Include="MetropolisHastings\LocalResult.cs" />
     <Compile Include="MetropolisHastings\MHSampler.cs" />
+    <Compile Include="MetropolisHastings\MHSampler2.cs" />
     <Compile Include="MetropolisHastings\MHSamplerParameters.cs" />
     <Compile Include="OLMEvaluationResult.cs" />
     <Compile Include="OLM\IsingMerkmal.cs" />

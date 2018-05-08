@@ -35,7 +35,7 @@ namespace CRFToolApp
             CRFBase.Build.Do();
             Build.Do();
             ViewModel = new MainViewViewModel();
-            ViewModel.Graphs.Add(GWGraphPackageTwo.CategoryGraph<CRFNodeData, CRFEdgeData, CRFGraphData>(50, 5, () => new CRFNodeData()));
+            ViewModel.Graphs.Add(GWGraphPackageTwo.CategoryGraph<SGLNodeData, SGLEdgeData, SGLGraphData>(50, 5, () => new SGLNodeData()));
             //ViewModel.ViewContent = ViewContent.GraphDetails;
             DataContext = ViewModel;
             graphsListView.ViewModel = ViewModel;
@@ -170,8 +170,14 @@ namespace CRFToolApp
 
         private void buttonMCMC_Click(object sender, RoutedEventArgs e)
         {// run mcmc
-            var parameters = new MHSamplerParameters();
-            var sampler = new MHSampler();
+            var parameters = new MHSampler2Parameters();
+            parameters.Graph = ViewModel.Graph;
+            parameters.NumberChains = 10;
+            parameters.PreRunLength = 100;
+            parameters.MHSampler2StartPoint = MHSampler2StartPoint.Random;
+            parameters.RunLength = 100;
+
+            var sampler = new MHSampler2();
             sampler.Do(parameters);
 
             ViewModel.Graph.Data.Sample = sampler.FinalSample;
@@ -267,9 +273,9 @@ namespace CRFToolApp
         public Visibility ViewItemFour => HasViewOptionFour ? Visibility.Visible : Visibility.Collapsed;
 
 
-        private ObservableList<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs = new ObservableList<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>();
+        private ObservableList<IGWGraph<SGLNodeData, SGLEdgeData, SGLGraphData>> graphs = new ObservableList<IGWGraph<SGLNodeData, SGLEdgeData, SGLGraphData>>();
 
-        public ObservableList<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> Graphs
+        public ObservableList<IGWGraph<SGLNodeData, SGLEdgeData, SGLGraphData>> Graphs
         {
             get { return graphs; }
         }
@@ -324,7 +330,7 @@ namespace CRFToolApp
         }
 
 
-        public IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> Graph
+        public IGWGraph<SGLNodeData, SGLEdgeData, SGLGraphData> Graph
         {
             get { return Graphs.NotNullOrEmpty() ? Graphs[graphIndex] : null; }
         }

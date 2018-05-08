@@ -10,12 +10,13 @@ namespace CodeBase
     {
         private static Random rdm = new Random();
         public static GWGraph<NodeData, EdgeData, GraphData> CategoryGraph<NodeData, EdgeData, GraphData>(int numberNodes, int categorieCount, Func<NodeData> createNodeData = null)
-            where NodeData : new()
+            where NodeData : ICategoryNodeData, new()
             where EdgeData : new()
-            where GraphData : new()
+            where GraphData : ICategoryGraph, new()
         {
             var graph = new GWGraph<NodeData, EdgeData, GraphData>("CategoryGraph (" + numberNodes + "," + categorieCount + ")");
             graph.Data = new GraphData();
+            graph.Data.NumberCategories = categorieCount;
             for (int i = 0; i < numberNodes; i++)
             {
                 graph.CreateNode();
@@ -41,6 +42,7 @@ namespace CodeBase
                 var category = rdm.Next(categorieCount);
                 catsTemp[i] = category;
                 categories[category].Add(nodes[i]);
+                nodes[i].Data.Category = category;
             }
 
             for (int i = 0; i < numberNodes; i++)
