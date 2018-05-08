@@ -18,6 +18,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Globalization;
 using System.IO;
+using CRFBase.GibbsSampling;
 
 namespace CRFToolApp
 {
@@ -151,6 +152,8 @@ namespace CRFToolApp
             var request = new SolveInference(ViewModel.Graph, null, 2);
             request.Request();
 
+            ViewModel.Graph.Data.Viterbi = request.Solution.Labeling;
+
             // assign viterbi result node.assignedlabel
             foreach (var node in ViewModel.Graph.Nodes)
             {
@@ -163,6 +166,24 @@ namespace CRFToolApp
             Directory.CreateDirectory("Output\\");
 
             JSONX.SaveAsJSON(ViewModel.Graph, "Output\\" + ViewModel.GraphName + ".json");
+        }
+
+        private void buttonMCMC_Click(object sender, RoutedEventArgs e)
+        {// run mcmc
+            var parameters = new MHSamplerParameters();
+            var sampler = new MHSampler();
+            sampler.Do(parameters);
+
+            ViewModel.Graph.Data.Sample = sampler.FinalSample;
+
+            if (ViewModel.Graph.Data.Sample.NotNullOrEmpty())
+            {
+                // assign viterbi result node.assignedlabel
+                foreach (var node in ViewModel.Graph.Nodes)
+                {
+                    node.Data.AssignedLabel = ViewModel.Graph.Data.Sample[0][node.GraphId];
+                }
+            }
         }
     }
 
@@ -279,25 +300,28 @@ namespace CRFToolApp
                 NotifyPropertyChanged("GraphName");
             }
         }
-        //private ViewContent viewContent;
-
-        //public ViewContent ViewContent
-        //{
-        //    get { return viewContent; }
-        //    set
-        //    {
-        //        viewContent = value;
-        //        NotifyPropertyChanged("ViewContent");
-        //        NotifyPropertyChanged("GraphsListVisibility");
-        //        NotifyPropertyChanged("View3DVisibility");
-        //    }
-        //}
-        //public Visibility GraphsListVisibility => ViewContent == ViewContent.GraphsList ? Visibility.Visible : Visibility.Collapsed;
-        //public Visibility View3DVisibility => ViewContent == ViewContent.View3D ? Visibility.Visible : Visibility.Collapsed;
-        //public Visibility GraphDetailsVisibility => ViewContent == ViewContent.GraphDetails ? Visibility.Visible : Visibility.Collapsed;
-        //public Visibility SettingsVisibility => ViewContent == ViewContent.Settings ? Visibility.Visible : Visibility.Collapsed;
-
         public MainViewViewModel ViewModel => this;
+
+        private int samplePointer;
+
+        public int SamplePointer
+        {
+            get { return samplePointer; }
+            set {
+                if (ViewModel?.Graph?.Data?.Sample?.NullOrEmpty() ?? false)
+                    return ;
+
+                samplePointer = Math.Max(0, value % ViewModel.Graph.Data.Sample.Count);
+
+                // assign viterbi result node.assignedlabel
+                foreach (var node in ViewModel.Graph.Nodes)
+                {
+                    node.Data.AssignedLabel = ViewModel.Graph.Data.Sample[SamplePointer][node.GraphId];
+                }
+
+                NotifyPropertyChanged("SamplePointer");
+            }
+        }
 
 
         public IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> Graph

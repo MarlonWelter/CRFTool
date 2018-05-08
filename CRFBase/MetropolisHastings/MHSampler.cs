@@ -12,9 +12,10 @@ namespace CRFBase
     public class MHSampler
     {
 
-        private List<CRFGraph> Chains { get; set; }
+        public List<CRFGraph> Chains { get; private set; }
 
-        private List<int[]>[] TestSamples;
+        public List<int[]> FinalSample { get; private set; }
+        public List<int[]>[] TestSamples { get; private set; }
 
         private List<int[]> Combinations;
 
@@ -163,7 +164,9 @@ namespace CRFBase
                 }
                 time++;
             }
-        
+
+            // shuffle all samples into one sample.
+            FinalSample = TestSamples.SelectMany(s => s).RandomizeOrder().ToList();
 
             Log.Post("Chains may have mixed. ");
             Log.Post("Number of Chains: " + numberChains);

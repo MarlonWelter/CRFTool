@@ -19,6 +19,7 @@ namespace CodeBase
         public int NumberOfLabels { get; set; }
         public List<int[]> Sample { get; set; }
         public int[] ReferenceLabeling { get; set; }
+        public int[] Viterbi { get; set; }
         public int[] AssginedLabeling { get; set; }
         public string[] Characteristics { get; set; }
         //wird momentan nicht wirklich benutzt, da auch der CRFNodeData eien observation enthält. Kann eventuell entfernt werden.

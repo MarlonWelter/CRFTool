@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CodeBase;
 
 namespace CRFToolApp
 {
@@ -45,6 +46,24 @@ namespace CRFToolApp
             //var viewOption = ComboBox
             if (viewOptionComboBox.SelectedValue != null)
                 ViewModel.ChangeViewItems(viewOptionComboBox.SelectedValue as string);
+        }
+
+        private void buttonViterbi_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var node in ViewModel.Graph.Nodes)
+            {
+                node.Data.AssignedLabel = ViewModel.Graph.Data.Viterbi[node.GraphId];
+            }
+        }
+
+        private void buttonNextSample_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SamplePointer++;
+        }
+
+        private void buttonPrevSample_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SamplePointer--;
         }
     }
 }

@@ -16,6 +16,8 @@ namespace CRFToolApp
             AddScore(graph);
             AddObservation(graph);
             AddReference(graph);
+            AddViterbi(graph);
+            AddSample(graph);
         }
         public static void AddCharacteristic(IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph)
         {
@@ -48,6 +50,29 @@ namespace CRFToolApp
             {
                 node.Data.ReferenceLabel = random.Next(2);
             }
+        }
+
+        public static void AddViterbi(IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph)
+        {
+            graph.Data.Viterbi = new int[graph.Nodes.Count()];
+            foreach (var node in graph.Nodes)
+            {
+                graph.Data.Viterbi[node.GraphId] = random.Next(2);
+            }
+        }
+
+        public static void AddSample(IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph)
+        {
+            graph.Data.Sample = new List<int[]>();
+            for (int i = 0; i < 100; i++)
+            {
+                graph.Data.Sample.Add(new int[graph.Nodes.Count()]); 
+                foreach (var node in graph.Nodes)
+                {
+                    graph.Data.Sample[i][node.GraphId] = random.Next(2);
+                }
+            }
+            
         }
     }
 }
