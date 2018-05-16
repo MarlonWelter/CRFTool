@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <local:MainViewGraph3DConverter  x:Key="viewConverter"/>
         <local:GraphCountConverter x:Key="graphCountConverter"></local:GraphCountConverter>
+        <local:SampleCountConverter x:Key="sampleCountConverter"></local:SampleCountConverter>
     </UserControl.Resources>
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
@@ -59,6 +60,7 @@
                 <Image Source="icons/arrow-right.png"></Image>
                 </Button>
             </StackPanel>
+            <Label FontSize="14" Content="{Binding Path=ViewModel, Converter={StaticResource sampleCountConverter}}"></Label>
             <Button Grid.Column="2" Click="buttonViterbi_Click" Name="buttonViterbi"  Background="Transparent" Width="40" HorizontalAlignment="Left">
                 <Image Source="icons/best.png"></Image>
             </Button>

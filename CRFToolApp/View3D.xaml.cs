@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CodeBase;
+using System.Globalization;
 
 namespace CRFToolApp
 {
@@ -64,6 +65,24 @@ namespace CRFToolApp
         private void buttonPrevSample_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.SamplePointer--;
+        }
+    }
+
+    [ValueConversion(typeof(MainViewViewModel), typeof(string))]
+    class SampleCountConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var vm = value as MainViewViewModel;
+            if (vm?.Graph?.Data?.Sample == null)
+                return "Sample 0/0";
+
+            return "Sample " + vm.SamplePointer + "/" + vm.Graph.Data.Sample.Count;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="CRFToolApp.ViterbiView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CRFToolApp"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <local:ArrayToStringConverter x:Key="arrayConverter"></local:ArrayToStringConverter>
+    </UserControl.Resources>
+    <DockPanel>
+        <Grid Height="90" DockPanel.Dock="Top" Background="AliceBlue">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label>Graphname</Label>
+            <Label Grid.Row="1">Nodes</Label>
+            <Label Grid.Row="2">TP</Label>
+            <Label Grid.Row="0" Grid.Column="2">TN</Label>
+            <Label Grid.Row="1" Grid.Column="2">FP</Label>
+            <Label Grid.Row="2" Grid.Column="2">FN</Label>
+            <Label Grid.Row="0" Grid.Column="1" Content="{Binding Graph.Name}"></Label>
+            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Graph.Nodes.Count}"></Label>
+            <Label Grid.Row="2" Grid.Column="1" Content="{Binding Graph.Name}"></Label>
+            <Label Grid.Row="0" Grid.Column="3" Content="{Binding Graph.Name}"></Label>
+            <Label Grid.Row="1" Grid.Column="3" Content="{Binding Graph.Name}"></Label>
+            <Label Grid.Row="2" Grid.Column="3" Content="{Binding Graph.Name}"></Label>
+        </Grid>
+        <DataGrid ItemsSource="{Binding Graph.Nodes}" AutoGenerateColumns="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id"  Binding="{Binding Data.Id}"/>
+                <DataGridTextColumn Header="ReferenceLabel"  Binding="{Binding Data.ReferenceLabel}"/>
+                <DataGridTextColumn Header="AssignedLabel"  Binding="{Binding Data.AssignedLabel}"/>
+                <DataGridTextColumn Header="Observation"  Binding="{Binding Data.Observation}"/>
+                <DataGridTextColumn Header="Characteristic"  Binding="{Binding Data.Characteristics, Converter={ StaticResource arrayConverter}}"/>
+                <DataGridTextColumn Header="Scores"  Binding="{Binding Data.Scores, Converter={ StaticResource arrayConverter}}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </DockPanel>
+</UserControl>

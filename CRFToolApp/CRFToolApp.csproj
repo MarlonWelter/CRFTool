@@ -91,6 +91,9 @@
     <Compile Include="View3D.xaml.cs">
       <DependentUpon>View3D.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViterbiView.xaml.cs">
+      <DependentUpon>ViterbiView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Workflow_I_1.xaml.cs">
       <DependentUpon>Workflow_I_1.xaml</DependentUpon>
     </Compile>
@@ -146,6 +149,10 @@
     <Page Include="View3D.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViterbiView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Workflow_I_1.xaml">
       <SubType>Designer</SubType>

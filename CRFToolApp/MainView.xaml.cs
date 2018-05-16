@@ -41,12 +41,14 @@ namespace CRFToolApp
             graphsListView.ViewModel = ViewModel;
             view3DView.ViewModel = ViewModel;
             graphDetailsView.ViewModel = ViewModel;
+            viterbiView.ViewModel = ViewModel;
             settings.DataContext = ViewModel;
         }
 
         private graphsList graphsListView = new graphsList();
         private View3D view3DView = new View3D();
         private graphDetailsList graphDetailsView = new graphDetailsList();
+        private ViterbiView viterbiView = new ViterbiView();
         private Settings settings = new Settings();
 
         private void button1_Click(object sender, RoutedEventArgs e)
@@ -136,7 +138,17 @@ namespace CRFToolApp
 
         private void buttonLeft4_Click(object sender, RoutedEventArgs e)
         { // show viterbi result
+            if (ViewModel?.Graph?.Data?.Viterbi != null)
+            {
+                // assign viterbi result node.assignedlabel
+                foreach (var node in ViewModel.Graph.Nodes)
+                {
+                    node.Data.AssignedLabel = ViewModel.Graph.Data.Viterbi[node.GraphId];
+                }
 
+                ContentPanel.Children.Clear();
+                ContentPanel.Children.Add(viterbiView);
+            }
         }
 
         private void buttonLeft5_Click(object sender, RoutedEventArgs e)
