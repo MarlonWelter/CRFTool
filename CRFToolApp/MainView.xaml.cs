@@ -87,20 +87,6 @@ namespace CRFToolApp
                 }
             }
         }
-
-        private void button2_Click(object sender, RoutedEventArgs e)
-        {
-            var graph = ViewModel.Graph;
-            if (graph?.Data == null) return;
-            var request = new SolveInference(graph, null, graph.Data.NumberOfLabels);
-            request.Request();
-            foreach (var item in graph.Nodes)
-            {
-                item.Data.AssignedLabel = request.Solution?.Labeling[item.Data.Ordinate] ?? 0;
-            }
-            ViewModel.NotifyPropertyChanged("Graph");
-        }
-
         private void button3_Click(object sender, RoutedEventArgs e)
         {
             Embed();
