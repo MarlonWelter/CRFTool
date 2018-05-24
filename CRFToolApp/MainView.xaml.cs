@@ -55,30 +55,36 @@ namespace CRFToolApp
         { // load data
             var request = new LoadCRFGraph();
             request.Request();
-            ViewModel.Graphs.Add(request.Graph);
-            Embed();
+            if (request.Graph != null)
+            {
+                ViewModel.Graphs.Add(request.Graph);
+                Embed();
+            }
         }
         I3DEmbeddingControl embeddingControl;
         Timer timer;
         bool isRunning = false;
         public void Embed()
         {
-            if (!isRunning)
+            if (ViewModel.Graph != null)
             {
-                embeddingControl = EmbeddingX.CreateDefaultEmbeddingControl();
-                timer = new Timer((obj) => ViewModel.NotifyPropertyChanged("Graph"));
-                timer.Change(0, 25);
+                if (!isRunning)
+                {
+                    embeddingControl = EmbeddingX.CreateDefaultEmbeddingControl();
+                    timer = new Timer((obj) => ViewModel.NotifyPropertyChanged("Graph"));
+                    timer.Change(0, 25);
 
-                embeddingControl.Graph = ViewModel.Graph?.Convert((n) => new EDND(1.0, "default", n.Data, 0), (edge) => new EDED(1.0), (g) => new EDGD());
+                    embeddingControl.Graph = ViewModel.Graph?.Convert((n) => new EDND(1.0, "default", n.Data, 0), (edge) => new EDED(1.0), (g) => new EDGD());
 
-                embeddingControl?.Start();
-                isRunning = true;
-            }
-            else
-            {
-                embeddingControl.Stop();
-                timer.Dispose();
-                isRunning = false;
+                    embeddingControl?.Start();
+                    isRunning = true;
+                }
+                else
+                {
+                    embeddingControl.Stop();
+                    timer.Dispose();
+                    isRunning = false;
+                }
             }
         }
 
@@ -325,9 +331,10 @@ namespace CRFToolApp
         public int SamplePointer
         {
             get { return samplePointer; }
-            set {
+            set
+            {
                 if (ViewModel?.Graph?.Data?.Sample?.NullOrEmpty() ?? false)
-                    return ;
+                    return;
 
                 samplePointer = Math.Max(0, value % ViewModel.Graph.Data.Sample.Count);
 
