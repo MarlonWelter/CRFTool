@@ -12,12 +12,12 @@
     <Grid>
         <DataGrid ItemsSource="{Binding Graph.Nodes}" AutoGenerateColumns="False" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id"  Binding="{Binding Data.Id}"/>
-                <DataGridTextColumn Header="ReferenceLabel"  Binding="{Binding Data.ReferenceLabel}"/>
-                <DataGridTextColumn Header="AssignedLabel"  Binding="{Binding Data.AssignedLabel}"/>
-                <DataGridTextColumn Header="Observation"  Binding="{Binding Data.Observation}"/>
-                <DataGridTextColumn Header="Characteristic"  Binding="{Binding Data.Characteristics, Converter={ StaticResource arrayConverter}}"/>
-                <DataGridTextColumn Header="Scores"  Binding="{Binding Data.Scores, Converter={ StaticResource arrayConverter}}"/>
+                <DataGridTextColumn Header="Id"  Binding="{Binding Data.Id, Mode=OneWay}"/>
+                <DataGridTextColumn Header="ReferenceLabel"  Binding="{Binding Data.ReferenceLabel, Mode=OneWay}"/>
+                <DataGridTextColumn Header="AssignedLabel"  Binding="{Binding Data.AssignedLabel, Mode=OneWay}"/>
+                <DataGridTextColumn Header="Observation"  Binding="{Binding Data.Observation, Mode=OneWay}"/>
+                <DataGridTextColumn Header="Characteristic"  Binding="{Binding Data.Characteristics, Converter={ StaticResource arrayConverter}, Mode=OneWay}"/>
+                <DataGridTextColumn Header="Scores"  Binding="{Binding Data.Scores, Converter={ StaticResource arrayConverter}, Mode=OneWay}"/>
             </DataGrid.Columns>
         </DataGrid>
             

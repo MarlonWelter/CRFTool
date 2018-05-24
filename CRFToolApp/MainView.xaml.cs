@@ -333,7 +333,7 @@ namespace CRFToolApp
             get { return samplePointer; }
             set
             {
-                if (ViewModel?.Graph?.Data?.Sample?.NullOrEmpty() ?? false)
+                if (ViewModel?.Graph?.Data?.Sample == null)
                     return;
 
                 samplePointer = Math.Max(0, value % ViewModel.Graph.Data.Sample.Count);
