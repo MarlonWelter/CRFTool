@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CRFToolAppBase
 {
-    class WorkflowPede
+    public class WorkflowPede
     {
         private const string RandomlySelectedPDBFile = @"../../Data/hermannData/"+ RandomlySelectedPDBFileName+"_A.txt";
         private const string RandomlySelectedPDBFileName = "1a00";
