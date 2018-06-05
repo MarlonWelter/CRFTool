@@ -234,6 +234,7 @@ namespace CRFToolApp
                     viewOptions.Add("Characteristic_" + characteristic);
                 }
             }
+            viewOptions.Add("Observation");
             NotifyPropertyChanged("ViewOptions");
         }
 
@@ -250,6 +251,9 @@ namespace CRFToolApp
                     break;
                 case "Reference":
                     ViewItems.AddRange("Classification 0", "Classification 1");
+                    break;
+                case "Observation":
+                    ViewItems.AddRange("Observation 0", "Observation 1");
                     break;
                 default:
                     break;

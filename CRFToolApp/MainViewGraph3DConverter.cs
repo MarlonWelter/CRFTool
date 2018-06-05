@@ -72,6 +72,9 @@ namespace CRFToolApp
                     case "Reference":
                         mesh = meshes[node.Data.ReferenceLabel % colors.Length];
                         break;
+                    case "Observation":
+                        mesh = meshes[node.Data.Observation % colors.Length];
+                        break;
                     default:
                         if (vm.ViewOption.StartsWith("Characteristic_"))
                         {
