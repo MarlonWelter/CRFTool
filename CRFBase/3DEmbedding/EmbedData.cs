@@ -23,9 +23,6 @@ namespace CRFBase
         bool CenterBalancePoint { get; set; }
         bool IsInPause { get; set; }
         void Start();
-        //void Pause();
-        //void UnPause();
-
         void Stop();
     }
 
@@ -74,7 +71,6 @@ namespace CRFBase
         public const bool DefaultUseCategories = true;
         public const bool DefaultUseEdgeWeights = false;
         public const bool DefaultCenterBalancePoint = true;
-        //public static TimeSpan DefaultRunningDuration = new TimeSpan(0, 0, 0, 0, 200000);
 
         public DefaultEmbeddingAlgorithm() : base(DefaultTemperature, DefaultUseCategories, DefaultCategoryFactor, DefaultUseEdgeWeights, DefaultCenterBalancePoint)
         {
@@ -152,26 +148,6 @@ namespace CRFBase
                     if (nb.GraphId == rdmNode.GraphId)
                         continue;
 
-                    //if (rdmNode.Data.Label == 0 && nb.Data.Label == 1)
-                    //{
-                    //    var strength = HuntForce(rdmNode.Data.Object3D, nb.Data.Object3D);
-                    //    if (UseCategories && nb.Data.Category != rdmNode.Data.Category)
-                    //        strength *= CategoryFactor;
-                    //    var direction = nb.Data.Object3D.Minus(rdmNode.Data.Object3D);
-                    //    direction.Normalize();
-                    //    direction.Multiply(strength);
-                    //    force.Add(direction);
-                    //}
-                    //else if (rdmNode.Data.Label == 1 && nb.Data.Label == 0)
-                    //{
-                    //    var strength = -HuntForce(rdmNode.Data.Object3D, nb.Data.Object3D);
-                    //    if (UseCategories && nb.Data.Category != rdmNode.Data.Category)
-                    //        strength *= CategoryFactor;
-                    //    var direction = nb.Data.Object3D.Minus(rdmNode.Data.Object3D);
-                    //    direction.Normalize();
-                    //    direction.Multiply(strength);
-                    //    force.Add(direction);
-                    //}
                     CategoryFactor = 0.025;
                     if (rdmNode.Neighbours.Contains(nb))
                     {

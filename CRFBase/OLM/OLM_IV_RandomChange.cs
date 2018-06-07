@@ -1,5 +1,5 @@
 ﻿
-   using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,103 +31,9 @@ namespace CRFBase
         public double[] Impulses { get; set; }
         public double[] LastChanges { get; set; }
         public List<double> Changes { get; set; }
-        
-        //public double[] Do(int weights, IEnumerable<IGWGraph<NodeData, EdgeData, GraphData>> graphs, double epsilon)
-        //{
-        //    int iteration = 0;
-        //    MaxIterations = 1000;
-        //    Changes = new List<double>();
 
-        //    var rdm = new Random();
-        //    double[] weightOpt = new double[weights];
-        //    double[] weightCurrent = new double[weights];
-        //    LastChanges = new double[weights];
-        //    Impulses = new double[weights];
-        //    for (int i = 0; i < weights; i++)
-        //    {
-        //        weightCurrent[i] = 0.0;
-        //        weightOpt[i] = weightCurrent[i];
-        //    }
-        //    //this.WeightObservationUnit.Init(weightCurrent);
-        //    var lossOpt = double.MaxValue;
-        //    var lossOptOld = 0.0;
-        //    var lossCurrent = 0.0;
-
-        //    OLMTracker = new OLMTracking(weights, new int[] { 1, 3, 5, 8, 12, 20, 50 }, weightCurrent, Name + "_OLMTracking.txt");
-        //    TrainingGraphs = new List<IGWGraph<NodeData, EdgeData, GraphData>>();
-        //    ValidationGraphs = new List<IGWGraph<NodeData, EdgeData, GraphData>>();
-
-        //    //divide graphs in training / validation
-        //    foreach (var graph in graphs)
-        //    {
-        //        //if (rdm.NextDouble() > 0.5)
-        //        {
-        //            TrainingGraphs.Add(graph);
-        //        }
-        //        //else
-        //        ValidationGraphs.Add(graph);
-        //    }
-
-
-        //    var interfaceValid = 0;
-        //    var noninterfaceValid = 0;
-
-        //    foreach (var graph in ValidationGraphs)
-        //    {
-        //        interfaceValid += graph.Data.ReferenceLabeling.Sum();
-        //        noninterfaceValid += graph.Nodes.Count() - interfaceValid;
-        //    }
-
-        //    var sitesValid = interfaceValid + Alpha * noninterfaceValid;
-
-        //    while (!(iteration >= MaxIterations))
-        //    {
-        //        iteration++;
-
-        //        var oldWVector = weightCurrent.ToArray();
-        //        var startTime = DateTime.Now;
-        //        weightCurrent = Doiteration(TrainingGraphs, weightCurrent, iteration);
-        //        var timeused = DateTime.Now - startTime;
-
-        //        tp = 0; tn = CoreResidues; fp = 0; fn = 0;
-        //        lossCurrent = 0.0;
-        //        foreach (var graph in ValidationGraphs)
-        //        {
-        //            //set scores according to weights
-        //            SetWeightsCRF(weightCurrent, graph);
-
-        //            var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, null, Labels, BufferSizeInference);
-        //            request.RequestInDefaultContext();
-
-        //            var labeling = request.Solution.Labeling;
-        //            lossCurrent += LossFunctionValidation(graph.Data.ReferenceLabeling, labeling);
-
-        //            TrackResults(graph.Data.ReferenceLabeling, labeling);
-
-        //        }
-
-        //        WriterResults();
-        //        lossCurrent /= sitesValid;
-
-        //        if (lossCurrent < lossOpt)
-        //        {
-        //            lossOptOld = lossOpt;
-        //            lossOpt = lossCurrent;
-        //            weightOpt = weightCurrent;
-        //        }
-
-        //        OLMTracker.Track(weightCurrent, lossCurrent);
-        //    }
-
-        //    OLMTracker.WriteWeights();
-
-        //    return weightOpt;
-        //}
-
-      
-        //double tp = 0, tn = 0, fp = 0, fn = 0;
         double lastMCC = 0.0;
-       
+
         private void WriterResults()
         {
             using (var writer = new StreamWriter(Name + "_Results.txt", true))
@@ -146,7 +52,6 @@ namespace CRFBase
 
         private double mccMax = 0.0;
         private double[] lastWeights;
-        //private Random random = new Random();
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
         {
             var weights = weightCurrent.ToArray();
@@ -162,10 +67,10 @@ namespace CRFBase
             var totalChange = random.NextDouble();
             //change weights
             for (int i = 0; i < weights.Length; i++)
-			{
+            {
                 var localChange = random.NextDouble();
                 weights[i] += (random.NextDouble() * 0.2 - 0.1) * totalChange * localChange;
-			}
+            }
 
             for (int i = 0; i < TrainingGraphs.Count; i++)
             {
@@ -174,7 +79,7 @@ namespace CRFBase
                 SetWeightsCRF(weights, graph);
 
                 //compute labeling with viterbi algorithm
-                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, null, Labels, BufferSizeInference);
+                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                 request.RequestInDefaultContext();
                 int[] labeling = request.Solution.Labeling;
                 //check nonequality
@@ -200,7 +105,6 @@ namespace CRFBase
                     }
                 }
 
-                //var loss = LossFunctionIteration(labeling, graph.Data.ReferenceLabeling);
                 int[] countsPred = CountPred(graph, labeling);
                 int[] countsRef = CountPred(graph, graph.Data.ReferenceLabeling);
                 for (int k = 0; k < countsPred.Length; k++)
@@ -211,7 +115,7 @@ namespace CRFBase
             }
 
             var mcc = (tp * tn + fp * fn) / Math.Sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn));
-            if(mcc < mccMax)
+            if (mcc < mccMax)
             {
                 weights = lastWeights;
                 Log.Post("Weight unchanged.");
@@ -221,7 +125,6 @@ namespace CRFBase
 
             mccMax = Math.Max(mccMax, mcc);
 
-            //this.WeightObservationUnit.Feedback(mcc - lastMCC);
             lastMCC = mcc;
             return weights;
         }

@@ -45,7 +45,6 @@ namespace CRFBase
 
                 int minimumOutsideEdges = vertices.Count();
                 int minimumIndex = -1;
-                //int bordercount = 0;
 
                 for (int counter = 0; counter < vertices.Count(); counter++)
                 {
@@ -103,7 +102,6 @@ namespace CRFBase
             }
             if (maximumBorder < 22)
             {
-                //Console.WriteLine("biggest historyset-boundary: " + maximumBorder);
                 if (MaxQueueFile != string.Empty)
                 {
                     using (var writer = File.AppendText(MaxQueueFile))
@@ -115,7 +113,6 @@ namespace CRFBase
             }
             else
             {
-                //Console.WriteLine("biggest historyset-boundary: " + maximumBorder);
                 if (MaxQueueFile != string.Empty)
                 {
                     using (var writer = File.AppendText(MaxQueueFile))
@@ -126,98 +123,8 @@ namespace CRFBase
                 problemMSA++;
             }
 
-            //Console.WriteLine("Computed Queue in " + (DateTime.Now - startTime));
-
-            //int ctr = 0;
-            //foreach (var item in queue)
-            //{
-            //    item.Ordinate = ctr;
-            //    ctr++;
-            //}
-
             return queue;
         }
-
-        //public static LinkedList<IGWNode> QueueComputeMethod2(CRFNode[] vertices)
-        //{
-        //    LinkedList<CRFNode> queue = new LinkedList<CRFNode>();
-        //    maximumBorder = 0;
-
-        //    while (queue.Count < vertices.Count())
-        //    {
-
-        //        int optimumIndex = -1;
-        //        int optimumScore = -vertices.Count();
-        //        int goodEdges = 0;
-        //        int BadEdges = 0;
-        //        int score = 0;
-
-        //        for (int counter = 0; counter < vertices.Count(); counter++)
-        //        {
-        //            score = 0;
-        //            goodEdges = 0;
-        //            BadEdges = 0;
-
-        //            var vertexInFocus = vertices[counter];
-
-        //            if (!queue.Contains(vertexInFocus))
-        //            {
-
-        //                if (OutsideEdges[vertexInFocus].Count <= 0)
-        //                {
-        //                    optimumIndex = counter;
-        //                    break;
-        //                }
-        //                else
-        //                {
-        //                    foreach (var edge in vertexInFocus.Edges())
-        //                    {
-        //                        if (queue.Contains(vertexInFocus.Neighbour(edge)))
-        //                            goodEdges++;
-        //                        BadEdges++;
-        //                    }
-        //                    score = goodEdges - BadEdges;
-
-        //                    if (score > optimumScore)
-        //                    {
-        //                        optimumScore = score;
-        //                        optimumIndex = counter;
-        //                    }
-        //                }
-        //            }
-
-        //        }
-
-        //        var bestScoreVertex = vertices[optimumIndex];
-
-
-        //        if (!queue.Contains(bestScoreVertex))
-        //        {
-        //            queue.AddLast(bestScoreVertex);
-        //            RemoveInnerEdges(queue);
-        //            countBorder(queue);
-        //        }
-
-        //        RemoveInnerEdges(queue);
-        //        countBorder(queue);
-
-
-        //    }
-
-        //    if (maximumBorder < 22)
-        //    {
-        //        //Console.WriteLine("biggest historyset-boundary: " + maximumBorder);
-        //        workingMSA++;
-        //    }
-        //    else
-        //    {
-        //        //Console.WriteLine("biggest historyset-boundary: " + maximumBorder);
-        //        problemMSA++;
-        //    }
-
-        //    return queue;
-        //}
-
 
         private static void countBorder(LinkedList<IGWNode> queue)
         {
@@ -237,9 +144,6 @@ namespace CRFBase
 
             if (bordercount > maximumBorder)
                 maximumBorder = bordercount;
-
-
-            //Log.Post("Iteration: "+ queue.Count() + " - bordercount: " + bordercount);
 
         }
 

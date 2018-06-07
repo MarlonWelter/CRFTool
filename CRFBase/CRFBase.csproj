@@ -59,8 +59,7 @@
   <ItemGroup>
     <Compile Include="3DEmbedding\EmbedData.cs" />
     <Compile Include="Build.cs" />
-    <Compile Include="ComputeDiscretization.cs" />
-    <Compile Include="ComputeKeys.cs" />
+    <Compile Include="TrainingEvaluationOLM\ComputeKeys.cs" />
     <Compile Include="CRFResult.cs" />
     <Compile Include="GibbsSampling\GibbsSamplingManager.cs" />
     <Compile Include="GibbsSampling\GiveProbableLabelings.cs" />
@@ -70,18 +69,15 @@
     <Compile Include="Input\ITrainingInputGraphData.cs" />
     <Compile Include="Input\ITrainingInputNodeData.cs" />
     <Compile Include="Input\TrainingInputData.cs" />
-    <Compile Include="Input\TrainingInputReferenceResolver.cs" />
-    <Compile Include="Input\UserTrainingX.cs" />
-    <Compile Include="IntervalValueMap.cs" />
-    <Compile Include="IsingModel.cs" />
-    <Compile Include="MCMCAsifRequest.cs" />
+    <Compile Include="OLM\IntervalValueMap.cs" />
+    <Compile Include="TrainingEvaluationOLM\IsingModel.cs" />
     <Compile Include="MetropolisHastings\ExampleRunMH.cs" />
     <Compile Include="MetropolisHastings\ExampleRunSoftwareGraphLearning.cs" />
     <Compile Include="MetropolisHastings\LocalResult.cs" />
     <Compile Include="MetropolisHastings\MHSampler.cs" />
     <Compile Include="MetropolisHastings\MHSampler2.cs" />
     <Compile Include="MetropolisHastings\MHSamplerParameters.cs" />
-    <Compile Include="OLMEvaluationResult.cs" />
+    <Compile Include="TrainingEvaluationOLM\OLMEvaluationResult.cs" />
     <Compile Include="OLM\IsingMerkmal.cs" />
     <Compile Include="OLM\KeyuFeaturesOLM.cs" />
     <Compile Include="OLM\OLM.cs" />
@@ -99,22 +95,20 @@
     <Compile Include="CreateObservationsUnit.cs" />
     <Compile Include="OLM\ShowOLMHistory.cs" />
     <Compile Include="QueueHeuristic\ComputeOrder.cs" />
-    <Compile Include="CRFInput.cs" />
+    <Compile Include="Input\CRFInput.cs" />
     <Compile Include="QueueHeuristic\GWMinBorderComputation.cs" />
-    <Compile Include="Resampling.cs" />
-    <Compile Include="Assignment.cs" />
     <Compile Include="GibbsSampling\BasicGibbsSampling.cs" />
     <Compile Include="Combination.cs" />
-    <Compile Include="DetermineBarrier.cs" />
+    <Compile Include="InferenceHeuristik\DetermineBarrier.cs" />
     <Compile Include="QueueHeuristic\GreedyMinBorderQueueComputing.cs" />
     <Compile Include="InferenceHeuristik\ViterbiHeuristic.cs" />
     <Compile Include="OLM\WeightObservationUnit.cs" />
     <Compile Include="OLM\WOU_II.cs" />
-    <Compile Include="SeedingMethodPatchCreation.cs" />
+    <Compile Include="TrainingEvaluationOLM\SeedingMethodPatchCreation.cs" />
     <Compile Include="ShowGraphs.cs" />
     <Compile Include="ShowOLMResult.cs" />
-    <Compile Include="TrainingEvaluationCycle.cs" />
-    <Compile Include="TrainingEvaluationCycleInputParameters.cs" />
+    <Compile Include="TrainingEvaluationOLM\TrainingEvaluationCycle.cs" />
+    <Compile Include="TrainingEvaluationOLM\TrainingEvaluationCycleInputParameters.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

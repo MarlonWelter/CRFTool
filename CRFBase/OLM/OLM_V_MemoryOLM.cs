@@ -61,8 +61,6 @@ namespace CRFBase
                 }
             }
 
-            //double tp = 0.001, tn = CoreResidues, fp = 0.001, fn = 0.001;
-
             tp = 0; tn = 0; fp = 0; fn = 0;
 
             var newPoint = new MemoryPoint(weights, new int[weights.Length], 0.0);
@@ -77,7 +75,7 @@ namespace CRFBase
                 SetWeightsCRF(weights, graph);
 
                 //compute labeling with viterbi algorithm
-                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, null, Labels, BufferSizeInference);
+                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                 request.RequestInDefaultContext();
                 int[] labeling = request.Solution.Labeling;
                 //check nonequality
@@ -93,20 +91,8 @@ namespace CRFBase
                 }
                 TrackResults(labeling, graph.Data.ReferenceLabeling);
             }
-            //WriterResults();
-            //var sensitivity = tp / (tp + fn);
-            //var specificity = tn / (tn + fp);
             var mcc = (tp * tn - fp * fn) / Math.Sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn));
             newPoint.Score = mcc;
-
-            //Log.Post("New MCC: " + Math.Round(mcc, 5) + " Sens: " + Math.Round(sensitivity, 5) + " Spec: " + Math.Round(specificity, 5));
-
-            //tn -= CoreResidues;
-            //var sensitivity2 = tp / (tp + fn);
-            //var specificity2 = tn / (tn + fp);
-            //var mcc2 = (tp * tn - fp * fn) / Math.Sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn));
-
-            //Log.Post("New MCC(2): " + Math.Round(mcc2, 5) + " Sens: " + Math.Round(sensitivity2, 5) + " Spec: " + Math.Round(specificity2, 5));
 
             if (globalIteration == 1)
                 MemoryPoints.Add(ReferencePoint);
@@ -141,29 +127,18 @@ namespace CRFBase
                 }
             }
 
-            //if (MemoryPoints.Count >= memoryPoints)
+            //normalize 
+            var normFactor = MemoryPoints.Count * (MemoryPoints.Count - 1) / 2;
+            for (int m = 0; m < weights.Length; m++)
             {
-                //normalize 
-                var normFactor = MemoryPoints.Count * (MemoryPoints.Count - 1) / 2;
-                for (int m = 0; m < weights.Length; m++)
-                {
-                    deltaomega[m] /= normFactor;
-                }
-
-                for (int k = 0; k < weights.Length; k++)
-                {
-                    weights[k] += deltaomega[k];
-                }
+                deltaomega[m] /= normFactor;
             }
-            //else
-            //{
-            //    for (int k = 0; k < weights.Length; k++)
-            //    {
-            //        weights[k] = 0.02 * random.NextDouble() - 0.01;
-            //    }
-            //}
-            //if (iteration == 1)
-            //MemoryPoints.Remove(ReferencePoint);
+
+            for (int k = 0; k < weights.Length; k++)
+            {
+                weights[k] += deltaomega[k];
+            }
+
 
             return weights;
         }

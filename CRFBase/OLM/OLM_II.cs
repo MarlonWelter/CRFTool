@@ -54,7 +54,7 @@ namespace CRFBase
                 SetWeightsCRF(weights, graph);
 
                 //compute labeling with viterbi algorithm
-                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, null, Labels, BufferSizeInference);
+                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                 request.RequestInDefaultContext();
                 int[] labeling = request.Solution.Labeling;
                 //check nonequality
@@ -79,8 +79,7 @@ namespace CRFBase
                             tn += 1;
                     }
                 }
-
-                //var loss = LossFunctionIteration(labeling, graph.Data.ReferenceLabeling);
+                
                 int[] countsPred = CountPred(graph, labeling);
                 int[] countsRef = CountPred(graph, graph.Data.ReferenceLabeling);
                 for (int k = 0; k < countsPred.Length; k++)
@@ -92,9 +91,7 @@ namespace CRFBase
 
             var mcc = (tp * tn + fp * fn) / Math.Sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn));
             mccMax = Math.Max(mccMax, mcc);
-
-            //this.WeightObservationUnit_II.Feedback(mcc - lastMCC);
-            //lastMCC = mcc;
+            
             return weights;
         }
 

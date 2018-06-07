@@ -28,7 +28,6 @@ namespace CRFBase
 
         protected Random random = new Random();
         protected long tp = 0, tn = 0, fp = 0, fn = 0;
-        //public int CoreResidues { get; set; }
         public OLMTracking OLMTracker { get; set; }
         protected double[] weightOpt;
         protected double[] weightCurrent;
@@ -112,7 +111,6 @@ namespace CRFBase
                 ValidationGraphs = new List<IGWGraph<NodeData, EdgeData, GraphData>>();
 
 
-                //CoreResidues = 0;
                 for (int quantil = 0; quantil < validationQuantils; quantil++)
                 {
                     if (quantil == quantilIteration)
@@ -124,11 +122,6 @@ namespace CRFBase
                         TrainingGraphs.AddRange(quantiledGraphs[quantil]);
                     }
                 }
-
-                //foreach (var graph in ValidationGraphs)
-                //{
-                //    CoreResidues += graph.Data.CoreResidues;
-                //}
 
                 Iteration = 0;
                 MaxIterations = maxIterations;
@@ -162,12 +155,6 @@ namespace CRFBase
 
                     ResultingWeights = weightCurrent;
 
-                    //for (int i = 1; i < 20; i++)
-                    //{
-                    //    for (int k = 1; k < 20; k++)
-                    //    {
-                    //        weightCurrent[0] = Math.Pow(-1.0, i) * ((int)(i / 2)) * 0.1;
-                    //        weightCurrent[1] = Math.Pow(-1.0, k) * ((int)(k / 2)) * 0.1;
 
                     tp = 0; tn = 0; fp = 0; fn = 0;
                     lossCurrent = 0.0;
@@ -175,7 +162,7 @@ namespace CRFBase
                     {
                         SetWeightsCRF(weightCurrent, graph);
 
-                        var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, null, Labels, BufferSizeInference);
+                        var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                         request.RequestInDefaultContext();
 
                         var prediction = request.Solution.Labeling;
@@ -197,15 +184,12 @@ namespace CRFBase
                     var iterationResult = new OLMIterationResult(weightCurrent.ToArray(), lossCurrent);
                     olmrequest.Result.ResultsHistory.IterationResultHistory.Add(iterationResult);
 
-                    //    }
-                    //}
 
                 }
             }
 
             OLMTracker.WriteWeights();
 
-            //return weightOpt;
         }
 
         internal abstract void SetStartingWeights();
@@ -241,7 +225,6 @@ namespace CRFBase
                 var specificity = tn / (tn + fp);
                 var mcc = (tp * tn + fp * fn) / Math.Sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn));
 
-                // Log.Post("MCC: "+mcc+"\n");
 
                 writer.WriteLine("" + tp + "_" + tn + "_" + fp + "_" + fn);
                 writer.WriteLine(sensitivity);
