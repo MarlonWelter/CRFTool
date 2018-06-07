@@ -133,7 +133,7 @@ namespace CRFBase
 
         private void FindStartPointViterbi(CRFGraph graph)
         {
-            var request = new SolveInference(graph, null, NumberLabels);
+            var request = new SolveInference(graph, NumberLabels);
             request.RequestInDefaultContext();
             var resultLabeling = request.Solution.Labeling;
 

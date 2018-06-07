@@ -16,7 +16,6 @@ namespace CodeBase
     }
     public class SGLGraphData : CRFGraphData
     {
-        public int NumberCategories { get; set; } = 1;
         public GWGraph<CGNodeData, CGEdgeData, CGGraphData> CategoryGraph { get; set; }
     }
 

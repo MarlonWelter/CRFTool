@@ -153,7 +153,7 @@ namespace CRFToolApp
 
         private void buttonViterbi_Click(object sender, RoutedEventArgs e)
         { // run viterbi
-            var request = new SolveInference(ViewModel.Graph, null, 2);
+            var request = new SolveInference(ViewModel.Graph, 2);
             request.Request();
 
             ViewModel.Graph.Data.Viterbi = request.Solution.Labeling;

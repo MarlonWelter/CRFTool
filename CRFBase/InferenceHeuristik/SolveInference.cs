@@ -11,15 +11,21 @@ namespace CRFBase
 {
     public class SolveInference : GWRequest<SolveInference>
     {
-        public SolveInference(CRFGraph graph, IDictionary<IGWNode, int> preAssignment, int labels, int bufferSize = 0)
+        public SolveInference(CRFGraph graph, int numberLabels, int bufferSize)
+        {
+            Graph = graph;
+            BufferSize = bufferSize;
+            NumberLabels = numberLabels;
+        }
+        public SolveInference(CRFGraph graph, int numberLabels, IDictionary<IGWNode, int> preAssignment = null, int bufferSize = 0)
         {
             PreAssignment = preAssignment;
             Graph = graph;
             BufferSize = bufferSize;
-            Labels = labels;
+            NumberLabels = numberLabels;
         }
 
-        public int Labels { get; set; }
+        public int NumberLabels { get; set; }
 
         public int BufferSize { get; set; }
         public CRFResult Solution { get; set; }

@@ -21,7 +21,7 @@ namespace CRFToolAppBase
         {
             // request settings
             //default:
-            request.Labels = 2;
+            request.NumberLabels = 2;
             request.Graph = crfToolData.SelectedGraph;
         }
     }
