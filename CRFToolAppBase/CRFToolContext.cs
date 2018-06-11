@@ -91,7 +91,7 @@ namespace CRFToolAppBase
         public CRFResult FindMaxLabelingForSelectedGraph()
         {
             var graph = Data.SelectedGraph;
-            var request = new SolveInference(graph, null, numberOfLabels);
+            var request = new SolveInference(graph, numberOfLabels);
             return request.Solution;
         }
 

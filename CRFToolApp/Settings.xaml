@@ -6,7 +6,15 @@
              xmlns:local="clr-namespace:CRFToolApp"
              mc:Ignorable="d" 
              d:DesignHeight="649" d:DesignWidth="1080">
-    <StackPanel>
-            <ComboBox />
+    <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Top">
+        <StackPanel Orientation="Horizontal" Width="600">
+            <Label Width="110" Background="AliceBlue" FontSize="16" HorizontalContentAlignment="Left">Export Folder: </Label>
+            <TextBox Width="490" Background="AntiqueWhite" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Text="{Binding Path=ExportFolder}"></TextBox>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Width="600">
+            <Label Width="200" Background="AliceBlue" FontSize="16" HorizontalContentAlignment="Left">Viterbi Heuristic Filter Size:</Label>
+            <TextBox Width="500" Background="AntiqueWhite" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Text="{Binding Path=ViterbiHeuristicFilterSize}"></TextBox>
+        </StackPanel>
     </StackPanel>
 </UserControl>
