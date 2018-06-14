@@ -22,7 +22,14 @@ namespace CRFToolAppBase
 
                 if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    graph = JSONX.LoadFromJSON<GWGraph<SGLNodeData, SGLEdgeData, SGLGraphData>>(openFileDialog1.FileName);
+                    try
+                    {
+                        graph = JSONX.LoadFromJSON<GWGraph<SGLNodeData, SGLEdgeData, SGLGraphData>>(openFileDialog1.FileName);
+                    }
+                    catch(Exception e)
+                    { // try simple format
+                        graph = CRFInput.ParseFile_CRF_Class(openFileDialog1.FileName);
+                    }
                 }
             }
             int nodeCounter = 0;

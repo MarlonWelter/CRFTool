@@ -200,5 +200,53 @@ namespace CRFBase
             }
             return graph;
         }
+
+        public static GWGraph<SGLNodeData, SGLEdgeData, SGLGraphData> ParseFile_CRF_Class(string file)
+        {
+
+            var graph = new GWGraph<SGLNodeData, SGLEdgeData, SGLGraphData>();
+            graph.Data = new SGLGraphData();
+
+            using (var reader = new StreamReader(file))
+            {
+                //if (reader.ReadLine() != "reflabels:")
+                //    throw new IOException("unbekanntes FileFormat - File sollte mit 'numlabels:' beginnen");
+                //int refLabels = int.Parse(reader.ReadLine());
+                //if (reader.ReadLine() != "observations:")
+                //    throw new IOException("unbekanntes FileFormat - File sollte mit 'numlabels:' beginnen");
+                //int observations = int.Parse(reader.ReadLine());
+
+                if (reader.ReadLine() != "nodes:")
+                    throw new IOException("unbekanntes FileFormat - File sollte 'nodes:' in Zeile 3 enthalten");
+
+                string line = string.Empty;
+                while ((line = reader.ReadLine()) != "edges:" && line.NotNullOrEmpty())
+                {
+                    string[] words = Regex.Split(line, "\\s");
+                    var node = graph.CreateNode();
+                    var scores = new List<double>();
+                    node.Data = new SGLNodeData();
+                    node.Data.ReferenceLabel = int.Parse(words[1]);
+                    node.Data.Observation = int.Parse(words[2]);
+
+                    if (words.Length > 3)
+                        node.Data.AssignedLabel = int.Parse(words[3]);
+
+                    node.Data.Id = words[0];
+
+                }
+                while ((line = reader.ReadLine()).NotNullOrEmpty())
+                {
+                    string[] words = Regex.Split(line, "\\s");
+                    string name = words[0] + "_" + words[1];
+                    string check = words[1] + "_" + words[0];
+
+                    var edge = graph.CreateEdge(graph.Nodes.First((n) => n.Data.Id.Equals(words[0])), graph.Nodes.First((n) => n.Data.Id.Equals(words[1])));
+
+                    edge.Data = new SGLEdgeData();
+                }
+            }
+            return graph;
+        }
     }
 }
