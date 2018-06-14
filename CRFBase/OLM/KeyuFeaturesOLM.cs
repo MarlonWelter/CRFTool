@@ -59,8 +59,7 @@ namespace CRFBase
         public List<BasisMerkmal<RASACRFNodeData, RASACRFEdgeData, ProteinCRFGraphData>> Do(List<IGWGraph<RASACRFNodeData, RASACRFEdgeData, ProteinCRFGraphData>> graphs, int intervalsCount, int labels)
         {
             var basisMerkmale = new List<BasisMerkmal<RASACRFNodeData, RASACRFEdgeData, ProteinCRFGraphData>>();
-            //for (int i = 0; i < graphs.Count; i++)
-            //{
+            
             var rasa = graphs.SelectMany(g => g.Nodes.Select(n => n.Data.RASA));
             var intervals = rasa.OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
 
@@ -84,8 +83,7 @@ namespace CRFBase
 
             var lowerBoundaryMax = -0.1;
             var lowerBoundaryDiff = -0.1;
-
-            //var upperBoundaryDiff = diffFeatures[k].Max();
+            
 
             for (int label1 = 0; label1 < labels; label1++)
             {
@@ -97,13 +95,12 @@ namespace CRFBase
                     {
                         var upperBoundaryMax = maxFeatures[k].Max();
                         var merkmal1 = new RASAMaxEdgeBasisMerkmal(lowerBoundaryMax, upperBoundaryMax, label1, label2);
-                        //var merkmal2 = new RASADiffEdgeBasisMerkmal(lowerBoundaryDiff, upperBoundaryDiff, label1, label2);
+                        
                         basisMerkmale.AddRange(merkmal1);
                         lowerBoundaryMax = upperBoundaryMax;
                     }
                 }
-
-                //lowerBoundaryDiff = upperBoundaryDiff;
+                
             }
 
             for (int label1 = 0; label1 < labels; label1++)
@@ -114,102 +111,18 @@ namespace CRFBase
                         continue;
                     for (int k = 0; k < intervals.Length; k++)
                     {
-                        //var upperBoundaryMax = maxFeatures[k].Max();
                         var upperBoundaryDiff = diffFeatures[k].Max();
-
-                        //var merkmal1 = new RASAMaxEdgeBasisMerkmal(lowerBoundaryMax, upperBoundaryMax, label1, label2);
+                        
                         var merkmal2 = new RASADiffEdgeBasisMerkmal(lowerBoundaryDiff, upperBoundaryDiff, label1, label2);
                         basisMerkmale.AddRange(merkmal2);
                         lowerBoundaryDiff = upperBoundaryDiff;
                     }
                 }
-
-                //lowerBoundaryMax = upperBoundaryMax;
+                
             }
             return basisMerkmale;
         }
     }
-
-    //public class KeyuFeaturesOLM
-    //{
-    //    public List<BasisMerkmal<RASACRFNodeData, RASACRFEdgeData, CRFGraphData>> Do(List<IGWGraph<RASACRFNodeData, RASACRFEdgeData, CRFGraphData>> graphs, int intervalsCount, int labels, int tries)
-    //    {
-    //        var basisMerkmale = new List<BasisMerkmal<RASACRFNodeData, RASACRFEdgeData, CRFGraphData>>();
-    //        //for (int i = 0; i < graphs.Count; i++)
-    //        //{
-    //        var rasa = graphs.SelectMany(g => g.Nodes.Select(n => n.Data.RASA));
-    //        var intervals = rasa.OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
-
-    //        var allnodes = graphs.SelectMany(g => g.Nodes);
-
-    //        var min = 0.0;
-    //        var max = 1.0;
-    //        var divisors = ComputeDiscretization<RASACRFNodeData>.Do(allnodes.Select(n => new AgO<RASACRFNodeData, double, int>(n.Data, n.Data.RASA, n.Data.ReferenceLabel == 0 ? 0 : 1)), intervalsCount, labels, tries);
-
-    //        var lowerBoundary = min;
-    //        for (int k = 0; k < intervals.Length; k++)
-    //        {
-    //            var upperBoundary = k < (intervalsCount - 1) ? divisors[k] : max;
-    //            for (int label = 1; label < labels; label++)
-    //            {
-    //                var merkmal = new RASANodeBasisMerkmal(lowerBoundary, upperBoundary, label);
-    //                basisMerkmale.Add(merkmal);
-    //            }
-    //            lowerBoundary = upperBoundary;
-    //        }
-
-    //        var edges = graphs.SelectMany(g => g.Edges);
-
-
-    //        min = edges.Min(e => e.Data.Max);
-    //        max = edges.Max(e => e.Data.Max);
-    //        divisors = ComputeDiscretization<RASACRFEdgeData>.Do(edges.Select(n => new AgO<RASACRFEdgeData, double, int>(n.Data, n.Data.Max, (n.Head.Data.ReferenceLabel == 0 ? 0 : 1) + (n.Foot.Data.ReferenceLabel == 0 ? 0 : 1))), intervalsCount, labels, tries, min, max);
-
-    //        //var maxFeatures = edges.Select(e => e.Data.Max).ToList().OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
-    //        //var diffFeatures = edges.Select(e => e.Data.Diff).ToList().OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
-
-    //        lowerBoundary = min;
-    //        for (int k = 0; k < intervals.Length; k++)
-    //        {
-    //            var upperBoundary = k < (intervalsCount - 1) ? divisors[k] : max;
-
-    //            for (int label1 = 0; label1 < labels; label1++)
-    //            {
-    //                for (int label2 = label1; label2 < labels; label2++)
-    //                {
-    //                    if (label1 == 0 && label2 == 0)
-    //                        continue;
-    //                    var merkmal1 = new RASAMaxEdgeBasisMerkmal(lowerBoundary, upperBoundary, label1, label2);
-    //                    basisMerkmale.AddRange(merkmal1);
-    //                }
-    //            }
-    //            lowerBoundary = upperBoundary;
-    //        }
-
-    //        min = edges.Min(e => e.Data.Max);
-    //        max = edges.Max(e => e.Data.Max);
-    //        divisors = ComputeDiscretization<RASACRFEdgeData>.Do(edges.Select(n => new AgO<RASACRFEdgeData, double, int>(n.Data, n.Data.Diff, (n.Head.Data.ReferenceLabel == 0 ? 0 : 1) + (n.Foot.Data.ReferenceLabel == 0 ? 0 : 1))), intervalsCount, labels, tries, min, max);
-
-
-    //        lowerBoundary = min;
-    //        for (int k = 0; k < intervals.Length; k++)
-    //        {
-    //            var upperBoundary = k < (intervalsCount - 1) ? divisors[k] : max;
-
-    //            for (int label1 = 0; label1 < labels; label1++)
-    //            {
-    //                for (int label2 = label1; label2 < labels; label2++)
-    //                {
-    //                    if (label1 == 0 && label2 == 0)
-    //                        continue;
-    //                    var merkmal1 = new RASADiffEdgeBasisMerkmal(lowerBoundary, upperBoundary, label1, label2);
-    //                    basisMerkmale.AddRange(merkmal1);
-    //                }
-    //            }
-    //            lowerBoundary = upperBoundary;
-    //        }
-    //        return basisMerkmale;
-    //    }
 
     public class RASANodeBasisMerkmal : BasisMerkmal<RASACRFNodeData, RASACRFEdgeData, ProteinCRFGraphData>
     {

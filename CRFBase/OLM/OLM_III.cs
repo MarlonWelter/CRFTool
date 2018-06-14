@@ -45,8 +45,7 @@ namespace CRFBase
                 SetWeightsCRF(weights, graph);
 
                 //compute labeling with viterbi algorithm
-                //BufferSizeInference = 2000;
-                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, null, Labels, BufferSizeInference);
+                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>,  Labels, BufferSizeInference);
                 request.RequestInDefaultContext();
                 int[] labeling = request.Solution.Labeling;
                 //check nonequality
@@ -71,8 +70,7 @@ namespace CRFBase
                             tn += 1;
                     }
                 }
-
-                //var loss = LossFunctionIteration(labeling, graph.Data.ReferenceLabeling);
+                
                 int[] countsPred = CountPred(graph, labeling);
                 int[] countsRef = CountPred(graph, graph.Data.ReferenceLabeling);
                 for (int k = 0; k < countsPred.Length; k++)
@@ -88,8 +86,7 @@ namespace CRFBase
                 weightedScore += weights[k] * countsRefMinusPred[k];
             }
             double l2normsq = (countsRefMinusPred.Sum(entry => entry * entry));
-
-            //var loss = (mccMax - mcc) * lossFunctionFactorMCC;
+            
             var loss = (fp + fn);
 
             var deltaomegaFactor = (loss - weightedScore) / l2normsq;
@@ -99,17 +96,9 @@ namespace CRFBase
                 if (l2normsq > 0)
                     deltaomega[k] = deltaomegaFactor * countsRefMinusPred[k];
                 weights[k] += deltaomega[k];
-                //weights[k] = 2 * (random.NextDouble() - 0.5);
                 weightsSum[k] = weights[k] + deltaomega[k];
             }
-
-
-            //var weightChanges = new double[weights.Length];
-            //for (int k = 0; k < weights.Length; k++)
-            //{
-            //    weightChanges[k] = ((weights[k]) - weightCurrent[k]);
-            //}
-            //weights = this.WeightObservationUnit.ApplyChangeVector(weightChanges, weightCurrent);
+            
             return weights;
         }
 

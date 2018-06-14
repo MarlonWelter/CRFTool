@@ -136,7 +136,7 @@ namespace CRFToolAppBase
             {
                 foreach (var graph in EvaluationData)
                 {
-                    var request = new SolveInference(graph, null, 2);
+                    var request = new SolveInference(graph, 2);
                     request.Request();
                     graph.Data.AssginedLabeling = request.Solution.Labeling;
                 }

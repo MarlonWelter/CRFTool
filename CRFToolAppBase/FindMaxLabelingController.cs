@@ -12,7 +12,7 @@ namespace CRFToolAppBase
     {
         public void FindMaxLabellingCommand(CRFToolData crfToolData)
         {
-            var request = new SolveInference(null, null, 0);
+            var request = new SolveInference(null, 0);
             determineSettings(request, crfToolData);
             request.RequestInDefaultContext();
         }
@@ -21,7 +21,7 @@ namespace CRFToolAppBase
         {
             // request settings
             //default:
-            request.Labels = 2;
+            request.NumberLabels = 2;
             request.Graph = crfToolData.SelectedGraph;
         }
     }

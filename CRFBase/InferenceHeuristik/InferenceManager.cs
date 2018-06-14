@@ -20,19 +20,10 @@ namespace CRFBase
 
         override protected void OnRequest(SolveInference obj)
         {
-            //if (obj.Labels == 2)
-            //{
-            //    GWGraph<ICRFNodeDataBinary, ICRFEdgeDataBinary, ICRFGraphData> newGraph = obj.Graph.Convert<ICRFNodeData, ICRFNodeDataBinary, ICRFEdgeData, ICRFEdgeDataBinary, ICRFGraphData, ICRFGraphData>((nd) => new CRFNodeDataBinary(nd.Data.Scores[0], nd.Data.Scores[1]) { Id = nd.Data.Id, Ordinate = nd.Data.Ordinate,  }, (ed) => new CRFEdgeDataBinary(ed.Data.Scores[0, 0], ed.Data.Scores[0, 1], ed.Data.Scores[1, 0], ed.Data.Scores[1, 1]), (gd) => gd.Data);
-            //    var heuristik = new InferenceHeuristikBinary(obj.BufferSize > 0 ? obj.BufferSize : MaxCombinationsBuffer);
-            //    var result = heuristik.Run(newGraph);
-            //    obj.Solution = result;
-            //}
-            //else
-            {
-                var heuristik = new InferenceHeuristik(obj.BufferSize > 0 ? obj.BufferSize : MaxCombinationsBuffer);
-                var result = heuristik.Run(obj.Graph, obj.PreAssignment);
-                obj.Solution = result;
-            }
+            var heuristik = new ViterbiHeuristic(obj.BufferSize > 0 ? obj.BufferSize : MaxCombinationsBuffer, obj.NumberLabels);
+            var result = heuristik.Run(obj.Graph, obj.PreAssignment);
+            obj.Solution = result;
+
 
         }
     }

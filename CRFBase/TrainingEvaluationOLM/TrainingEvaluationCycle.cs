@@ -151,7 +151,7 @@ namespace CRFBase
                 // 1) Viterbi-Heuristik starten (request: SolveInference) + zusätzliche Parameter hinzufügen
                 for (int graph = 0; graph < evaluationGraphs.Count; graph++)
                 {
-                    var request2 = new SolveInference(evaluationGraphs[graph], null, inputParameters.NumberOfLabels,
+                    var request2 = new SolveInference(evaluationGraphs[graph], inputParameters.NumberOfLabels,
                     inputParameters.BufferSizeViterbi);
 
                     request2.RequestInDefaultContext();

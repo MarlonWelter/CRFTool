@@ -32,7 +32,7 @@ namespace CRFToolAppBase
             // Aufruf der Inferenz-Heuristik
             int numberOfLabels = 2;
             int bufferSize = 200;
-            var request = new SolveInference(cloneGraph, null, numberOfLabels, bufferSize);
+            var request = new SolveInference(cloneGraph, numberOfLabels, bufferSize);
             request.RequestInDefaultContext();
 
             cloneGraph.Data.AssginedLabeling = request.Solution.Labeling;

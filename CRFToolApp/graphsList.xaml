@@ -7,12 +7,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="649" d:DesignWidth="1080">
     <Grid>
-        <DataGrid ItemsSource="{Binding Graphs}" AutoGenerateColumns="False" >
+        <DataGrid ItemsSource="{Binding Graphs}" AutoGenerateColumns="False" CanUserAddRows="False" MouseDoubleClick="DataGrid_MouseDoubleClick" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name"  Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Type"  Binding="{Binding GraphStyle}"/>
-                <DataGridTextColumn Header="Nodes"  Binding="{Binding Nodes.Count}"/>
-                <DataGridTextColumn Header="Edges" Binding="{Binding Edges.Count}" />
+                <DataGridTextColumn Header="Name"  Binding="{Binding Name, Mode=OneWay}" />
+                <DataGridTextColumn Header="Type"  Binding="{Binding GraphStyle, Mode=OneWay}"/>
+                <DataGridTextColumn Header="Nodes"  Binding="{Binding Nodes.Count, Mode=OneWay}"/>
+                <DataGridTextColumn Header="Edges" Binding="{Binding Edges.Count, Mode=OneWay}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

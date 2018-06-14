@@ -48,18 +48,7 @@ namespace CRFBase
                 item.Data.TempAssign = Math.Log(Random.NextDouble()) < item.Data.Score(0) ? 0 : 1;
             }
         }
-
-        //private static void FindStartPointViterbi(CRFGraph graph)
-        //{
-        //    var request = default(SolveInference);
-
-        //    (request = new SolveInference(graph, null, DefaultBufferFindStartpointViterbi)).RequestInDefaultContext();
-
-        //    foreach (var item in request.Solution.Labeling)
-        //    {
-        //        item.Key.TempAssign = item.Value;
-        //    }
-        //}
+        
         private static Random random;
         public static Random Random
         {
@@ -70,8 +59,7 @@ namespace CRFBase
         public static void ChangePositionDefault(CRFGraph graph, int time)
         {
             var node = graph.Nodes.ToList().RandomElement(Random);
-            //var score = assignment.TakeScore();
-
+          
             //compute relative change
             var relChange = 0.0;
             relChange += node.Data.Score((node.Data.TempAssign + 1) % 2) - node.Data.Score(node.Data.TempAssign);

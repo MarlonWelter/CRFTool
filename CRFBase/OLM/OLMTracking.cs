@@ -101,30 +101,6 @@ namespace CRFBase
 
             Iteration++;
 
-            //using (var writer = new StreamWriter(StoreLocation))
-            //{
-            //    //writer.WriteLine("Iteration: " + Iteration);
-            //    //writer.WriteLine("loss: " + Math.Round(Losses.Last.Value, 3));
-            //    //writer.WriteLine("loss2: " + Math.Round(LossesMidTerm.Last.Value, 3));
-            //    //writer.WriteLine("loss3: " + Math.Round(LosseslongTerm.Last.Value, 3));
-            //    //for (int i = 0; i < TrackDistances.Length; i++)
-            //    //{
-            //    //    if (Iteration >= TrackDistances[i])
-            //    //    {
-            //    //        writer.WriteLine("Distance-" + i + " :" + Math.Round(Distances[i][Distances[i].Count - 1], 10));
-            //    //        writer.WriteLine("DistanceMidTerm-" + i + " :" + Math.Round(AverageChanges[i].Last.Value, 10));
-            //    //        writer.WriteLine("DistanceLongTerm-" + i + " :" + Math.Round(AverageChangesLong[i].Last.Value, 10));
-            //    //    }
-            //    //}
-            //    //if(Iteration % 10 == 0)
-            //    {
-            //        for (int i = 0; i < Weights; i++)
-            //        {
-            //            writer.WriteLine("Weights: " + WeightsInLine(weightHistories[i]));
-            //        }
-            //    }
-            //    //writer.WriteLine();
-            //}
         }
 
         public void WriteWeights()

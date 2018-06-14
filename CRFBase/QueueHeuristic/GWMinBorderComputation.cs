@@ -18,14 +18,14 @@ namespace CRFBase.QueueHeuristic
         public IGWNode Node { get; set; }
         public MinBorderOperations Operation { get; set; }
     }
-    
+
     enum MinBorderOperations
     {
         Add,
         Remove
     }
 
-    class MinBorderInput /*: IInputData<MinBorderPositionData>*/
+    class MinBorderInput
     {
         public MinBorderInput(IEnumerable<IGWNode> nodes)
         {

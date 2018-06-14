@@ -55,46 +55,38 @@ namespace CRFToolApp
         { // load data
             var request = new LoadCRFGraph();
             request.Request();
-            ViewModel.Graphs.Add(request.Graph);
-            Embed();
+            if (request.Graph != null)
+            {
+                ViewModel.Graphs.Add(request.Graph);
+                Embed();
+            }
         }
         I3DEmbeddingControl embeddingControl;
         Timer timer;
         bool isRunning = false;
         public void Embed()
         {
-            if (!isRunning)
+            if (ViewModel.Graph != null)
             {
-                embeddingControl = EmbeddingX.CreateDefaultEmbeddingControl();
-                timer = new Timer((obj) => ViewModel.NotifyPropertyChanged("Graph"));
-                timer.Change(0, 25);
+                if (!isRunning)
+                {
+                    embeddingControl = EmbeddingX.CreateDefaultEmbeddingControl();
+                    timer = new Timer((obj) => ViewModel.NotifyPropertyChanged("Graph"));
+                    timer.Change(0, 25);
 
-                embeddingControl.Graph = ViewModel.Graph?.Convert((n) => new EDND(1.0, "default", n.Data, 0), (edge) => new EDED(1.0), (g) => new EDGD());
+                    embeddingControl.Graph = ViewModel.Graph?.Convert((n) => new EDND(1.0, "default", n.Data, 0), (edge) => new EDED(1.0), (g) => new EDGD());
 
-                embeddingControl?.Start();
-                isRunning = true;
-            }
-            else
-            {
-                embeddingControl.Stop();
-                timer.Dispose();
-                isRunning = false;
+                    embeddingControl?.Start();
+                    isRunning = true;
+                }
+                else
+                {
+                    embeddingControl.Stop();
+                    timer.Dispose();
+                    isRunning = false;
+                }
             }
         }
-
-        private void button2_Click(object sender, RoutedEventArgs e)
-        {
-            var graph = ViewModel.Graph;
-            if (graph?.Data == null) return;
-            var request = new SolveInference(graph, null, graph.Data.NumberOfLabels);
-            request.Request();
-            foreach (var item in graph.Nodes)
-            {
-                item.Data.AssignedLabel = request.Solution?.Labeling[item.Data.Ordinate] ?? 0;
-            }
-            ViewModel.NotifyPropertyChanged("Graph");
-        }
-
         private void button3_Click(object sender, RoutedEventArgs e)
         {
             Embed();
@@ -161,7 +153,7 @@ namespace CRFToolApp
 
         private void buttonViterbi_Click(object sender, RoutedEventArgs e)
         { // run viterbi
-            var request = new SolveInference(ViewModel.Graph, null, 2);
+            var request = new SolveInference(ViewModel.Graph, 2);
             request.Request();
 
             ViewModel.Graph.Data.Viterbi = request.Solution.Labeling;
@@ -242,6 +234,7 @@ namespace CRFToolApp
                     viewOptions.Add("Characteristic_" + characteristic);
                 }
             }
+            viewOptions.Add("Observation");
             NotifyPropertyChanged("ViewOptions");
         }
 
@@ -258,6 +251,9 @@ namespace CRFToolApp
                     break;
                 case "Reference":
                     ViewItems.AddRange("Classification 0", "Classification 1");
+                    break;
+                case "Observation":
+                    ViewItems.AddRange("Observation 0", "Observation 1");
                     break;
                 default:
                     break;
@@ -325,9 +321,10 @@ namespace CRFToolApp
         public int SamplePointer
         {
             get { return samplePointer; }
-            set {
-                if (ViewModel?.Graph?.Data?.Sample?.NullOrEmpty() ?? false)
-                    return ;
+            set
+            {
+                if (ViewModel?.Graph?.Data?.Sample == null)
+                    return;
 
                 samplePointer = Math.Max(0, value % ViewModel.Graph.Data.Sample.Count);
 

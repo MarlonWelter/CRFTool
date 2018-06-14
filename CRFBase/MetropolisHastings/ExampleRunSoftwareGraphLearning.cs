@@ -115,7 +115,7 @@ namespace CRFBase.MetropolisHastings
                         isingModel.CreateCRFScore(graph);
 
                         // Viterbiheuristik starten
-                        var request = new SolveInference(graph, null, parameters.NumberLabels);
+                        var request = new SolveInference(graph, parameters.NumberLabels);
                         request.RequestInDefaultContext();
 
                         // sammeln der ergebnisse
@@ -162,7 +162,7 @@ namespace CRFBase.MetropolisHastings
                             }
                         }
                         // Viterbiheuristik starten
-                        request = new SolveInference(graph, null, parameters.NumberLabels);
+                        request = new SolveInference(graph, parameters.NumberLabels);
                         request.RequestInDefaultContext();
 
                         // sammeln der ergebnisse
@@ -281,7 +281,7 @@ namespace CRFBase.MetropolisHastings
             foreach (var graph in graphs)
             {
                 isingModell.CreateCRFScore(graph);
-                var request = new SolveInference(graph, null, parameters.NumberLabels);
+                var request = new SolveInference(graph, parameters.NumberLabels);
                 request.RequestInDefaultContext();
                 graph.Data.ReferenceLabeling = request.Solution.Labeling;
             }

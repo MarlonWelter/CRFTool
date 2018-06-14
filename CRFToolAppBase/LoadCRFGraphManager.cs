@@ -32,13 +32,15 @@ namespace CRFToolAppBase
                     }
                 }
             }
-            int nodeCounter = 0;
-            foreach (var node in graph.Nodes)
+            if (graph != null)
             {
-                node.Data.Ordinate = nodeCounter;
-                nodeCounter++;
+                int nodeCounter = 0;
+                foreach (var node in graph.Nodes)
+                {
+                    node.Data.Ordinate = nodeCounter;
+                    nodeCounter++;
+                }
             }
-
             request.Graph = graph;
         }
     }

@@ -16,28 +16,13 @@ using System.Windows.Shapes;
 namespace CRFToolApp
 {
     /// <summary>
-    /// Interaction logic for Settings.xaml
+    /// Interaction logic for EvaluationProject.xaml
     /// </summary>
-    public partial class Settings : UserControl
+    public partial class EvaluationProject : UserControl
     {
-        private SettingsViewModel viewModel;
-
-        public SettingsViewModel ViewModel
-        {
-            get { return viewModel; }
-            set
-            {
-                viewModel = value;
-                DataContext = viewModel;
-            }
-        }
-
-        public Settings()
+        public EvaluationProject()
         {
             InitializeComponent();
-
-            ViewModel = new SettingsViewModel();
         }
     }
-
 }

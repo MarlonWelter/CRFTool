@@ -58,7 +58,7 @@ namespace CRFBase
                 mx = graph.Nodes.Count();
                 mu += mx;
                 // Labeling mit Viterbi (MAP)
-                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, null, Labels, BufferSizeInference);
+                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                 request.RequestInDefaultContext();
                 int[] labelingVit = request.Solution.Labeling;
                 vit[g] = labelingVit;
