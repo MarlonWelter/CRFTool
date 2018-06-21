@@ -61,9 +61,9 @@
     <Compile Include="Build.cs" />
     <Compile Include="TrainingEvaluationOLM\ComputeKeys.cs" />
     <Compile Include="CRFResult.cs" />
-    <Compile Include="GibbsSampling\GibbsSamplingManager.cs" />
-    <Compile Include="GibbsSampling\GiveProbableLabelings.cs" />
-    <Compile Include="InferenceHeuristik\InferenceManager.cs" />
+    <Compile Include="MCMC\MCMCSamplingManager.cs" />
+    <Compile Include="MCMC\GiveProbableLabelings.cs" />
+    <Compile Include="InferenceHeuristik\ViterbiManager.cs" />
     <Compile Include="InferenceHeuristik\SolveInference.cs" />
     <Compile Include="Input\ITrainingInputEdgeData.cs" />
     <Compile Include="Input\ITrainingInputGraphData.cs" />
@@ -97,8 +97,8 @@
     <Compile Include="QueueHeuristic\ComputeOrder.cs" />
     <Compile Include="Input\CRFInput.cs" />
     <Compile Include="QueueHeuristic\GWMinBorderComputation.cs" />
-    <Compile Include="GibbsSampling\BasicGibbsSampling.cs" />
-    <Compile Include="Combination.cs" />
+    <Compile Include="MCMC\BasicMCMCSampling.cs" />
+    <Compile Include="CRFLabelling.cs" />
     <Compile Include="InferenceHeuristik\DetermineBarrier.cs" />
     <Compile Include="QueueHeuristic\GreedyMinBorderQueueComputing.cs" />
     <Compile Include="InferenceHeuristik\ViterbiHeuristic.cs" />

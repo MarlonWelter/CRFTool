@@ -7,18 +7,19 @@ using System.Collections;
 
 namespace CRFBase
 {
-    public class Combination : IComparable<Combination>
+    public class CRFLabelling : IComparable<CRFLabelling>
     {
 
-        public Combination()
+        public CRFLabelling()
         {
         }
 
-        public Combination(Combination parent)
+        public CRFLabelling(CRFLabelling parent)
         {
-            Assignment = parent.Assignment.Clone() as int[];
+            AssignedLabels = parent.AssignedLabels.Clone() as int[];
         }
-        public int[] Assignment { get; set; }
+        //this array holds the labellings for all nodes. The index for a node is its GraphId
+        public int[] AssignedLabels { get; set; }
 
         public double Score { get; set; }
         public double LastAddedScore { get; set; }
@@ -28,7 +29,7 @@ namespace CRFBase
         {
             var addedScore = 0.0;
 
-            Assignment[chosenVertex.GraphId] = state;
+            AssignedLabels[chosenVertex.GraphId] = state;
 
             addedScore += chosenVertex.Data.Score(state);
             foreach (var edge in chosenVertex.Edges)
@@ -38,7 +39,7 @@ namespace CRFBase
                 if (!headData.IsChosen || !footData.IsChosen)
                     continue;
 
-                addedScore += edge.Score(Assignment[edge.Head.GraphId], Assignment[edge.Foot.GraphId]);
+                addedScore += edge.Score(AssignedLabels[edge.Head.GraphId], AssignedLabels[edge.Foot.GraphId]);
             }
             Score += (addedScore);
             LastAddedScore = (addedScore);
@@ -48,14 +49,14 @@ namespace CRFBase
         public override string ToString()
         {
             string name = "";
-            foreach (var vertex in Assignment)
+            foreach (var vertex in AssignedLabels)
             {
-                name += "Vertex " + vertex + ": " + Assignment[vertex] + "\n";
+                name += "Vertex " + vertex + ": " + AssignedLabels[vertex] + "\n";
             }
             return name;
         }
 
-        public int CompareTo(Combination other)
+        public int CompareTo(CRFLabelling other)
         {
             if (Score > other.Score)
                 return 1;

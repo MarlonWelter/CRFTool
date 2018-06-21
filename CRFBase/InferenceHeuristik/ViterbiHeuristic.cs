@@ -18,8 +18,8 @@ namespace CRFBase
         public readonly int NumberLabels;
         readonly List<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> ChosenVertices = new List<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
         internal List<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> BoundaryVertices = new List<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
-        public List<Combination> Combinations = new List<Combination>();
-        LinkedList<Combination> NextGeneration = new LinkedList<Combination>();
+        public List<CRFLabelling> Combinations = new List<CRFLabelling>();
+        LinkedList<CRFLabelling> NextGeneration = new LinkedList<CRFLabelling>();
         public double Barrier { get; set; }
         private const int RunsToDetermineBarrier = 100;
         private Random Random = new Random();
@@ -65,8 +65,8 @@ namespace CRFBase
 
             //Create starting Combination
             {
-                Combination newCombination = new Combination();
-                newCombination.Assignment = new int[Graph.Nodes.Count() - startPatch.Count()];
+                CRFLabelling newCombination = new CRFLabelling();
+                newCombination.AssignedLabels = new int[Graph.Nodes.Count() - startPatch.Count()];
 
                 var score = 0.0;
                 if (startLabeling != null)
@@ -109,7 +109,7 @@ namespace CRFBase
                 {
                     var ng = NextGeneration.ToList();
                     var barrier2 = DetermineBarrierStep2(ng, MaximalCombinationsUnderConsideration, RunsToDetermineBarrier);
-                    NextGeneration = new LinkedList<Combination>(ng.Where(item => item.Score > barrier2 || (item.Score == barrier2 && Random.NextDouble() > 0.5)));
+                    NextGeneration = new LinkedList<CRFLabelling>(ng.Where(item => item.Score > barrier2 || (item.Score == barrier2 && Random.NextDouble() > 0.5)));
                 }
 
                 Combinations = NextGeneration.ToList();
@@ -132,7 +132,7 @@ namespace CRFBase
             }
             foreach (var node in vertexQueue)
             {
-                result.Labeling[node.GraphId] = winner.Assignment[node.GraphId];
+                result.Labeling[node.GraphId] = winner.AssignedLabels[node.GraphId];
             }
             result.RunTime = watch.Elapsed;
             result.Score = winner.Score;
@@ -140,7 +140,7 @@ namespace CRFBase
             return result;
         }
 
-        private double DetermineBarrierStep2(List<Combination> Combinations, int MaximalCombinationsUnderConsideration, int RunsToDetermineBarrier)
+        private double DetermineBarrierStep2(List<CRFLabelling> Combinations, int MaximalCombinationsUnderConsideration, int RunsToDetermineBarrier)
         {
 
             var surviveRatio = ((double)MaximalCombinationsUnderConsideration) / (Combinations.Count);
@@ -165,7 +165,7 @@ namespace CRFBase
             return barrier;
         }
 
-        private double DetermineBarrier(List<Combination> Combinations, IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> vertex, bool needBarrier, int MaximalCombinationsUnderConsideration, int RunsToDetermineBarrier)
+        private double DetermineBarrier(List<CRFLabelling> Combinations, IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> vertex, bool needBarrier, int MaximalCombinationsUnderConsideration, int RunsToDetermineBarrier)
         {
             if (!needBarrier)
                 return double.MinValue;
@@ -194,9 +194,9 @@ namespace CRFBase
                 foreach (var edge in scoringEdges)
                 {
                     if (edge.Foot.Equals(vertex))
-                        score += edge.Score(item.Assignment[edge.Head.GraphId], label);
+                        score += edge.Score(item.AssignedLabels[edge.Head.GraphId], label);
                     else
-                        score += edge.Score(label, item.Assignment[edge.Foot.GraphId]);
+                        score += edge.Score(label, item.AssignedLabels[edge.Foot.GraphId]);
                 }
                 LinkedListHandler.SortedInsert(Scores, score, survivors);
             }
@@ -234,26 +234,26 @@ namespace CRFBase
             return NewInnerVertices;
         }
 
-        public Func<Combination, bool> CombinationFilter { get; set; }
-        public readonly MEvent<Combination> AnnounceNewCombination = new MEvent<Combination>();
+        public Func<CRFLabelling, bool> CombinationFilter { get; set; }
+        public readonly MEvent<CRFLabelling> AnnounceNewCombination = new MEvent<CRFLabelling>();
 
-        public void Do(IList<Combination> Combinations, IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> chosenVertex, LinkedList<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> NewInnerVertices, Func<Combination, bool> combinationFilter, IList<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> border)
+        public void Do(IList<CRFLabelling> Combinations, IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> chosenVertex, LinkedList<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> NewInnerVertices, Func<CRFLabelling, bool> combinationFilter, IList<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> border)
         {
             CombinationFilter = combinationFilter;
             Do(Combinations, chosenVertex, NewInnerVertices, border);
         }
-        public void Do(IList<Combination> Combinations, IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> chosenVertex, LinkedList<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> NewInnerVertices, IList<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> border)
+        public void Do(IList<CRFLabelling> Combinations, IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> chosenVertex, LinkedList<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> NewInnerVertices, IList<IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> border)
         {
 
             bool hasNewInnerVertices = NewInnerVertices.Count > 0;
-            var validNewCombinations = new Dictionary<long, Combination>();
+            var validNewCombinations = new Dictionary<long, CRFLabelling>();
 
-            foreach (Combination combination in Combinations)
+            foreach (CRFLabelling combination in Combinations)
             {
-                LinkedList<Combination> newCombinations = CreateNextGeneration(chosenVertex, combination);
+                LinkedList<CRFLabelling> newCombinations = CreateNextGeneration(chosenVertex, combination);
 
 
-                foreach (Combination newCombination in newCombinations)
+                foreach (CRFLabelling newCombination in newCombinations)
                 {
                     if (!CombinationFilter(newCombination))
                         continue;
@@ -265,7 +265,7 @@ namespace CRFBase
                     for (int index = 0; index < border.Count; index++)
                     {
                         fp = fp << 1;
-                        fp += newCombination.Assignment[border[index].GraphId];
+                        fp += newCombination.AssignedLabels[border[index].GraphId];
                     }
                     newCombination.BorderFingerPrint = fp;
                     
@@ -284,23 +284,23 @@ namespace CRFBase
                 AnnounceNewCombination.Enter(comb);
             }
         }
-        public LinkedList<Combination> CreateNextGeneration(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> chosenVertex,
-               Combination oldCombination)
+        public LinkedList<CRFLabelling> CreateNextGeneration(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> chosenVertex,
+               CRFLabelling oldCombination)
         {
 
-            LinkedList<Combination> newCombinations = new LinkedList<Combination>();
+            LinkedList<CRFLabelling> newCombinations = new LinkedList<CRFLabelling>();
             for (int counter = 0; counter < NumberLabels; counter++)
             {
-                Combination newCombination = default(Combination);
+                CRFLabelling newCombination = default(CRFLabelling);
                 if (counter == NumberLabels - 1)
                 {
-                    newCombination = new Combination();
+                    newCombination = new CRFLabelling();
                     newCombination.Score = oldCombination.Score;
-                    newCombination.Assignment = oldCombination.Assignment;
+                    newCombination.AssignedLabels = oldCombination.AssignedLabels;
                 }
                 else
                 {
-                    newCombination = new Combination(oldCombination);
+                    newCombination = new CRFLabelling(oldCombination);
                     newCombination.Score = oldCombination.Score;
                 }
                 newCombination.AddScore(chosenVertex, counter);

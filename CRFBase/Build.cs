@@ -15,8 +15,8 @@ namespace CRFBase
         public static void Do(IGWContext context = null)
         {
             new ComputeOrderManager(context);
-            new InferenceManager();
-            new GibbsSamplingManager();
+            new ViterbiManager();
+            new MCMCSamplingManager();
             new OLMManager();
         }
     }

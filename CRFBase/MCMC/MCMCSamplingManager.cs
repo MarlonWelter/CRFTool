@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CRFBase.GibbsSampling
 {
-    class GibbsSamplingManager : GWManager<GiveProbableLabelings>
+    class MCMCSamplingManager : GWManager<GiveProbableLabelings>
     {
         public int MaxCombinationsBuffer { get; set; }
 
@@ -18,7 +18,7 @@ namespace CRFBase.GibbsSampling
             var watch = new Stopwatch();
             watch.Start();
 
-            var occurences = BasicGibbsSampling.Do(obj.Graph, obj.StartingPoints, obj.PreRunLength, obj.RunLength);
+            var occurences = BasicMCMCSampling.Do(obj.Graph, obj.StartingPoints, obj.PreRunLength, obj.RunLength);
 
             watch.Stop();
 

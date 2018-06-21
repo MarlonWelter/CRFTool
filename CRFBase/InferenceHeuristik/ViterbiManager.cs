@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace CRFBase
 {
-    class InferenceManager : GWManager<SolveInference>
+    class ViterbiManager : GWManager<SolveInference>
     {
         public const int DefaultBufferSize = 1000;
 
-        public InferenceManager(int maxCombinationsBuffer = DefaultBufferSize) : base()
+        public ViterbiManager(int maxCombinationsBuffer = DefaultBufferSize) : base()
         {
             MaxCombinationsBuffer = maxCombinationsBuffer;
         }

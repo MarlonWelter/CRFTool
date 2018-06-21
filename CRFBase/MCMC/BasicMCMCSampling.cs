@@ -8,7 +8,7 @@ using CRFGraph = CodeBase.IGWGraph<CodeBase.ICRFNodeData, CodeBase.ICRFEdgeData,
 
 namespace CRFBase
 {
-    public class BasicGibbsSampling
+    public class BasicMCMCSampling
     {
         public const int DefaultBufferFindStartpointViterbi = 25;
 
@@ -48,7 +48,7 @@ namespace CRFBase
                 item.Data.TempAssign = Math.Log(Random.NextDouble()) < item.Data.Score(0) ? 0 : 1;
             }
         }
-        
+
         private static Random random;
         public static Random Random
         {
@@ -59,7 +59,7 @@ namespace CRFBase
         public static void ChangePositionDefault(CRFGraph graph, int time)
         {
             var node = graph.Nodes.ToList().RandomElement(Random);
-          
+
             //compute relative change
             var relChange = 0.0;
             relChange += node.Data.Score((node.Data.TempAssign + 1) % 2) - node.Data.Score(node.Data.TempAssign);
@@ -76,8 +76,6 @@ namespace CRFBase
             {
                 relChange += edge.TempScore();
             }
-
-
 
             if (Random.NextDouble() <= Math.Exp(relChange))
             {
