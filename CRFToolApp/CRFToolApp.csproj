@@ -80,6 +80,9 @@
     <Compile Include="graphsList.xaml.cs">
       <DependentUpon>graphsList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="InfoPage.xaml.cs">
+      <DependentUpon>InfoPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainViewGraph3DConverter.cs" />
     <Compile Include="RandomData.cs" />
     <Compile Include="Settings.xaml.cs">
@@ -110,6 +113,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="graphsList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InfoPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -430,6 +437,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icons\viterbi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\info %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\info %283%29.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="CRFToolApp.InfoPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CRFToolApp"
+             mc:Ignorable="d" 
+             d:DesignHeight="680" d:DesignWidth="1100">
+    <StackPanel Orientation="Vertical" Background="AliceBlue">
+        <StackPanel Orientation="Horizontal" Width="1100">
+            <Button Padding="10" Background="Beige" FontSize="16" Width="100" Click="Button_Click">Use Case 1:</Button>
+            <TextBlock Name="testCase1Text" Padding="10" FontSize="16" Width="1000" TextWrapping="Wrap">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Width="1100">
+            <Button Padding="10" Background="Beige" FontSize="16" Width="100" Click="Button_Click_1">Use Case 2:</Button>
+            <TextBlock Name="TestCase2Text" Padding="10" FontSize="16" Width="1000" TextWrapping="Wrap">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</TextBlock>
+        </StackPanel >
+        <StackPanel Orientation="Horizontal" Width="1100">
+            <Button Padding="10" Background="Beige" FontSize="16" Width="100" Click="Button_Click_2">Use Case 3:</Button>
+            <TextBlock Name="TestCase3Text" Padding="10" FontSize="16" Width="1000" TextWrapping="Wrap">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</TextBlock>
+        </StackPanel>
+    </StackPanel >
+</UserControl>

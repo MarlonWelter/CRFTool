@@ -50,6 +50,7 @@ namespace CRFToolApp
         private graphDetailsList graphDetailsView = new graphDetailsList();
         private ViterbiView viterbiView = new ViterbiView();
         private Settings settings = new Settings();
+        private InfoPage infoPage = new InfoPage();
 
         private void button1_Click(object sender, RoutedEventArgs e)
         { // load data
@@ -208,6 +209,12 @@ namespace CRFToolApp
             {
                 Log.Error(ex);
             }
+        }
+
+        private void buttonLeftInfo_Click(object sender, RoutedEventArgs e)
+        {
+            ContentPanel.Children.Clear();
+            ContentPanel.Children.Add(infoPage);
         }
     }
 
@@ -410,6 +417,7 @@ namespace CRFToolApp
         GraphsList,
         View3D,
         GraphDetails,
-        Settings
+        Settings,
+        Info
     }
 }

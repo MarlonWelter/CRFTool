@@ -99,6 +99,9 @@
             <Button Name="buttonLeft5" Background="Transparent"  Padding="10" Click="buttonLeft5_Click">
                 <Image Source="icons/settings.png"></Image>
             </Button>
+            <Button Name="buttonLeftInfo" Background="Transparent"  Padding="10" Click="buttonLeftInfo_Click">
+                <Image Source="icons/info (3).png"></Image>
+            </Button>
         </StackPanel>
     </Grid>
 </Window>
