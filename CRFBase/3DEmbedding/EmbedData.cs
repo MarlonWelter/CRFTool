@@ -172,8 +172,9 @@ namespace CRFBase
                     }
 
                     //add force to 2D - plane
-                    force.Add(new Vector(0, 0, -rdmNode.Data.Object3D.Z / 500.0));
+                    //  force.Add(new Vector(0, 0, -rdmNode.Data.Object3D.Z / 500.0));
 
+                    Temperature = 1;
                     force.Multiply(Temperature);
                     rdmNode.Data.Object3D.Move(force);
 
@@ -211,16 +212,25 @@ namespace CRFBase
 
             var distOne = 20;
 
-            return Math.Min(0, -distOne + dist * 0.25);
-            //return -distOne / (3 * dist);
-            //return -Math.Min(10, Math.Exp(-dist * 0.01));
+            //  return 20 * Math.Min(0, -distOne + dist * 0.25);
+            //   return -distOne / (3 * dist);
+            //  return 12 * -Math.Min(100, Math.Exp(-dist * 0.0));
+            return -1000 * (1 / (Math.Pow(dist, 1.1))); 
         }
         public double ForceNbs(ICoordinated from, ICoordinated to)
         {
             var dist = from.Distance(to);
 
-            return Math.Min(25, -8 + dist * 0.5);
-            //return -Math.Min(100, Math.Exp(-dist * 0.01)) + Math.Log(dist);
+            //if (dist < 50)
+            //    return 25;
+            //if( dist < 200)
+            //{
+            //    return  (dist-50) * 0.125;
+            //}
+            //else
+
+            //return (dist-200) * 0.5;
+            return  Math.Pow(Math.Log(dist), 1.2);
         }
 
         public void Start()
