@@ -153,15 +153,22 @@ namespace CRFToolApp
 
         private void buttonViterbi_Click(object sender, RoutedEventArgs e)
         { // run viterbi
-            var request = new SolveInference(ViewModel.Graph, 2);
-            request.Request();
-
-            ViewModel.Graph.Data.Viterbi = request.Solution.Labeling;
-
-            // assign viterbi result node.assignedlabel
-            foreach (var node in ViewModel.Graph.Nodes)
+            try
             {
-                node.Data.AssignedLabel = request.Solution.Labeling[node.GraphId];
+                var request = new SolveInference(ViewModel.Graph, 2);
+                request.Request();
+
+                ViewModel.Graph.Data.Viterbi = request.Solution.Labeling;
+
+                // assign viterbi result node.assignedlabel
+                foreach (var node in ViewModel.Graph.Nodes)
+                {
+                    node.Data.AssignedLabel = request.Solution.Labeling[node.GraphId];
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
             }
         }
 
@@ -174,25 +181,32 @@ namespace CRFToolApp
 
         private void buttonMCMC_Click(object sender, RoutedEventArgs e)
         {// run mcmc
-            var parameters = new MHSampler2Parameters();
-            parameters.Graph = ViewModel.Graph;
-            parameters.NumberChains = 10;
-            parameters.PreRunLength = 100;
-            parameters.MHSampler2StartPoint = MHSampler2StartPoint.Random;
-            parameters.RunLength = 100;
-
-            var sampler = new MHSampler2();
-            sampler.Do(parameters);
-
-            ViewModel.Graph.Data.Sample = sampler.FinalSample;
-
-            if (ViewModel.Graph.Data.Sample.NotNullOrEmpty())
+            try
             {
-                // assign viterbi result node.assignedlabel
-                foreach (var node in ViewModel.Graph.Nodes)
+                var parameters = new MHSampler2Parameters();
+                parameters.Graph = ViewModel.Graph;
+                parameters.NumberChains = 10;
+                parameters.PreRunLength = 100;
+                parameters.MHSampler2StartPoint = MHSampler2StartPoint.Random;
+                parameters.RunLength = 100;
+
+                var sampler = new MHSampler2();
+                sampler.Do(parameters);
+
+                ViewModel.Graph.Data.Sample = sampler.FinalSample;
+
+                if (ViewModel.Graph.Data.Sample.NotNullOrEmpty())
                 {
-                    node.Data.AssignedLabel = ViewModel.Graph.Data.Sample[0][node.GraphId];
+                    // assign viterbi result node.assignedlabel
+                    foreach (var node in ViewModel.Graph.Nodes)
+                    {
+                        node.Data.AssignedLabel = ViewModel.Graph.Data.Sample[0][node.GraphId];
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
             }
         }
     }
@@ -335,6 +349,18 @@ namespace CRFToolApp
                 }
 
                 NotifyPropertyChanged("SamplePointer");
+            }
+        }
+
+        public void ShowViterbiLabelling()
+        {
+            if (Graph?.Data?.Viterbi != null)
+            {
+                foreach (var node in ViewModel.Graph.Nodes)
+                {
+                    node.Data.AssignedLabel = ViewModel.Graph.Data.Viterbi[node.GraphId];
+                }
+                NotifyPropertyChanged("Graph");
             }
         }
 

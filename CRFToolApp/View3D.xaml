@@ -62,7 +62,7 @@
             </StackPanel>
             <Label FontSize="14" Content="{Binding Path=ViewModel, Converter={StaticResource sampleCountConverter}}"></Label>
             <Button Grid.Column="2" Click="buttonViterbi_Click" Name="buttonViterbi"  Background="Transparent" Width="40" HorizontalAlignment="Left">
-                <Image Source="icons/best.png"></Image>
+                <Image Source="icons/viterbi.png"></Image>
             </Button>
         </StackPanel >
     </Grid>

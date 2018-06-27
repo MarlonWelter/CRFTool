@@ -26,22 +26,22 @@
         </Grid.Background>-->
         <StackPanel Grid.Row="0" Grid.ColumnSpan="4" Background="CadetBlue" Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Button Name="button1" Click="button1_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent" ToolTip="Load a graph.">
-                <Image Source="icons/download.png"></Image>
+                <Image Source="icons/open.png"></Image>
             </Button>
             <Button Name="buttonSave" Click="buttonSave_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent" ToolTip="Save current graph.">
                 <Image Source="icons/save.png"></Image>
             </Button>
             <Button Name="button3" Click="button3_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent" ToolTip="Start 3D embeding.">
-                <Image Source="icons/action.png"></Image>
+                <Image Source="icons/graph3d.png"></Image>
             </Button>
             <Button Name="button4" Click="button4_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent" ToolTip="Init with random data.">
-                <Image Source="icons/defense.png"></Image>
+                <Image Source="icons/randomData.png"></Image>
             </Button>
             <Button Name="buttonViterbi" Click="buttonViterbi_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent" ToolTip="Run Viterbi.">
                 <Image Source="icons/action.png"></Image>
             </Button>
             <Button Name="buttonMCMC" Click="buttonMCMC_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent" ToolTip="Create sample with Metropolis Hastings.">
-                <Image Source="icons/action.png"></Image>
+                <Image Source="icons/mcmc.png"></Image>
             </Button>
         </StackPanel>
         <DockPanel
@@ -85,19 +85,19 @@
 
         <StackPanel Grid.Row="1" Grid.Column="0" Background="Beige">
             <Button Name="buttonLeft1" Background="Transparent" Padding="10" Click="buttonLeft1_Click">
-                <Image Source="icons/collection.png"></Image>
+                <Image Source="icons/menu.png"></Image>
             </Button>
             <Button Name="buttonLeft2" Background="Transparent"  Padding="10" Click="buttonLeft2_Click">
-                <Image Source="icons/network.png"></Image>
+                <Image Source="icons/view3d.png"></Image>
             </Button>
             <Button Name="buttonLeft3" Background="Transparent"  Padding="10" Click="buttonLeft3_Click">
-                <Image Source="icons/list.png"></Image>
+                <Image Source="icons/magGlass.png"></Image>
             </Button>
             <Button Name="buttonLeft4" Background="Transparent"  Padding="10" Click="buttonLeft4_Click">
-                <Image Source="icons/best.png"></Image>
+                <Image Source="icons/viterbi.png"></Image>
             </Button>
             <Button Name="buttonLeft5" Background="Transparent"  Padding="10" Click="buttonLeft5_Click">
-                <Image Source="icons/feature.png"></Image>
+                <Image Source="icons/settings.png"></Image>
             </Button>
         </StackPanel>
     </Grid>

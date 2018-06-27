@@ -185,6 +185,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="icons\png\.DS_Store" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -250,6 +251,185 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icons\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\png\mid\3d_file.png" />
+    <Resource Include="icons\png\mid\3d_folder_open.png" />
+    <Resource Include="icons\png\mid\3d_group.png" />
+    <Resource Include="icons\png\mid\3d_ribbon.png" />
+    <Resource Include="icons\png\mid\3d_trash_can.png" />
+    <Resource Include="icons\png\mid\3d_trash_can_empting-copia.png" />
+    <Resource Include="icons\png\mid\3d_trash_can_full.png" />
+    <Resource Include="icons\png\mid\advertising.png" />
+    <Resource Include="icons\png\mid\alliance.png" />
+    <Resource Include="icons\png\mid\alliance2.png" />
+    <Resource Include="icons\png\mid\checkered_flag.png" />
+    <Resource Include="icons\png\mid\client_user.png" />
+    <Resource Include="icons\png\mid\filter.png" />
+    <Resource Include="icons\png\mid\filter_data.png" />
+    <Resource Include="icons\png\mid\focus_group.png" />
+    <Resource Include="icons\png\mid\front_desk.png" />
+    <Resource Include="icons\png\mid\multimple_solutions.png" />
+    <Resource Include="icons\png\mid\oil.png" />
+    <Resource Include="icons\png\mid\plastic_bottle.png" />
+    <Resource Include="icons\png\mid\positioning.png" />
+    <Resource Include="icons\png\mid\service_waste_disposal.png" />
+    <Resource Include="icons\png\mid\solution.png" />
+    <Resource Include="icons\png\mid\solution2.png" />
+    <Resource Include="icons\png\mid\stats_area_chart.png" />
+    <Resource Include="icons\png\mid\stats_histogram.png" />
+    <Resource Include="icons\png\mid\stats_pie_chart.png" />
+    <Resource Include="icons\png\mid\stock_market.png" />
+    <Resource Include="icons\png\mid\task.png" />
+    <Resource Include="icons\png\mid\trophy.png" />
+    <Resource Include="icons\png\mid\umbrella.png" />
+    <Resource Include="icons\png\x1\3d_file.png" />
+    <Resource Include="icons\png\x1\3d_folder_open.png" />
+    <Resource Include="icons\png\x1\3d_group.png" />
+    <Resource Include="icons\png\x1\3d_ribbon.png" />
+    <Resource Include="icons\png\x1\3d_trash_can.png" />
+    <Resource Include="icons\png\x1\3d_trash_can_empting-copia.png" />
+    <Resource Include="icons\png\x1\3d_trash_can_full.png" />
+    <Resource Include="icons\png\x1\advertising.png" />
+    <Resource Include="icons\png\x1\alliance.png" />
+    <Resource Include="icons\png\x1\alliance2.png" />
+    <Resource Include="icons\png\x1\checkered_flag.png" />
+    <Resource Include="icons\png\x1\client_user.png" />
+    <Resource Include="icons\png\x1\filter.png" />
+    <Resource Include="icons\png\x1\filter_data.png" />
+    <Resource Include="icons\png\x1\focus_group.png" />
+    <Resource Include="icons\png\x1\front_desk.png" />
+    <Resource Include="icons\png\x1\multimple_solutions.png" />
+    <Resource Include="icons\png\x1\oil.png" />
+    <Resource Include="icons\png\x1\plastic_bottle.png" />
+    <Resource Include="icons\png\x1\positioning.png" />
+    <Resource Include="icons\png\x1\service_waste_disposal.png" />
+    <Resource Include="icons\png\x1\solution.png" />
+    <Resource Include="icons\png\x1\solution2.png" />
+    <Resource Include="icons\png\x1\stats_area_chart.png" />
+    <Resource Include="icons\png\x1\stats_histogram.png" />
+    <Resource Include="icons\png\x1\stats_pie_chart.png" />
+    <Resource Include="icons\png\x1\stock_market.png" />
+    <Resource Include="icons\png\x1\task.png" />
+    <Resource Include="icons\png\x1\trophy.png" />
+    <Resource Include="icons\png\x1\umbrella.png" />
+    <Resource Include="icons\png\x2\3d_file.png" />
+    <Resource Include="icons\png\x2\3d_folder_open.png" />
+    <Resource Include="icons\png\x2\3d_group.png" />
+    <Resource Include="icons\png\x2\3d_ribbon.png" />
+    <Resource Include="icons\png\x2\3d_trash_can.png" />
+    <Resource Include="icons\png\x2\3d_trash_can_empting-copia.png" />
+    <Resource Include="icons\png\x2\3d_trash_can_full.png" />
+    <Resource Include="icons\png\x2\advertising.png" />
+    <Resource Include="icons\png\x2\alliance.png" />
+    <Resource Include="icons\png\x2\alliance2.png" />
+    <Resource Include="icons\png\x2\checkered_flag.png" />
+    <Resource Include="icons\png\x2\client_user.png" />
+    <Resource Include="icons\png\x2\filter.png" />
+    <Resource Include="icons\png\x2\filter_data.png" />
+    <Resource Include="icons\png\x2\focus_group.png" />
+    <Resource Include="icons\png\x2\front_desk.png" />
+    <Resource Include="icons\png\x2\multimple_solutions.png" />
+    <Resource Include="icons\png\x2\oil.png" />
+    <Resource Include="icons\png\x2\plastic_bottle.png" />
+    <Resource Include="icons\png\x2\positioning.png" />
+    <Resource Include="icons\png\x2\service_waste_disposal.png" />
+    <Resource Include="icons\png\x2\solution.png" />
+    <Resource Include="icons\png\x2\solution2.png" />
+    <Resource Include="icons\png\x2\stats_area_chart.png" />
+    <Resource Include="icons\png\x2\stats_histogram.png" />
+    <Resource Include="icons\png\x2\stats_pie_chart.png" />
+    <Resource Include="icons\png\x2\stock_market.png" />
+    <Resource Include="icons\png\x2\task.png" />
+    <Resource Include="icons\png\x2\trophy.png" />
+    <Resource Include="icons\png\x2\umbrella.png" />
+    <Resource Include="icons\png\x4\3d_file.png" />
+    <Resource Include="icons\png\x4\3d_folder_open.png" />
+    <Resource Include="icons\png\x4\3d_group.png" />
+    <Resource Include="icons\png\x4\3d_ribbon.png" />
+    <Resource Include="icons\png\x4\3d_trash_can.png" />
+    <Resource Include="icons\png\x4\3d_trash_can_empting-copia.png" />
+    <Resource Include="icons\png\x4\3d_trash_can_full.png" />
+    <Resource Include="icons\png\x4\advertising.png" />
+    <Resource Include="icons\png\x4\alliance.png" />
+    <Resource Include="icons\png\x4\alliance2.png" />
+    <Resource Include="icons\png\x4\checkered_flag.png" />
+    <Resource Include="icons\png\x4\client_user.png" />
+    <Resource Include="icons\png\x4\filter.png" />
+    <Resource Include="icons\png\x4\filter_data.png" />
+    <Resource Include="icons\png\x4\focus_group.png" />
+    <Resource Include="icons\png\x4\front_desk.png" />
+    <Resource Include="icons\png\x4\multimple_solutions.png" />
+    <Resource Include="icons\png\x4\oil.png" />
+    <Resource Include="icons\png\x4\plastic_bottle.png" />
+    <Resource Include="icons\png\x4\positioning.png" />
+    <Resource Include="icons\png\x4\service_waste_disposal.png" />
+    <Resource Include="icons\png\x4\solution.png" />
+    <Resource Include="icons\png\x4\solution2.png" />
+    <Resource Include="icons\png\x4\stats_area_chart.png" />
+    <Resource Include="icons\png\x4\stats_histogram.png" />
+    <Resource Include="icons\png\x4\stats_pie_chart.png" />
+    <Resource Include="icons\png\x4\stock_market.png" />
+    <Resource Include="icons\png\x4\task.png" />
+    <Resource Include="icons\png\x4\trophy.png" />
+    <Resource Include="icons\png\x4\umbrella.png" />
+    <Resource Include="icons\png\x8\3d_file.png" />
+    <Resource Include="icons\png\x8\3d_folder_open.png" />
+    <Resource Include="icons\png\x8\3d_group.png" />
+    <Resource Include="icons\png\x8\3d_ribbon.png" />
+    <Resource Include="icons\png\x8\3d_trash_can.png" />
+    <Resource Include="icons\png\x8\3d_trash_can_empting-copia.png" />
+    <Resource Include="icons\png\x8\3d_trash_can_full.png" />
+    <Resource Include="icons\png\x8\advertising.png" />
+    <Resource Include="icons\png\x8\alliance.png" />
+    <Resource Include="icons\png\x8\alliance2.png" />
+    <Resource Include="icons\png\x8\checkered_flag.png" />
+    <Resource Include="icons\png\x8\client_user.png" />
+    <Resource Include="icons\png\x8\filter.png" />
+    <Resource Include="icons\png\x8\filter_data.png" />
+    <Resource Include="icons\png\x8\focus_group.png" />
+    <Resource Include="icons\png\x8\front_desk.png" />
+    <Resource Include="icons\png\x8\multimple_solutions.png" />
+    <Resource Include="icons\png\x8\oil.png" />
+    <Resource Include="icons\png\x8\plastic_bottle.png" />
+    <Resource Include="icons\png\x8\positioning.png" />
+    <Resource Include="icons\png\x8\service_waste_disposal.png" />
+    <Resource Include="icons\png\x8\solution.png" />
+    <Resource Include="icons\png\x8\solution2.png" />
+    <Resource Include="icons\png\x8\stats_area_chart.png" />
+    <Resource Include="icons\png\x8\stats_histogram.png" />
+    <Resource Include="icons\png\x8\stats_pie_chart.png" />
+    <Resource Include="icons\png\x8\stock_market.png" />
+    <Resource Include="icons\png\x8\task.png" />
+    <Resource Include="icons\png\x8\trophy.png" />
+    <Resource Include="icons\png\x8\umbrella.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\graph3d.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\randomData.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\mcmc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\menu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\view3d.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\magGlass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\viterbi.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -51,13 +51,7 @@ namespace CRFToolApp
 
         private void buttonViterbi_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.Graph.Data.Viterbi != null)
-            {
-                foreach (var node in ViewModel.Graph.Nodes)
-                {
-                    node.Data.AssignedLabel = ViewModel.Graph.Data.Viterbi[node.GraphId];
-                }
-            }
+            ViewModel.ShowViterbiLabelling();
         }
 
         private void buttonNextSample_Click(object sender, RoutedEventArgs e)
