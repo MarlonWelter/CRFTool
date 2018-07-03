@@ -1,0 +1,12 @@
+
+# Usecase Software Graph pre-trained Ising model
+
+## Input Textfile
+* Input graph folder
+* Output folder
+* Ising correlation parameter
+* Ising conformity parameter
+* Viterbi heuristic memory parameter
+
+## corresponding file
+* Softwaregraph_Analysis_1.cs

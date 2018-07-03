@@ -16,6 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{023F02DA-1DF6-40FD-A06B-EBD3B735F76C}"
 	ProjectSection(SolutionItems) = preProject
 		CRFToolApp\bin\Debug\HelixToolkit.dll = CRFToolApp\bin\Debug\HelixToolkit.dll
+		UseCase-Softwaregraph.txt = UseCase-Softwaregraph.txt
 		Usecase_1.txt = Usecase_1.txt
 	EndProjectSection
 EndProject

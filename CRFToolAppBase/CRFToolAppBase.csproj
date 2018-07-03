@@ -65,6 +65,8 @@
     <Compile Include="ModelData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Software Graph\SoftwareGraphAnalysis_1.cs" />
+    <Compile Include="Software Graph\SoftwareGraphAnalysis_1_Manager.cs" />
     <Compile Include="UserTrainingViewModel.cs" />
     <Compile Include="UserTrainingWorkflowOne.cs" />
     <Compile Include="WorkflowOne.cs" />
