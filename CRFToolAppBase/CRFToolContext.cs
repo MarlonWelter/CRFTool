@@ -19,15 +19,23 @@ namespace CRFToolAppBase
 
         public CRFToolData Data { get; set; } = new CRFToolData();
 
-        public void CommandIn(string command)
+        public void CommandIn(string commandLine)
         {
+            var commands = commandLine.Split(' ');
+            var command = commands[0];
             var methods = typeof(CRFToolContext).GetMethods();
             var commandRecognized = false;
             foreach (var method in methods)
             {
                 if (method.Name.ToLower().Equals(command.ToLower()))
                 {
-                    method.Invoke(this, new object[0]);
+                    var args = new string[commands.Length - 1];
+                    for (int i = 0; i < args.Length; i++)
+                    {
+                        args[i] = commands[i + 1];
+                    }
+
+                    method.Invoke(this, new object[] { args });
                     commandRecognized = true;
                 }
             }
@@ -104,9 +112,9 @@ namespace CRFToolAppBase
 
         #region Testing Purposes
 
-        public void SoftwareGraph_1()
+        public void SoftwareGraph_1(params string[] args)
         {
-            var request = new SoftwareGraphAnalysis_1("..//..//graphs//", "output//", 1.0, 1.0, 1000);
+            var request = new SoftwareGraphAnalysis_1(args[0], args[1], double.Parse(args[2]), double.Parse(args[3]), int.Parse(args[4]));
             request.Request();
         }
 
