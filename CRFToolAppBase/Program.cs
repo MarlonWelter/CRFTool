@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using CRFToolAppBase.Software_Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,9 @@ namespace CRFToolAppBase
     class Program
     {
         static void Main(string[] args)
-        {
+        { 
             new ConsoleLogger();
+            Build.Do();
             CRFBase.Build.Do();
             //CRFGraphVis.Build.Do();
 

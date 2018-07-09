@@ -20,10 +20,6 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="80"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <!--<Grid.Background>
-            --><!--<ImageBrush ImageSource="icons/wood1.jpg">
-            </ImageBrush>--><!--
-        </Grid.Background>-->
         <StackPanel Grid.Row="0" Grid.ColumnSpan="4" Background="CadetBlue" Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Button Name="button1" Click="button1_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent" ToolTip="Load a graph.">
                 <Image Source="icons/open.png"></Image>
@@ -43,6 +39,9 @@
             <Button Name="buttonMCMC" Click="buttonMCMC_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent" ToolTip="Create sample with Metropolis Hastings.">
                 <Image Source="icons/mcmc.png"></Image>
             </Button>
+            <Button Name="buttonSoftwareCase1" Click="buttonSoftwareCase1_Click" Height="80" Width="80" Margin="20, 10" Background="Transparent" ToolTip="Use viterbi on software graphs.">
+                <Image Source="icons/softwareUsecase1.png"></Image>
+            </Button>
         </StackPanel>
         <DockPanel
             Grid.Row="1"
@@ -54,35 +53,8 @@
             
             Name="ContentPanel"
             >
-            <!--<GroupBox 
-                Name="contentBox"
-                Header="Help" 
-                Background="Beige" 
-                VerticalAlignment="Stretch" 
-                VerticalContentAlignment="Stretch" 
-                Height="Auto">
-                    <TextBlock Text="This is the help that is available on the news screen." 
-                       TextWrapping="Wrap" />
-            </GroupBox>-->
-
-            <!--<StackPanel DockPanel.Dock="Bottom" Margin="10" 
-           Width="Auto" HorizontalAlignment="Stretch">
-                <TextBlock Text="Here is the news that should wrap around." 
-                     TextWrapping="Wrap"/>
-            </StackPanel>-->
         </DockPanel>
-        <!--<StackPanel Name="ContentPanel" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Height="*" VerticalAlignment="Stretch">
-            -->
-        <!--<local:View3D x:Name="view3DView" Height="649" Visibility="{Binding View3DVisibility, UpdateSourceTrigger=PropertyChanged}"></local:View3D>
-            <local:graphsList x:Name="graphsListView" Height="649"  Visibility="{Binding GraphsListVisibility, UpdateSourceTrigger=PropertyChanged}"></local:graphsList>
-            <local:Settings x:Name="settingsView" Height="649"  Visibility="{Binding SettingsVisibility, UpdateSourceTrigger=PropertyChanged}"></local:Settings>
-            <local:graphDetailsList x:Name="graphDetailsView" Height="649"  Visibility="{Binding GraphDetailsVisibility, UpdateSourceTrigger=PropertyChanged}">
-            </local:graphDetailsList>-->
-        <!--
-        </StackPanel>-->
-
-
-
+     
         <StackPanel Grid.Row="1" Grid.Column="0" Background="Beige">
             <Button Name="buttonLeft1" Background="Transparent" Padding="10" Click="buttonLeft1_Click">
                 <Image Source="icons/menu.png"></Image>

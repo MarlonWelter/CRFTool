@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CRFToolAppBase.Software_Graph;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace CRFToolAppBase
         public static void Do()
         {
             new LoadCRFGraphManager();
+            new SoftwareGraphAnalysis_1_Manager();
         }
     }
 }

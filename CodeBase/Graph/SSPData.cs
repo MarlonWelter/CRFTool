@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace CodeBase
 {
-    public class SSPND
+    // SSP = Simulated Software Project
+    public class SSPND : CRFNodeData
     {
         public SSPND(string name, string category, double value)
         {
@@ -22,7 +23,7 @@ namespace CodeBase
         public double Value { get; set; }
     }
 
-    public class SSPED
+    public class SSPED : CRFEdgeData
     {
         public SSPED(double weight, string type)
         {
@@ -33,7 +34,7 @@ namespace CodeBase
         public string Type { get; set; }
     }
 
-    public class SSPGD
+    public class SSPGD : CRFGraphData
     {
         public List<string> Categories { get; set; }
         public CategoryGraph CategoryGraph { get; set; }

@@ -19,6 +19,7 @@ using System.Threading;
 using System.Globalization;
 using System.IO;
 using CRFBase.GibbsSampling;
+using CRFToolAppBase.Software_Graph;
 
 namespace CRFToolApp
 {
@@ -215,6 +216,12 @@ namespace CRFToolApp
         {
             ContentPanel.Children.Clear();
             ContentPanel.Children.Add(infoPage);
+        }
+
+        private void buttonSoftwareCase1_Click(object sender, RoutedEventArgs e)
+        {
+            var request = new SoftwareGraphAnalysis_1("graphs", "output", 1.0, 1.0, 10000);
+            request.Request();
         }
     }
 

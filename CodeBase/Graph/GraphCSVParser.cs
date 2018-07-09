@@ -314,7 +314,7 @@ namespace CodeBase
                     throw new ArgumentException("File has to start with #graph#");
                 {
                     var name = reader.ReadLine();
-                    graph.Name = name;
+                    graph.Name = name.Substring(5); //remove "name="
                 }
 
                 while ((line = reader.ReadLine()) != "#nodes#")

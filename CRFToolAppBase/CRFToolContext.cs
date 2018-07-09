@@ -1,6 +1,7 @@
 ﻿using CodeBase;
 using CRFBase;
 using CRFBase.OLM;
+using CRFToolAppBase.Software_Graph;
 //using EmbedBase;
 using System;
 using System.Collections.Generic;
@@ -102,6 +103,12 @@ namespace CRFToolAppBase
         }
 
         #region Testing Purposes
+
+        public void SoftwareGraph_1()
+        {
+            var request = new SoftwareGraphAnalysis_1("..//..//graphs//", "output//", 1.0, 1.0, 1000);
+            request.Request();
+        }
 
         public void CreateTestGraphs()
         {

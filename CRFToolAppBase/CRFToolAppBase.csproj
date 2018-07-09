@@ -74,6 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="graphs\ChangeCoupling01.cgr" />
+    <None Include="graphs\ChangeCoupling02.cgr" />
+    <None Include="graphs\ChangeCoupling03.cgr" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
