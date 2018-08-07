@@ -34,7 +34,7 @@ namespace CRFToolAppBase
         public const bool GraphVisualization = false;
 
         // allgemein: 0: nicht-interface ; 1: interface
-        static void Start(string[] args)
+        public static void Start(string[] args)
         {
             // manager erzeugen
             new ConsoleLogger();
@@ -51,6 +51,8 @@ namespace CRFToolAppBase
         {
             // erzeugt die RequestListener
             Build.Do();
+            CRFBase.Build.Do();
+
 
             // calculation of the termination condition for the seeding method
             double[] averageRatioItoS = calculateTerminationConditionForSeeding();

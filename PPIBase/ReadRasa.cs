@@ -72,10 +72,11 @@ namespace PPIBase
                     if (rasaFile == null)
                     {
 
+                        var temp = " -jar protein-pdb-asa.jar -pdbfile "
+                            + PDBFiles + obj.File.Name + "_" + chain.Name + ".txt" + " -pdb " + obj.File.Name + " -chain " + chain.Name + " -rasafile "
+                            + RasaFiles + obj.File.Name + "_" + chain.Name + ".rasa";
                         //compute Rasa:
-                        var processInfo = new ProcessStartInfo("java", " -jar protein-pdb-asa.jar -pdbfile "
-                            + PDBFiles + obj.File.Name + "_" + chain.Name + ".pdb" + " -pdb " + obj.File.Name + " -chain " + chain.Name + " -rasafile "
-                            + RasaFiles + obj.File.Name + "_" + chain.Name + ".rasa")
+                        var processInfo = new ProcessStartInfo("java",temp)
                         {
                             CreateNoWindow = true,
                             UseShellExecute = false

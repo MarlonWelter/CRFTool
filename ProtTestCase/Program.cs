@@ -13,7 +13,9 @@ namespace ProtTestCase
         {
 
             // als Referenz folgende Klasse:
-            var oldWorkFlow = new WorkflowPede();
+            //var oldWorkFlow = new WorkflowPede();
+
+            WorkflowPede.Start(null);
 
         }
     }

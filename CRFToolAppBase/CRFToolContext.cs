@@ -35,7 +35,10 @@ namespace CRFToolAppBase
                         args[i] = commands[i + 1];
                     }
 
-                    method.Invoke(this, new object[] { args });
+                    if (args.Length > 0)
+                        method.Invoke(this, new object[] { args });
+                    else
+                        method.Invoke(this, null);
                     commandRecognized = true;
                 }
             }
@@ -161,6 +164,7 @@ namespace CRFToolAppBase
             var graph = CreateTestGraphCRF();
 
             var request = new OLMRequest(OLMVariant.Default, graph.ToIEnumerable());
+            request.Request();
         }
 
         public void olmres()
