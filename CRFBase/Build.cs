@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CRFBase.OLM;
+using CRFBase.GradientDescent;
 
 namespace CRFBase
 {
@@ -18,6 +19,7 @@ namespace CRFBase
             new ViterbiManager();
             new MCMCSamplingManager();
             new OLMManager();
+            new GradientDescentManager();
         }
     }
 }

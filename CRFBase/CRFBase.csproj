@@ -59,6 +59,9 @@
   <ItemGroup>
     <Compile Include="3DEmbedding\EmbedData.cs" />
     <Compile Include="Build.cs" />
+    <Compile Include="GradientDescent\ExecuteGradientDescent.cs" />
+    <Compile Include="GradientDescent\GradientDescentManager.cs" />
+    <Compile Include="OLM\ExampleFeature1.cs" />
     <Compile Include="TrainingEvaluationOLM\ComputeKeys.cs" />
     <Compile Include="CRFResult.cs" />
     <Compile Include="MCMC\MCMCSamplingManager.cs" />
