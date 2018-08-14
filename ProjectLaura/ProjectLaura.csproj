@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{21DC6E1E-E1A6-437C-AE31-9AC48BDBC60A}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ProjectLaura</RootNamespace>
+    <AssemblyName>ProjectLaura</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CodeBase\CodeBase.csproj">
+      <Project>{e9adfe92-6054-4916-874d-6de3842e7850}</Project>
+      <Name>CodeBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CRFBase\CRFBase.csproj">
+      <Project>{53b1b9f0-a5cf-4fc7-978a-dbb796bfee69}</Project>
+      <Name>CRFBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CRFGraphVis\CRFGraphVis.csproj">
+      <Project>{b7d201ee-a2f6-4855-a7f7-35e74df0b9d8}</Project>
+      <Name>CRFGraphVis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CRFToolAppBase\CRFToolAppBase.csproj">
+      <Project>{359dbcdb-e9a2-4a7d-a1d7-17dea81da82f}</Project>
+      <Name>CRFToolAppBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CRFToolApp\CRFToolApp.csproj">
+      <Project>{900e2432-99ce-44ad-8101-b2ff9860ad97}</Project>
+      <Name>CRFToolApp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPIBase\PPIBase.csproj">
+      <Project>{109f627f-be52-4e83-8d55-3df2f38ceb9f}</Project>
+      <Name>PPIBase</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

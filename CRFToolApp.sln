@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPIBase", "PPIBase\PPIBase.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtTestCase", "ProtTestCase\ProtTestCase.csproj", "{D2165C6B-3DF0-46AB-ADFB-DAEB15F01AB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectLaura", "ProjectLaura\ProjectLaura.csproj", "{21DC6E1E-E1A6-437C-AE31-9AC48BDBC60A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{D2165C6B-3DF0-46AB-ADFB-DAEB15F01AB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2165C6B-3DF0-46AB-ADFB-DAEB15F01AB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2165C6B-3DF0-46AB-ADFB-DAEB15F01AB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21DC6E1E-E1A6-437C-AE31-9AC48BDBC60A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21DC6E1E-E1A6-437C-AE31-9AC48BDBC60A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21DC6E1E-E1A6-437C-AE31-9AC48BDBC60A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21DC6E1E-E1A6-437C-AE31-9AC48BDBC60A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
