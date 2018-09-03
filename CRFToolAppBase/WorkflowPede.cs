@@ -28,7 +28,7 @@ namespace CRFToolAppBase
         public static string InterfaceDefLocation = @"../../Data/nuss.iface.2012.txt";
 
         // just need to be done once, is stored in a file named terminationCondition.txt 
-        public const bool ComputeTerminationCondition = true;
+        public const bool ComputeTerminationCondition = false;
 
         // false = true labeling, true = computed labeling
         public const bool GraphVisualization = false;
