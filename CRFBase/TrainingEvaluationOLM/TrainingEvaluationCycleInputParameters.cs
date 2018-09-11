@@ -27,6 +27,20 @@ namespace CRFBase
             NumberOfLabels = numberOfLabels;
             BufferSizeViterbi = bufferSizeViterbi;
         }
+
+        public TrainingEvaluationCycleInputParameters(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs,
+            List<OLMVariant> trainingVariantsToTest, double isingConformityParameter, double isingCorrelationParameter,
+            double[,] transitionProbabilities, int numberOfLabels, int bufferSizeViterbi)
+        {
+            Graphs = graphs;
+            TrainingVariantsToTest = trainingVariantsToTest;
+            IsingConformityParameter = isingConformityParameter;
+            IsingCorrelationParameter = isingCorrelationParameter;
+            TransitionProbabilities = transitionProbabilities;
+            NumberOfLabels = numberOfLabels;
+            BufferSizeViterbi = bufferSizeViterbi;
+        }
+        public List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> Graphs { get; set; }
         public GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> Graph { get; set; }
         public int NumberOfGraphInstances { get; set; }
         public int NumberOfSeedsForPatchCreation { get; set; }

@@ -75,6 +75,8 @@ namespace ProjectLaura
 
             #region modify graph
             // do this for all graphs (currently saved in form of pdbfiles)
+            List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> crfGraphList = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>();
+
             foreach (String file in File.ReadLines(fileNames))
             {
                 RandomlySelectedPDBFile = fileFolder + "/" + file;
@@ -91,6 +93,7 @@ namespace ProjectLaura
 
                 // set real reference label of the graph
                 var crfGraph = setReferenceLabel(trimmedGraph);
+                crfGraphList.Add(crfGraph);
             }
             #endregion
 
@@ -104,9 +107,9 @@ namespace ProjectLaura
 
             // set parameters for the training cycle
             // TODO parameters for seeding not needed anymore
-            /*parameters = new TrainingEvaluationCycleInputParameters(crfGraphList, NumberOfGraphInstances, variants,
+            parameters = new TrainingEvaluationCycleInputParameters(crfGraphList, variants,
                 IsingConformityParameter, IsingCorrelationParameter, transition, NumberOfLabels, BufferSizeViterbi);
-                */
+                
             // running the cycle
             trainingCycle.RunCycle(parameters);
         }
