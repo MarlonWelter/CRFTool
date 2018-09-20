@@ -110,6 +110,7 @@
     <Compile Include="TrainingEvaluationOLM\SeedingMethodPatchCreation.cs" />
     <Compile Include="ShowGraphs.cs" />
     <Compile Include="ShowOLMResult.cs" />
+    <Compile Include="TrainingEvaluationOLM\TrainingEvaluationCycleZellner.cs" />
     <Compile Include="TrainingEvaluationOLM\TrainingEvaluationCycle.cs" />
     <Compile Include="TrainingEvaluationOLM\TrainingEvaluationCycleInputParameters.cs" />
   </ItemGroup>

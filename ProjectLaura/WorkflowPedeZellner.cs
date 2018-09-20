@@ -62,7 +62,7 @@ namespace ProjectLaura
             CRFBase.Build.Do();
 
             // starting of TrainingCycle:
-            var trainingCycle = new TrainingEvaluationCycle();
+            var trainingCycle = new TrainingEvaluationCycleZellner();
             var parameters = new TrainingEvaluationCycleInputParameters();
 
             // take OLM variants we want to test, ISING and OLM_III (Default)
@@ -107,15 +107,18 @@ namespace ProjectLaura
 
             // set parameters for the training cycle
             // TODO parameters for seeding not needed anymore
-            parameters = new TrainingEvaluationCycleInputParameters(crfGraphList, variants,
+            parameters = new TrainingEvaluationCycleInputParameters(crfGraphList, crfGraphList.Count, variants,
                 IsingConformityParameter, IsingCorrelationParameter, transition, NumberOfLabels, BufferSizeViterbi);
-                
+
             // running the cycle
+
             trainingCycle.RunCycle(parameters);
         }
 
         private static GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> setReferenceLabel(ProteinGraph trimmedGraph)
         {
+
+            
             var nameWithChain = RandomlySelectedPDBFile.Substring(fileFolder.Length + 1, 6);
             var interfacesList = new List<string>();
             using (var reader = new StreamReader(InterfaceDefLocation))

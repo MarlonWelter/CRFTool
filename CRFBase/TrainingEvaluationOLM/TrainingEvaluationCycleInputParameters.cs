@@ -28,11 +28,12 @@ namespace CRFBase
             BufferSizeViterbi = bufferSizeViterbi;
         }
 
-        public TrainingEvaluationCycleInputParameters(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs,
+        public TrainingEvaluationCycleInputParameters(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs, int numberOfGraphInstances,
             List<OLMVariant> trainingVariantsToTest, double isingConformityParameter, double isingCorrelationParameter,
             double[,] transitionProbabilities, int numberOfLabels, int bufferSizeViterbi)
         {
             Graphs = graphs;
+            NumberOfGraphInstances = numberOfGraphInstances;
             TrainingVariantsToTest = trainingVariantsToTest;
             IsingConformityParameter = isingConformityParameter;
             IsingCorrelationParameter = isingCorrelationParameter;
