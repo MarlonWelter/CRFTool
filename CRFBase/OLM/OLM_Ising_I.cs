@@ -14,7 +14,8 @@ namespace CRFBase
         where EdgeData : ICRFEdgeData
         where GraphData : ICRFGraphData
     {
-        public OLM_Ising_I(int labels, int bufferSizeInference, IList<BasisMerkmal<NodeData, EdgeData, GraphData>> basisMerkmale, Func<int[], int[], double> lossfunctionIteration, Func<int[], int[], double> lossfunctionValidation, double sensitivityFactor, string name)
+        public OLM_Ising_I(int labels, int bufferSizeInference, IList<BasisMerkmal<NodeData, EdgeData, GraphData>> basisMerkmale, 
+            Func<int[], int[], double> lossfunctionIteration, Func<int[], int[], double> lossfunctionValidation, double sensitivityFactor, string name)
         {
             Name = name;
             Labels = labels;
@@ -51,6 +52,8 @@ namespace CRFBase
 
             int[] countsMCMCMinusRef = new int[weightCurrent.Length];
             int[] countsRefMinusMCMC = new int[weightCurrent.Length];
+
+            Log.Post("#Iteration: "+ globalIteration);
 
             for (int g = 0; g < TrainingGraphs.Count; g++)
             {

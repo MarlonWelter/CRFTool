@@ -41,9 +41,10 @@ namespace ProjectLaura
             new RasaManager("../../Data/RASA/", @"../../Data/hermannData/");
             new PDBFileManager(@"../../Data/hermannData/");
 
-            Console.WriteLine("Hello");
+            Log.Post("Begin");
             startTrainingCycle();
-            Console.WriteLine("Worked");
+            Log.Post("Worked");
+            Console.ReadKey();
 
             BaseProgram.Exit.Enter();
         }
@@ -68,7 +69,7 @@ namespace ProjectLaura
             // take OLM variants we want to test, ISING and OLM_III (Default)
             List<OLMVariant> variants = new List<OLMVariant>();
             variants.Add(OLMVariant.Ising);
-            variants.Add(OLMVariant.Default);
+            //variants.Add(OLMVariant.Default);
 
             // TODO setting of transition probabilities
             double[,] transition = setTransitionProbabilities();
@@ -129,7 +130,7 @@ namespace ProjectLaura
                     var nuss = nameWithChain;
                     if (line.StartsWith(nameWithChain))
                     {
-                        interfacesList.Add(line.Substring(8));
+                        interfacesList.Add(line.Substring(7));
                     }
                 }
             }
@@ -149,7 +150,7 @@ namespace ProjectLaura
             }*/
 
             var crfGraph = trimmedGraph.Convert<ResidueNodeData, CRFNodeData, SimpleEdgeData, CRFEdgeData,
-                ProteinGraphData, CRFGraphData>(nd => new CRFNodeData(nd.Data.Residue.Id) { X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z }, ed => new CRFEdgeData(),
+                ProteinGraphData, CRFGraphData>(nd => new CRFNodeData(nd.Data.Residue.Id) { X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z, ReferenceLabel = nd.Data.ReferenceLabel }, ed => new CRFEdgeData(),
                 gd => new CRFGraphData());
             crfGraph.SaveAsJSON("testGraph.txt");
 

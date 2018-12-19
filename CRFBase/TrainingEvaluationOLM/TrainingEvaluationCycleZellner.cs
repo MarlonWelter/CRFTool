@@ -59,7 +59,7 @@ namespace CRFBase
                 {
                     graph.Data.ReferenceLabeling[node.GraphId] = node.Data.ReferenceLabel;
                 }
-                Console.WriteLine(graph.Data.ReferenceLabeling);
+                //Console.WriteLine(graph.Data.ReferenceLabeling);
 
                 if (i == 0 && GraphVisalization == true)
                 {
@@ -94,22 +94,24 @@ namespace CRFBase
 
             #region Schritt 3: Aufteilen der Daten in Evaluation und Training
             // Verhaeltnis: 50 50
-            int separation = inputParameters.NumberOfGraphInstances / 2;
+            int separation = inputParameters.NumberOfGraphInstances - inputParameters.NumberOfGraphInstances/6;
 
-            var testGraphs = new List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>
+            var trainingGraphs = new List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>
                 (new IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>[separation]);
             var evaluationGraphs = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>
                 (new GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>[inputParameters.NumberOfGraphInstances - separation]);
 
             for (int i = 0; i < separation; i++)
             {
-                testGraphs[i] = graphList[i];
+                trainingGraphs[i] = graphList[i];
             }
             int k = 0;
             for (int j = separation; j < inputParameters.NumberOfGraphInstances; j++, k++)
             {
                 evaluationGraphs[k] = graphList[j];
             }
+
+            Log.Post("#Training Graphs: " + trainingGraphs.Count);
 
             #endregion
 
@@ -124,7 +126,7 @@ namespace CRFBase
 
                 #region Schritt 4.1: Training der OLM-Variante
                 {
-                    var request = new OLMRequest(trainingVariant, testGraphs);
+                    var request = new OLMRequest(trainingVariant, trainingGraphs);
                     request.BasisMerkmale.AddRange(new IsingMerkmalNode(), new IsingMerkmalEdge());
                     //TODO: loss function auslagern
                     request.LossFunctionValidation = (a, b) =>
@@ -209,7 +211,7 @@ namespace CRFBase
             // TODO: Marlon
             // graphische Ausgabe
 
-            var olmPresentationRequest = new ShowOLMResult(evaluationResults.Values.ToList());
+            //var olmPresentationRequest = new ShowOLMResult(evaluationResults.Values.ToList());
             //foreach (var variant in evaluationResults.Keys)
             //{
 
@@ -218,7 +220,7 @@ namespace CRFBase
             //    //    //var graph = graphresult.Graph;
             //    //}
             //}
-            olmPresentationRequest.Request();
+            //olmPresentationRequest.Request();
             #endregion
         }
 
