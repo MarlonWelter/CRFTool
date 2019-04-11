@@ -151,6 +151,7 @@ namespace CRFBase
                     Iteration++;
 
                     var oldWVector = weightCurrent.ToArray();
+                    // train
                     weightCurrent = DoIteration(TrainingGraphs, weightCurrent, Iteration);
 
                     ResultingWeights = weightCurrent;

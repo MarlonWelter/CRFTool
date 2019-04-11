@@ -16,10 +16,9 @@ namespace ProjectLaura
 {
     class WorkflowPedeZellner
     {
-        //private const string RandomlySelectedPDBFile = @"../../Data/hermannData/" + RandomlySelectedPDBFileName + "_A.txt";
-        //private const string RandomlySelectedPDBFileName = "1a00";
-        //private const int NumberOfGraphInstances = 100;
-        //private const int NumberOfSeedsForPatchCreation = 2;
+        private const int NumberOfIntervals = 3;
+        private static double[] PottsConformityParameters = new double[NumberOfIntervals];
+       
         private const int IsingConformityParameter = 1;
         private const int IsingCorrelationParameter = 1;
         private const int NumberOfLabels = 2;
@@ -32,7 +31,6 @@ namespace ProjectLaura
         private static string RandomlySelectedPDBFile;
         private static string RandomlySelectedPDBFileName;
 
-
         public static void Main(string[] args)
         {
             // manager erzeugen
@@ -43,7 +41,7 @@ namespace ProjectLaura
 
             Log.Post("Begin");
             startTrainingCycle();
-            Log.Post("Worked");
+            Log.Post("End");
             Console.ReadKey();
 
             BaseProgram.Exit.Enter();
@@ -66,12 +64,18 @@ namespace ProjectLaura
             var trainingCycle = new TrainingEvaluationCycleZellner();
             var parameters = new TrainingEvaluationCycleInputParameters();
 
+            // set Potts Conformity parameters
+           for(int i=0; i<NumberOfIntervals; i++)
+            {
+                PottsConformityParameters[i] = 1.0;
+            }
+
             // take OLM variants we want to test, ISING and OLM_III (Default)
             List<OLMVariant> variants = new List<OLMVariant>();
             variants.Add(OLMVariant.Ising);
             //variants.Add(OLMVariant.Default);
 
-            // TODO setting of transition probabilities
+            // setting of transition probabilities to create observation from reference labeling
             double[,] transition = setTransitionProbabilities();
 
             #region modify graph
@@ -96,23 +100,13 @@ namespace ProjectLaura
                 var crfGraph = setReferenceLabel(trimmedGraph);
                 crfGraphList.Add(crfGraph);
             }
-            #endregion
-
-            #region old
-            // setting the MaximumTotalPatchSize based on the ratio calculated with the hermann data
-            //int min = (int)(crfGraph.NodeCounter * averageRatioItoS[1]);
-            //int max = (int)(crfGraph.NodeCounter * averageRatioItoS[2]);
-            //int av = (int)(crfGraph.NodeCounter * averageRatioItoS[0]);
-            //int MaximumTotalPatchSize = rdm.Next(min, max);
-            #endregion
+            #endregion      
 
             // set parameters for the training cycle
-            // TODO parameters for seeding not needed anymore
             parameters = new TrainingEvaluationCycleInputParameters(crfGraphList, crfGraphList.Count, variants,
-                IsingConformityParameter, IsingCorrelationParameter, transition, NumberOfLabels, BufferSizeViterbi);
+                IsingConformityParameter, PottsConformityParameters, IsingCorrelationParameter, NumberOfIntervals, transition, NumberOfLabels, BufferSizeViterbi);
 
             // running the cycle
-
             trainingCycle.RunCycle(parameters);
         }
 
@@ -142,12 +136,12 @@ namespace ProjectLaura
             }
 
             //test
-            /*if (GraphVisualization)
-            {
-                var graph3D = trimmedGraph.Wrap3D(nd => new Node3DWrap<ResidueNodeData>(nd.Data) { ReferenceLabel = nd.Data.ReferenceLabel, X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z });
-                new ShowGraph3D(graph3D).Request(RequestRunType.Background);
-                Thread.Sleep(120000);
-            }*/
+            //if (GraphVisualization)
+            //{
+            //    var graph3D = trimmedGraph.Wrap3D(nd => new Node3DWrap<ResidueNodeData>(nd.Data) { ReferenceLabel = nd.Data.ReferenceLabel, X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z });
+            //    new ShowGraph3D(graph3D).Request(RequestRunType.Background);
+            //    Thread.Sleep(120000);
+            //}
 
             var crfGraph = trimmedGraph.Convert<ResidueNodeData, CRFNodeData, SimpleEdgeData, CRFEdgeData,
                 ProteinGraphData, CRFGraphData>(nd => new CRFNodeData(nd.Data.Residue.Id) { X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z, ReferenceLabel = nd.Data.ReferenceLabel }, ed => new CRFEdgeData(),

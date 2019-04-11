@@ -14,7 +14,7 @@ namespace CRFBase
         }
         public TrainingEvaluationCycleInputParameters(GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph,
             int numberOfGraphInstances, int numberOfSeedsForPatchCreation, int maximumTotalPatchSize,
-            List<OLMVariant> trainingVariantsToTest, double isingConformityParameter, double isingCorrelationParameter,
+            List<OLMVariant> trainingVariantsToTest, double isingConformityParameter, double isingCorrelationParameter, 
             double[,] transitionProbabilities, int numberOfLabels, int bufferSizeViterbi) {
             Graph = graph;
             NumberOfGraphInstances = numberOfGraphInstances;
@@ -29,14 +29,16 @@ namespace CRFBase
         }
 
         public TrainingEvaluationCycleInputParameters(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs, int numberOfGraphInstances,
-            List<OLMVariant> trainingVariantsToTest, double isingConformityParameter, double isingCorrelationParameter,
-            double[,] transitionProbabilities, int numberOfLabels, int bufferSizeViterbi)
+            List<OLMVariant> trainingVariantsToTest, double isingConformityParameter, double[] pottsConformityParameters, double isingCorrelationParameter,
+            int numberOfIntervals, double[,] transitionProbabilities, int numberOfLabels, int bufferSizeViterbi)
         {
             Graphs = graphs;
             NumberOfGraphInstances = numberOfGraphInstances;
             TrainingVariantsToTest = trainingVariantsToTest;
             IsingConformityParameter = isingConformityParameter;
+            PottsConformityParameters = pottsConformityParameters;
             IsingCorrelationParameter = isingCorrelationParameter;
+            NumberOfIntervals = numberOfIntervals;
             TransitionProbabilities = transitionProbabilities;
             NumberOfLabels = numberOfLabels;
             BufferSizeViterbi = bufferSizeViterbi;
@@ -48,7 +50,10 @@ namespace CRFBase
         public int MaximumTotalPatchSize { get; set; }
         public List<OLMVariant> TrainingVariantsToTest { get; set; }
         public double IsingConformityParameter { get; set; }
+        public double[] PottsConformityParameters { get; set; }
         public double IsingCorrelationParameter { get; set; }
+        public int NumberOfIntervals { get; set; }
+
         // Dieses Feld gibt an wie wahrscheinlich es ist bei welchem Labeling welche Beobachtung entsteht.
         public double[,] TransitionProbabilities { get; set; }
         public int NumberOfLabels { get; set; }

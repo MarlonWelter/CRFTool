@@ -23,34 +23,17 @@ namespace CRFBase
         public void RunCycle(TrainingEvaluationCycleInputParameters inputParameters)
         {
             #region Schritt 0: Vorbereiten der Daten
-
-            // Zwischenspeichern von viel genutzten Variablen zur Übersichtlichkeit:
-            //var inputGraph = inputParameters.Graph;
-            //var graphList = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>();
-
-            //// Graphen erzeugen
-            //for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
-            //{
-            //    var newGraph = inputGraph.Clone(nd => new CRFNodeData() { X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z }, ed => new CRFEdgeData(), gd => new CRFGraphData());
-            //    graphList.Add(newGraph);
-            //}
-
-            //// Erzeugung der benötigten Objekte:
-            //seedingMethodPatchCreation = new SeedingMethodPatchCreation(inputParameters.NumberOfSeedsForPatchCreation, inputParameters.MaximumTotalPatchSize);
-
+            
             var graphList = inputParameters.Graphs;
+            int numberOfLabels = inputParameters.NumberOfLabels;
+            int numberOfIntervals = inputParameters.NumberOfIntervals;
             #endregion
 
 
-            #region Schritt 1: Referenzlabelings erzeugen.
+            #region Schritt 1: Referenzlabelings setzen            
 
-            // REMARK: The reference labelings do not need to be created because each graph has already its own according to nuss.iface!
-            // what is missing now is graph.data.ReferenceLabeling! Do we need this?
-
-            //int[][] referenceLabelings = new int[inputParameters.NumberOfGraphInstances][];
             for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
             {
-                //    seedingMethodPatchCreation.CreatePatchAndSetAsReferenceLabel(graphList[i]);
                 var graph = graphList[i];
                 graph.Data.ReferenceLabeling = new int[graph.Nodes.Count()];
                 var nodes = graph.Nodes.ToList();
@@ -59,7 +42,6 @@ namespace CRFBase
                 {
                     graph.Data.ReferenceLabeling[node.GraphId] = node.Data.ReferenceLabel;
                 }
-                //Console.WriteLine(graph.Data.ReferenceLabeling);
 
                 if (i == 0 && GraphVisalization == true)
                 {
@@ -67,8 +49,6 @@ namespace CRFBase
                     new ShowGraph3D(graph3D).Request();
                 }
             }
-
-
             #endregion
 
             #region Schritt 2: Beobachtungen erzeugen (und Scores)
@@ -79,7 +59,6 @@ namespace CRFBase
             {
                 var graph = graphList[i];
                 createObservationsUnit.CreateObservation(graph);
-                //graph.Data.Observations = observation;
 
                 // zugehörige Scores erzeugen
                 isingModel.CreateCRFScore(graph);
@@ -93,8 +72,8 @@ namespace CRFBase
             #endregion
 
             #region Schritt 3: Aufteilen der Daten in Evaluation und Training
-            // Verhaeltnis: 50 50
-            int separation = inputParameters.NumberOfGraphInstances - inputParameters.NumberOfGraphInstances/6;
+            // Verhaeltnis: 80 20
+            int separation = inputParameters.NumberOfGraphInstances - inputParameters.NumberOfGraphInstances/5;
 
             var trainingGraphs = new List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>
                 (new IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>[separation]);
@@ -112,7 +91,6 @@ namespace CRFBase
             }
 
             Log.Post("#Training Graphs: " + trainingGraphs.Count);
-
             #endregion
 
             #region Schritt 4: Die verschiedenen Varianten von OLM trainieren und evaluieren
@@ -128,6 +106,9 @@ namespace CRFBase
                 {
                     var request = new OLMRequest(trainingVariant, trainingGraphs);
                     request.BasisMerkmale.AddRange(new IsingMerkmalNode(), new IsingMerkmalEdge());
+                    // TODO: change features from Ising to Potts (Keyus)
+                    //request.BasisMerkmale.Add(new RASANodeBasisMerkmal(0.0, 1.0, 1));
+
                     //TODO: loss function auslagern
                     request.LossFunctionValidation = (a, b) =>
                     {
@@ -139,12 +120,14 @@ namespace CRFBase
                         return loss / a.Length;
                     };
 
+                    // execute training methods by calling OLMManager -> OLMBase
                     request.Request();
 
                     var olmResult = request.Result;
 
 
                     // update Ising parameters in IsingModel
+                    // TODO update Potts parameters instead of Ising
                     isingModel.ConformityParameter = olmResult.ResultingWeights[0];
                     isingModel.CorrelationParameter = olmResult.ResultingWeights[1];
 
@@ -162,6 +145,7 @@ namespace CRFBase
                 var results = new OLMEvaluationResult();
                 results.ConformityParameter = isingModel.ConformityParameter;
                 results.CorrelationParameter = isingModel.CorrelationParameter;
+                Log.Post("Conformity: " + results.ConformityParameter + "\t Correlation: " + results.CorrelationParameter);
 
                 // 1) Viterbi-Heuristik starten (request: SolveInference) + zusätzliche Parameter hinzufügen
                 for (int graph = 0; graph < evaluationGraphs.Count; graph++)
@@ -215,31 +199,14 @@ namespace CRFBase
             //foreach (var variant in evaluationResults.Keys)
             //{
 
-            //    //foreach (var graphresult in evaluationResults[variant].GraphResults)
-            //    //{
-            //    //    //var graph = graphresult.Graph;
-            //    //}
+            //    foreach (var graphresult in evaluationResults[variant].GraphResults)
+            //    {
+            //        var graph = graphresult.Graph;
+            //    }
             //}
             //olmPresentationRequest.Request();
             #endregion
         }
-
-        //private int[] CreateReferenceLabeling(TrainingEvaluationCycleInputParameters input)
-        //{
-        //    // Die ReferenzLabelings werden über die Seeding-Methode erzeugt.
-        //    seedingMethodPatchCreation.NumberOfSeeds = input.NumberOfSeedsForPatchCreation;
-        //    seedingMethodPatchCreation.TotalPatchesSize = input.MaximumTotalPatchSize;
-        //    var referenceLabelingNodes = seedingMethodPatchCreation.CreatePatches(input.Graph);
-        //    var referenceLabeling = new int[input.Graph.Nodes.Count()];
-
-        //    // Laura: Jeder Knoten aus referenceLabelingNodes muss nun den Eintrag "1" im referenceLabeling-Array bekommen.
-        //    foreach (var node in referenceLabelingNodes)
-        //    {
-        //        referenceLabeling[node.GraphId] = 1;
-        //    }
-
-        //    return referenceLabeling;
-        //}
 
         private static void outputKeys(double[][] keysForAllClones, TrainingEvaluationCycleInputParameters input,
             List<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> evaluationGraphs)
