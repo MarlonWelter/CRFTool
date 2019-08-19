@@ -15,7 +15,7 @@ namespace CRFBase
             double sensitivity = 0.0, specificity = 0.0, mcc = 0.0, accuracy = 0.0;
             int[] referenceLabel = graph.Data.ReferenceLabeling;
 
-            // für jeden graphen: true positives / false positives / true negatives / fn   || 0: negative 1: positive
+            // für jeden graphen: true positives / false positives / true negatives / false negatives   || 0: negative 1: positive
             int[] tps = computeClassification(referenceLabel, predicitionLabeling);
             int tp = tps[0], tn = tps[1], fp = tps[2], fn = tps[3];
 
@@ -62,6 +62,8 @@ namespace CRFBase
             double mcc = 0.0;
             mcc = (tp * tn - fp * fn) / System.Math.Sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn));
             if (mcc.ToString() == "n. def.")
+                mcc = 0;
+            if (mcc.ToString() == "NaN")
                 mcc = 0;
             return mcc;
         }

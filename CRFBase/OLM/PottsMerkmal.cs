@@ -16,17 +16,17 @@ namespace CRFBase.OLM
             UpperBoundary = upperBoundary;
         }
         public int Label { get; set; }
-
-        // TODO need node.Data.Ordinate and node.Data.ZScore
+        
         public override int Count(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph, int[] labeling)
         {
             int count = 0;
             foreach (var node in graph.Nodes)
             {
-                var label = labeling[node.Data.Ordinate];
+                var label = labeling[node.GraphId];
                 if (label == Label)
                 {
-                    if (node.Data.ZScore > LowerBoundary && node.Data.ZScore <= UpperBoundary)
+                    // Characteristics[0] contains Zellner Score
+                    if (node.Data.Characteristics[0] > LowerBoundary && node.Data.Characteristics[0] <= UpperBoundary)
                     {
                         count++;
                     }
@@ -39,7 +39,8 @@ namespace CRFBase.OLM
         {
             if (label == Label)
             {
-                if (node.Data.ZScore > LowerBoundary && node.Data.ZScore <= UpperBoundary)
+                // Characteristics[0] contains Zellner Score
+                if (node.Data.Characteristics[0] > LowerBoundary && node.Data.Characteristics[0] <= UpperBoundary)
                 {
                     return 1.0;
                 }

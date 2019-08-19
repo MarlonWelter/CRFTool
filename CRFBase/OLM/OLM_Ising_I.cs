@@ -14,7 +14,7 @@ namespace CRFBase
         where EdgeData : ICRFEdgeData
         where GraphData : ICRFGraphData
     {
-        public OLM_Ising_I(int labels, int bufferSizeInference, IList<BasisMerkmal<NodeData, EdgeData, GraphData>> basisMerkmale, 
+        public OLM_Ising_I(int labels, int bufferSizeInference, IList<BasisMerkmal<NodeData, EdgeData, GraphData>> basisMerkmale,
             Func<int[], int[], double> lossfunctionIteration, Func<int[], int[], double> lossfunctionValidation, double sensitivityFactor, string name)
         {
             Name = name;
@@ -35,8 +35,6 @@ namespace CRFBase
 
             var weights = weightCurrent.ToArray();
 
-            Log.Post("Conformity: " + weights[0] + " Correlation: " + weights[1]);
-
             int u = TrainingGraphs.Count;
             var vit = new int[u][];
             var mcmc = new int[u][];
@@ -53,7 +51,7 @@ namespace CRFBase
             int[] countsMCMCMinusRef = new int[weightCurrent.Length];
             int[] countsRefMinusMCMC = new int[weightCurrent.Length];
 
-            Log.Post("#Iteration: "+ globalIteration);
+            Log.Post("#Iteration: " + globalIteration);
 
             for (int g = 0; g < TrainingGraphs.Count; g++)
             {
@@ -152,7 +150,7 @@ namespace CRFBase
 
         protected override bool CheckCancelCriteria()
         {
-            return (realdev <= middev + eps) && (realdev >= middev - eps); // && Iteration >= 20;
+            return ((realdev <= middev + eps) && (realdev >= middev - eps)) || Iteration >= 60;
         }
 
         internal override void SetStartingWeights()
@@ -161,7 +159,7 @@ namespace CRFBase
             weightCurrent = new double[Weights];
             for (int i = 0; i < Weights; i++)
             {
-                weightCurrent[i] = 1.0;
+                weightCurrent[i] = 1;
                 weightOpt[i] = weightCurrent[i];
             }
         }

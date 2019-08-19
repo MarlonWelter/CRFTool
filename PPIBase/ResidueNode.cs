@@ -19,14 +19,12 @@ namespace PPIBase
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
+        public double ZScore { get; set; }
 
         public int CommunityId { get; set; }
 
         public int Labelling { get; set; }
-        public int ReferenceLabel
-        {
-            get; set;
-        }
+        public int ReferenceLabel { get; set; }
     }
 
     public class ResidueNode : IHas<NodeLogic<ResidueNode, SimpleEdge<ResidueNode>>>, ICoordinated

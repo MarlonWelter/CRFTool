@@ -9,6 +9,7 @@ namespace CRFBase
         public List<OLMEvaluationGraphResult> GraphResults { get; set; } = new List<OLMEvaluationGraphResult>();
         public double CorrelationParameter { get; set; }
         public double ConformityParameter { get; set; }
+        public double[] ConformityParameters { get; set; }
 
         public double AverageSensitivity { get; set; }
         public double AverageSpecificity { get; set; }

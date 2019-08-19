@@ -36,5 +36,7 @@ namespace PPIBase
         public PDBFile PDB { get; set; }
 
         public bool IsCore { get; set; }
+
+        public double ZScore { get; set; }
     }
 }

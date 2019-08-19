@@ -49,6 +49,7 @@ namespace ProtTestCase
                 foreach (var entry in request.Solution.Labeling)
                 {
                     Console.Write(entry);
+                    Console.ReadKey();
                 }
             }
 

@@ -14,6 +14,7 @@ namespace CRFBase
         private Random random = new Random();
         // Graph Visualization: false = orignial, true = created
         private const bool GraphVisalization = false;
+        private const bool UseIsingModel = false;
 
         /*
 *  Die mit Herrn Waack besprochene Version des Projektzyklus zum Testen der verschiedenen Trainingsvarianten von OLM 
@@ -27,6 +28,7 @@ namespace CRFBase
             var graphList = inputParameters.Graphs;
             int numberOfLabels = inputParameters.NumberOfLabels;
             int numberOfIntervals = inputParameters.NumberOfIntervals;
+            
             #endregion
 
 
@@ -54,14 +56,20 @@ namespace CRFBase
             #region Schritt 2: Beobachtungen erzeugen (und Scores)
 
             var createObservationsUnit = new CreateObservationsUnit(inputParameters.TransitionProbabilities);
+
             var isingModel = new IsingModel(inputParameters.IsingConformityParameter, inputParameters.IsingCorrelationParameter);
+            var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter);
+
             for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
             {
                 var graph = graphList[i];
                 createObservationsUnit.CreateObservation(graph);
 
                 // zugehörige Scores erzeugen
-                isingModel.CreateCRFScore(graph);
+                if(UseIsingModel)
+                    isingModel.CreateCRFScore(graph);
+                else
+                    pottsModel.InitCRFScore(graph);
 
                 if (i == 0)
                 {
@@ -105,9 +113,13 @@ namespace CRFBase
                 #region Schritt 4.1: Training der OLM-Variante
                 {
                     var request = new OLMRequest(trainingVariant, trainingGraphs);
-                    request.BasisMerkmale.AddRange(new IsingMerkmalNode(), new IsingMerkmalEdge());
-                    // TODO: change features from Ising to Potts (Keyus)
-                    //request.BasisMerkmale.Add(new RASANodeBasisMerkmal(0.0, 1.0, 1));
+                    if (UseIsingModel)
+                        request.BasisMerkmale.AddRange(new IsingMerkmalNode(), new IsingMerkmalEdge());
+                    else
+                    {
+                        request.BasisMerkmale.AddRange(pottsModel.AddNodeFeatures(graphList, numberOfIntervals, numberOfLabels));
+                        request.BasisMerkmale.Add(new IsingMerkmalEdge());
+                    }
 
                     //TODO: loss function auslagern
                     request.LossFunctionValidation = (a, b) =>
@@ -125,16 +137,26 @@ namespace CRFBase
 
                     var olmResult = request.Result;
 
-
-                    // update Ising parameters in IsingModel
-                    // TODO update Potts parameters instead of Ising
-                    isingModel.ConformityParameter = olmResult.ResultingWeights[0];
-                    isingModel.CorrelationParameter = olmResult.ResultingWeights[1];
+                    // update parameters in PottsModel
+                    if (UseIsingModel)
+                    {
+                        isingModel.ConformityParameter = olmResult.ResultingWeights[0];
+                        isingModel.CorrelationParameter = olmResult.ResultingWeights[1];
+                    }
+                    else
+                    {
+                        for (int i = 0; i < numberOfIntervals * 2; i++)
+                            pottsModel.ConformityParameter[i] = olmResult.ResultingWeights[i];
+                        pottsModel.CorrelationParameter = olmResult.ResultingWeights[numberOfIntervals * 2 - 1];
+                    }
 
                     // zugehörige Scores erzeugen für jeden Graphen (auch Evaluation)
                     foreach (var graph in graphList)
                     {
-                        isingModel.CreateCRFScore(graph);
+                        if(UseIsingModel)
+                            isingModel.CreateCRFScore(graph);
+                        else
+                            pottsModel.CreateCRFScore(graph, request.BasisMerkmale);
                     }
                 }
                 #endregion
@@ -143,9 +165,30 @@ namespace CRFBase
 
                 var keys = new ComputeKeys();
                 var results = new OLMEvaluationResult();
-                results.ConformityParameter = isingModel.ConformityParameter;
-                results.CorrelationParameter = isingModel.CorrelationParameter;
-                Log.Post("Conformity: " + results.ConformityParameter + "\t Correlation: " + results.CorrelationParameter);
+                if (UseIsingModel)
+                {
+                    results = new OLMEvaluationResult
+                    {
+                        ConformityParameter = isingModel.ConformityParameter,
+                        CorrelationParameter = isingModel.CorrelationParameter
+                    };
+                } else
+                {
+                    results = new OLMEvaluationResult
+                    {
+                        ConformityParameters = pottsModel.ConformityParameter,
+                        CorrelationParameter = pottsModel.CorrelationParameter
+                    };
+                }
+
+                if (UseIsingModel)
+                    Log.Post("Conformity: " + results.ConformityParameter + "\t Correlation: " + results.CorrelationParameter);
+                else
+                {
+                    for (int i = 0; i < results.ConformityParameters.Length; i++)
+                        Log.Post("Conformity " + i + ": " + results.ConformityParameters[i] + "\t");
+                    Log.Post("Correlation: " + results.CorrelationParameter);
+                }
 
                 // 1) Viterbi-Heuristik starten (request: SolveInference) + zusätzliche Parameter hinzufügen
                 for (int graph = 0; graph < evaluationGraphs.Count; graph++)
@@ -163,7 +206,6 @@ namespace CRFBase
                     var result = keys.computeEvalutionGraphResult(evaluationGraphs[graph], predictionLabeling);
                     // einfügen in Dictionary -> Liste
                     evaluationResults[trainingVariant].GraphResults.Add(result);
-
                 }
 
                 // Berechnen der Average-Werte
@@ -176,7 +218,10 @@ namespace CRFBase
                     "\t Specificy: " + evaluationResults[trainingVariant].AverageSpecificity +
                     "\t MCC: " + evaluationResults[trainingVariant].AverageMCC +
                     //"\t Accuracy: " + evaluationResults[trainingVariant].AverageAccuracy +
-                    "\t TotalTP: " + evaluationResults[trainingVariant].TotalTP + "\n");
+                    "\t TotalTP: " + evaluationResults[trainingVariant].TotalTP +
+                    "\t TotalFP: " + evaluationResults[trainingVariant].TotalFP +
+                    "\t TotalTN: " + evaluationResults[trainingVariant].TotalTN +
+                    "\t TotalFN: " + evaluationResults[trainingVariant].TotalFN + "\n");
 
                 #endregion
 
@@ -208,7 +253,7 @@ namespace CRFBase
             #endregion
         }
 
-        private static void outputKeys(double[][] keysForAllClones, TrainingEvaluationCycleInputParameters input,
+        private static void OutputKeys(double[][] keysForAllClones, TrainingEvaluationCycleInputParameters input,
             List<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> evaluationGraphs)
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter
@@ -234,7 +279,7 @@ namespace CRFBase
             file.Close();
         }
 
-        private static void outputLabelingsScores(List<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> clone,
+        private static void OutputLabelingsScores(List<IGWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> clone,
             TrainingEvaluationCycleInputParameters input)
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter

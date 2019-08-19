@@ -16,8 +16,8 @@ namespace ProjectLaura
 {
     class WorkflowPedeZellner
     {
-        private const int NumberOfIntervals = 3;
-        private static double[] PottsConformityParameters = new double[NumberOfIntervals];
+        private const int NumberOfIntervals = 1;
+        private static double[] PottsConformityParameters = new double[NumberOfIntervals*2];
        
         private const int IsingConformityParameter = 1;
         private const int IsingCorrelationParameter = 1;
@@ -40,21 +40,21 @@ namespace ProjectLaura
             new PDBFileManager(@"../../Data/hermannData/");
 
             Log.Post("Begin");
-            startTrainingCycle();
+            StartTrainingCycle();
             Log.Post("End");
             Console.ReadKey();
 
             BaseProgram.Exit.Enter();
         }
 
-        private static void listFiles() {
+        private static void ListFiles() {
             foreach (String name in File.ReadLines(fileNames))
             {
                 Console.WriteLine(fileFolder +"/"+ name +" : "+ name.Substring(0, 4));
             }
         }
 
-        private static void startTrainingCycle()
+        private static void StartTrainingCycle()
         {
             // erzeugt die RequestListener
             CRFToolApp.Build.Do();
@@ -62,21 +62,17 @@ namespace ProjectLaura
 
             // starting of TrainingCycle:
             var trainingCycle = new TrainingEvaluationCycleZellner();
-            var parameters = new TrainingEvaluationCycleInputParameters();
-
-            // set Potts Conformity parameters
-           for(int i=0; i<NumberOfIntervals; i++)
-            {
-                PottsConformityParameters[i] = 1.0;
-            }
+            var parameters = new TrainingEvaluationCycleInputParameters();           
 
             // take OLM variants we want to test, ISING and OLM_III (Default)
-            List<OLMVariant> variants = new List<OLMVariant>();
-            variants.Add(OLMVariant.Ising);
-            //variants.Add(OLMVariant.Default);
+            List<OLMVariant> variants = new List<OLMVariant>
+            {
+                OLMVariant.Ising
+                //OLMVariant.Default;
+            };            
 
             // setting of transition probabilities to create observation from reference labeling
-            double[,] transition = setTransitionProbabilities();
+            double[,] transition = SetTransitionProbabilities();
 
             #region modify graph
             // do this for all graphs (currently saved in form of pdbfiles)
@@ -91,13 +87,13 @@ namespace ProjectLaura
                 pdbFile.Name = RandomlySelectedPDBFileName;
 
                 // set IsCore nodes, cuz we only need the interface nodes (the core nodes cannot interact)
-                var proteinGraph = setIsCore(pdbFile);  
+                var proteinGraph = SetIsCore(pdbFile);  
 
                 // trim graph -> remove isCore nodes
-                var trimmedGraph = trimGraph(pdbFile, proteinGraph);
+                var trimmedGraph = TrimGraph(pdbFile, proteinGraph);
 
                 // set real reference label of the graph
-                var crfGraph = setReferenceLabel(trimmedGraph);
+                var crfGraph = SetReferenceLabel(trimmedGraph);
                 crfGraphList.Add(crfGraph);
             }
             #endregion      
@@ -110,7 +106,7 @@ namespace ProjectLaura
             trainingCycle.RunCycle(parameters);
         }
 
-        private static GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> setReferenceLabel(ProteinGraph trimmedGraph)
+        private static GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> SetReferenceLabel(ProteinGraph trimmedGraph)
         {
 
             
@@ -144,14 +140,14 @@ namespace ProjectLaura
             //}
 
             var crfGraph = trimmedGraph.Convert<ResidueNodeData, CRFNodeData, SimpleEdgeData, CRFEdgeData,
-                ProteinGraphData, CRFGraphData>(nd => new CRFNodeData(nd.Data.Residue.Id) { X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z, ReferenceLabel = nd.Data.ReferenceLabel }, ed => new CRFEdgeData(),
+                ProteinGraphData, CRFGraphData>(nd => new CRFNodeData(nd.Data.Residue.Id) { X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z, ReferenceLabel = nd.Data.ReferenceLabel, Characteristics = new double[] { nd.Data.ZScore } }, ed => new CRFEdgeData(),
                 gd => new CRFGraphData());
             crfGraph.SaveAsJSON("testGraph.txt");
 
             return crfGraph;
         }
 
-        private static ProteinGraph setIsCore(PDBFile pdbFile)
+        private static ProteinGraph SetIsCore(PDBFile pdbFile)
         {
             var rasaRequest = new RequestRasa(pdbFile);
             rasaRequest.RequestInDefaultContext();
@@ -164,7 +160,7 @@ namespace ProjectLaura
             return proteinGraph;
         }
 
-        private static double[,] setTransitionProbabilities()
+        private static double[,] SetTransitionProbabilities()
         {
             var a = 0.85;
             var b = 0.85;
@@ -172,7 +168,7 @@ namespace ProjectLaura
             return transition;
         }
 
-        private static ProteinGraph trimGraph(PDBFile pdbFile, ProteinGraph proteinGraph)
+        private static ProteinGraph TrimGraph(PDBFile pdbFile, ProteinGraph proteinGraph)
         {
             var trimmedGraph = new ProteinGraph();
             Dictionary<GWNode<ResidueNodeData, SimpleEdgeData, ProteinGraphData>, GWNode<ResidueNodeData, SimpleEdgeData, ProteinGraphData>> dict = new Dictionary<GWNode<ResidueNodeData, SimpleEdgeData, ProteinGraphData>, GWNode<ResidueNodeData, SimpleEdgeData, ProteinGraphData>>();

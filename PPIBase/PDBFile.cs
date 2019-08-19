@@ -86,6 +86,7 @@ namespace PPIBase
                         currentAA.Code = line.Substring(17, 3);
                         currentAA.Id = residue;
                         currentAA.Chain = chain;
+                        currentAA.ZScore = double.Parse(line.Substring(60, 6), CultureInfo.InvariantCulture);
                     }
 
                     var atom = new Atom();
@@ -93,7 +94,9 @@ namespace PPIBase
                     atom.Id = line.Substring(6, 5);
                     atom.Name = line.Substring(12, 4).Trim();
                     atom.Element = line.Substring(76, 2).Trim();
+                    // read in Zellner score
                     atom.TemperatureFactor = double.Parse(line.Substring(60, 6), CultureInfo.InvariantCulture);
+
                     //check for CAlpha
                     if (atom.Name.Contains("CA"))
                         currentAA.CAlpha = atom;
@@ -101,6 +104,7 @@ namespace PPIBase
                     atom.X = double.Parse(line.Substring(30, 8), CultureInfo.InvariantCulture);
                     atom.Y = double.Parse(line.Substring(38, 8), CultureInfo.InvariantCulture);
                     atom.Z = double.Parse(line.Substring(46, 8), CultureInfo.InvariantCulture);
+                    
                     //pdb.Atoms.AddLast(atom);
                     currentAA.Atoms.AddLast(atom);
                 }

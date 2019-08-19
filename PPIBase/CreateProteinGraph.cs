@@ -30,6 +30,7 @@ namespace PPIBase
                         var node = graph.CreateNode();
                         node.Data = new ResidueNodeData(residue);
                         node.Data.IsCore = residue.IsCore;
+                        node.Data.ZScore = residue.ZScore;
                         switch (centerdef)
                         {
                             case ResidueNodeCenterDefinition.CAlpha:
