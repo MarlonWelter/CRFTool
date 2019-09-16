@@ -17,7 +17,7 @@ namespace CRFBase
         }
         public double[] ConformityParameter { get; set; }
         public double CorrelationParameter { get; set; }
-
+        
         public const int NumberOfLabels = 2;
 
         public List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> AddNodeFeatures(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs, int intervalsCount, int labels)
@@ -25,7 +25,25 @@ namespace CRFBase
             var basisMerkmale = new List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
             // Observation = Zellner Scores -> use for different features -> Zellner Score in different intervals
             var zscores = graphs.SelectMany(g => g.Nodes.Select(n => n.Data.Characteristics[0]));
-            var intervals = zscores.OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
+
+
+            var zscore_list = zscores.ToList();
+            var label_list = graphs.SelectMany((g => g.Nodes.Select(n => n.Data.ReferenceLabel))).ToList();
+            int multiplier = 3;
+            //System.IO.File.WriteAllLines("listForIntervalVisualisation2.txt", listForIntervalVisualisation);
+            for(int i=0; i<label_list.Count; i++)
+            {
+                if(label_list[i] == 1)
+                {
+                    for(int j=0; j<multiplier; j++)
+                    {
+                        zscore_list.Add(zscore_list[i]);
+                    }
+                }
+            }
+
+            var intervals = zscore_list.OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
+            //var intervals = zscores.OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
 
             var lowerBoundary = -0.1;
             for (int k = 0; k < intervals.Length; k++)

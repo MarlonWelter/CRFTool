@@ -14,7 +14,7 @@ namespace CRFBase
         private Random random = new Random();
         // Graph Visualization: false = orignial, true = created
         private const bool GraphVisalization = false;
-        private const bool UseIsingModel = false;
+        private const bool UseIsingModel = true;
 
         /*
 *  Die mit Herrn Waack besprochene Version des Projektzyklus zum Testen der verschiedenen Trainingsvarianten von OLM 
@@ -57,6 +57,11 @@ namespace CRFBase
 
             var createObservationsUnit = new CreateObservationsUnit(inputParameters.TransitionProbabilities);
 
+            if (UseIsingModel)
+                Log.Post("Ising-Model");
+            else
+                Log.Post("Potts-Model with " + inputParameters.NumberOfIntervals + " Intervals");
+
             var isingModel = new IsingModel(inputParameters.IsingConformityParameter, inputParameters.IsingCorrelationParameter);
             var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter);
 
@@ -68,6 +73,7 @@ namespace CRFBase
                 // zugehörige Scores erzeugen
                 if(UseIsingModel)
                     isingModel.CreateCRFScore(graph);
+                    
                 else
                     pottsModel.InitCRFScore(graph);
 
@@ -81,16 +87,21 @@ namespace CRFBase
 
             #region Schritt 3: Aufteilen der Daten in Evaluation und Training
             // Verhaeltnis: 80 20
-            int separation = inputParameters.NumberOfGraphInstances - inputParameters.NumberOfGraphInstances/5;
+            //int separation = inputParameters.NumberOfGraphInstances - inputParameters.NumberOfGraphInstances/5;
+            // Verhältnis Leave-one-out
+            int separation = inputParameters.NumberOfGraphInstances - 1;
 
             var trainingGraphs = new List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>
                 (new IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>[separation]);
             var evaluationGraphs = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>
-                (new GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>[inputParameters.NumberOfGraphInstances - separation]);
+            (new GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>[inputParameters.NumberOfGraphInstances - separation]);
+            //var evaluationGraphs = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>
+            //    (new GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>[separation]);
 
             for (int i = 0; i < separation; i++)
             {
                 trainingGraphs[i] = graphList[i];
+                //evaluationGraphs[i] = graphList[i];
             }
             int k = 0;
             for (int j = separation; j < inputParameters.NumberOfGraphInstances; j++, k++)
@@ -221,7 +232,7 @@ namespace CRFBase
                     "\t TotalTP: " + evaluationResults[trainingVariant].TotalTP +
                     "\t TotalFP: " + evaluationResults[trainingVariant].TotalFP +
                     "\t TotalTN: " + evaluationResults[trainingVariant].TotalTN +
-                    "\t TotalFN: " + evaluationResults[trainingVariant].TotalFN + "\n");
+                    "\t TotalFN: " + evaluationResults[trainingVariant].TotalFN);
 
                 #endregion
 

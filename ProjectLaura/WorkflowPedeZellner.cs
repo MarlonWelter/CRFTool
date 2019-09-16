@@ -16,7 +16,7 @@ namespace ProjectLaura
 {
     class WorkflowPedeZellner
     {
-        private const int NumberOfIntervals = 1;
+        private const int NumberOfIntervals = 4;
         private static double[] PottsConformityParameters = new double[NumberOfIntervals*2];
        
         private const int IsingConformityParameter = 1;
@@ -39,9 +39,12 @@ namespace ProjectLaura
             new RasaManager("../../Data/RASA/", @"../../Data/hermannData/");
             new PDBFileManager(@"../../Data/hermannData/");
 
-            Log.Post("Begin");
-            StartTrainingCycle();
-            Log.Post("End");
+            for(int i=0; i<20; i++)
+            {
+                Log.Post("Begin");
+                StartTrainingCycle();
+                Log.Post("End");
+            }
             Console.ReadKey();
 
             BaseProgram.Exit.Enter();
@@ -142,7 +145,7 @@ namespace ProjectLaura
             var crfGraph = trimmedGraph.Convert<ResidueNodeData, CRFNodeData, SimpleEdgeData, CRFEdgeData,
                 ProteinGraphData, CRFGraphData>(nd => new CRFNodeData(nd.Data.Residue.Id) { X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z, ReferenceLabel = nd.Data.ReferenceLabel, Characteristics = new double[] { nd.Data.ZScore } }, ed => new CRFEdgeData(),
                 gd => new CRFGraphData());
-            crfGraph.SaveAsJSON("testGraph.txt");
+            //crfGraph.SaveAsJSON("testGraph.txt");
 
             return crfGraph;
         }
