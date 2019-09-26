@@ -16,7 +16,7 @@ namespace ProjectLaura
 {
     class WorkflowPedeZellner
     {
-        private const int NumberOfIntervals = 4;
+        private const int NumberOfIntervals = 5;
         private static double[] PottsConformityParameters = new double[NumberOfIntervals*2];
        
         private const int IsingConformityParameter = 1;
@@ -25,7 +25,7 @@ namespace ProjectLaura
         private const int BufferSizeViterbi = 1000;
         private static Random rdm = new Random();
         
-        private static readonly string fileFolder = @"../../Data/hermannData";
+        private static readonly string fileFolder = @"../../Data/ArtificialValue";
         private static readonly string fileNames = @"../../Data/myFiles.txt";
         public static string InterfaceDefLocation = @"../../Data/nuss.iface.2012.txt";
         private static string RandomlySelectedPDBFile;
@@ -70,8 +70,8 @@ namespace ProjectLaura
             // take OLM variants we want to test, ISING and OLM_III (Default)
             List<OLMVariant> variants = new List<OLMVariant>
             {
-                OLMVariant.Ising
-                //OLMVariant.Default;
+                //OLMVariant.Ising
+                OLMVariant.Default
             };            
 
             // setting of transition probabilities to create observation from reference labeling
