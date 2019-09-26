@@ -38,6 +38,9 @@ namespace CRFBase
 
             int[] countsRefMinusPred = new int[weightCurrent.Length];
 
+
+            Log.Post("#Iteration: " + globalIteration);
+
             for (int i = 0; i < TrainingGraphs.Count; i++)
             {
                 var graph = TrainingGraphs[i];

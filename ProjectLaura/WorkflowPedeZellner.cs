@@ -25,7 +25,7 @@ namespace ProjectLaura
         private const int BufferSizeViterbi = 1000;
         private static Random rdm = new Random();
         
-        private static readonly string fileFolder = @"../../Data/hermannData";
+        private static readonly string fileFolder = @"../../Data/ArtificialValue";
         private static readonly string fileNames = @"../../Data/myFiles.txt";
         public static string InterfaceDefLocation = @"../../Data/nuss.iface.2012.txt";
         private static string RandomlySelectedPDBFile;
@@ -39,12 +39,12 @@ namespace ProjectLaura
             new RasaManager("../../Data/RASA/", @"../../Data/hermannData/");
             new PDBFileManager(@"../../Data/hermannData/");
 
-            for(int i=0; i<20; i++)
-            {
+            //for(int i=0; i<20; i++)
+            //{
                 Log.Post("Begin");
                 StartTrainingCycle();
                 Log.Post("End");
-            }
+            //}
             Console.ReadKey();
 
             BaseProgram.Exit.Enter();
@@ -71,7 +71,7 @@ namespace ProjectLaura
             List<OLMVariant> variants = new List<OLMVariant>
             {
                 OLMVariant.Ising
-                //OLMVariant.Default;
+                //OLMVariant.Default
             };            
 
             // setting of transition probabilities to create observation from reference labeling

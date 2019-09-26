@@ -25,13 +25,13 @@ namespace CRFBase
             var basisMerkmale = new List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
             // Observation = Zellner Scores -> use for different features -> Zellner Score in different intervals
             var zscores = graphs.SelectMany(g => g.Nodes.Select(n => n.Data.Characteristics[0]));
-
-
             var zscore_list = zscores.ToList();
             var label_list = graphs.SelectMany((g => g.Nodes.Select(n => n.Data.ReferenceLabel))).ToList();
             int multiplier = 3;
-            //System.IO.File.WriteAllLines("listForIntervalVisualisation2.txt", listForIntervalVisualisation);
-            for(int i=0; i<label_list.Count; i++)
+
+            //System.IO.File.AppendAllLines("listForIntervalVisualisation_artificial.txt", zscore_list.Select(score => score.ToString())); //label_list.Select(label=>label.ToString()));
+
+            for (int i=0; i<label_list.Count; i++)
             {
                 if(label_list[i] == 1)
                 {
