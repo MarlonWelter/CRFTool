@@ -36,8 +36,8 @@ namespace ProjectLaura
             // manager erzeugen
             new ConsoleLogger();
             new FileLogger("Log/");
-            new RasaManager("../../Data/RASA/", @"../../Data/hermannData/");
-            new PDBFileManager(@"../../Data/hermannData/");
+            new RasaManager("../../Data/RASA/", @"../../Data/ArtificialValue/");
+            new PDBFileManager(@"../../Data/ArtificialValue/");
 
             for(int i=0; i<20; i++)
             {
@@ -63,6 +63,14 @@ namespace ProjectLaura
             CRFToolApp.Build.Do();
             CRFBase.Build.Do();
 
+            // initialize conformity parameters
+            var ini = 1;
+            for (int i = 0; i < PottsConformityParameters.Length; i++)
+            {
+                PottsConformityParameters[i] = ini;
+                ini *= -1;
+            }
+
             // starting of TrainingCycle:
             var trainingCycle = new TrainingEvaluationCycleZellner();
             var parameters = new TrainingEvaluationCycleInputParameters();           
@@ -70,8 +78,8 @@ namespace ProjectLaura
             // take OLM variants we want to test, ISING and OLM_III (Default)
             List<OLMVariant> variants = new List<OLMVariant>
             {
-                //OLMVariant.Ising
-                OLMVariant.Default
+                OLMVariant.Ising
+                //OLMVariant.Default
             };            
 
             // setting of transition probabilities to create observation from reference labeling

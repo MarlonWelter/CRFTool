@@ -66,9 +66,11 @@ namespace CRFBase
             var random = new Random();
             foreach (var node in graph.Nodes)
             {
-                node.Data.Scores = new double[2];
-                node.Data.Scores[0] = random.NextDouble();
-                node.Data.Scores[1] = random.NextDouble();
+                node.Data.Scores = new double[NumberOfLabels];
+                for (int labelCount = 0; labelCount < NumberOfLabels; labelCount++)
+                {
+                    node.Data.Scores[labelCount] = node.Data.Observation == labelCount ? ConformityParameter[0] : ConformityParameter[1];
+                }
 
             }
             foreach (var edge in graph.Edges)
