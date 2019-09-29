@@ -13,6 +13,7 @@ namespace CRFBase
         where EdgeData : ICRFEdgeData
         where GraphData : ICRFGraphData
     {
+        // default OLM algorithm
         public OLM_III(int labels, int bufferSizeInference, IList<BasisMerkmal<NodeData, EdgeData, GraphData>> basisMerkmale, Func<int[], int[], double> lossfunctionIteration, Func<int[], int[], double> lossfunctionValidation, double sensitivityFactor, string name)
         {
             Name = name;

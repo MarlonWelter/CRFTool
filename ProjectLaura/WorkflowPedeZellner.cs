@@ -16,7 +16,7 @@ namespace ProjectLaura
 {
     class WorkflowPedeZellner
     {
-        private const int NumberOfIntervals = 4;
+        private const int NumberOfIntervals = 5;
         private static double[] PottsConformityParameters = new double[NumberOfIntervals*2];
        
         private const int IsingConformityParameter = 1;
@@ -39,12 +39,12 @@ namespace ProjectLaura
             new RasaManager("../../Data/RASA/", @"../../Data/hermannData/");
             new PDBFileManager(@"../../Data/hermannData/");
 
-            //for(int i=0; i<20; i++)
-            //{
+            for(int i=0; i<20; i++)
+            {
                 Log.Post("Begin");
                 StartTrainingCycle();
                 Log.Post("End");
-            //}
+            }
             Console.ReadKey();
 
             BaseProgram.Exit.Enter();
@@ -70,8 +70,8 @@ namespace ProjectLaura
             // take OLM variants we want to test, ISING and OLM_III (Default)
             List<OLMVariant> variants = new List<OLMVariant>
             {
-                OLMVariant.Ising
-                //OLMVariant.Default
+                //OLMVariant.Ising
+                OLMVariant.Default
             };            
 
             // setting of transition probabilities to create observation from reference labeling

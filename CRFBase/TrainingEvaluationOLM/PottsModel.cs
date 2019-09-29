@@ -46,7 +46,7 @@ namespace CRFBase
             //var intervals = zscores.OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
 
             var lowerBoundary = -0.1;
-            for (int k = 0; k < intervals.Length; k++)
+            for (int k = 0; k < intervalsCount; k++)
             {
                 var upperBoundary = intervals[k].Max();
 
