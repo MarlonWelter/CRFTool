@@ -30,6 +30,8 @@ namespace CRFBase
         private double middev = 0;
         // realer Fehler
         private double realdev = 2 * eps;
+        private double delta = 0.2;
+
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
         {
 
@@ -150,7 +152,7 @@ namespace CRFBase
 
         protected override bool CheckCancelCriteria()
         {
-            return ((realdev <= middev + eps) && (realdev >= middev - eps)) || Iteration >= 60;
+            return ((realdev <= middev + eps) && (realdev >= middev - eps)) && realdev <= delta;
         }
 
         internal override void SetStartingWeights()
