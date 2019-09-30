@@ -39,12 +39,12 @@ namespace ProjectLaura
             new RasaManager("../../Data/RASA/", @"../../Data/ArtificialValue/");
             new PDBFileManager(@"../../Data/ArtificialValue/");
 
-            for(int i=0; i<20; i++)
-            {
-                Log.Post("Begin");
-                StartTrainingCycle();
-                Log.Post("End");
-            }
+            //for(int i=0; i<20; i++)
+            //{
+            Log.Post("Begin");
+            StartTrainingCycle();
+            Log.Post("End");
+            //}
             Console.ReadKey();
 
             BaseProgram.Exit.Enter();
@@ -88,6 +88,7 @@ namespace ProjectLaura
             #region modify graph
             // do this for all graphs (currently saved in form of pdbfiles)
             List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> crfGraphList = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>();
+            var id = 0;
 
             foreach (String file in File.ReadLines(fileNames))
             {
@@ -105,6 +106,7 @@ namespace ProjectLaura
 
                 // set real reference label of the graph
                 var crfGraph = SetReferenceLabel(trimmedGraph);
+                crfGraph.Id = id++;
                 crfGraphList.Add(crfGraph);
             }
             #endregion      
