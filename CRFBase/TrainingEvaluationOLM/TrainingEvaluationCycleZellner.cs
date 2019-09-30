@@ -95,19 +95,20 @@ namespace CRFBase
                 (new IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>[separation]);
             var evaluationGraphs = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>
                 (new GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>[inputParameters.NumberOfGraphInstances - separation]);
+            var randomizedGraphList = graphList.RandomizeOrder().ToList();
 
             for (int i = 0; i < separation; i++)
             {
-                trainingGraphs[i] = graphList[i];
+                trainingGraphs[i] = randomizedGraphList[i];
                 //evaluationGraphs[i] = graphList[i];
             }
             int k = 0;
             for (int j = separation; j < inputParameters.NumberOfGraphInstances; j++, k++)
             {
-                evaluationGraphs[k] = graphList[j];
+                evaluationGraphs[k] = randomizedGraphList[j];
             }
 
-            Log.Post("#Training Graphs: " + trainingGraphs.Count);
+            Log.Post("Evaluation Graph ID: " + evaluationGraphs[0].Id);
             #endregion
 
             #region Schritt 4: Die verschiedenen Varianten von OLM trainieren und evaluieren
