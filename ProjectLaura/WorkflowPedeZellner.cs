@@ -63,14 +63,6 @@ namespace ProjectLaura
             CRFToolApp.Build.Do();
             CRFBase.Build.Do();
 
-            // initialize conformity parameters
-            var ini = 1;
-            for (int i = 0; i < PottsConformityParameters.Length; i++)
-            {
-                PottsConformityParameters[i] = ini;
-                ini *= -1;
-            }
-
             // starting of TrainingCycle:
             var trainingCycle = new TrainingEvaluationCycleZellner();
             var parameters = new TrainingEvaluationCycleInputParameters();           

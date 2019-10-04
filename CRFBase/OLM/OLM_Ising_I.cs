@@ -152,16 +152,20 @@ namespace CRFBase
 
         protected override bool CheckCancelCriteria()
         {
-            return ((realdev <= middev + eps) && (realdev >= middev - eps)) && realdev <= delta;
+            if ((realdev <= middev + eps) && (realdev >= middev - eps))
+                Log.Post("first cancel criteria triggered");
+            return ((realdev <= middev + eps) && (realdev >= middev - eps) && realdev <= delta);
         }
 
         internal override void SetStartingWeights()
         {
             weightOpt = new double[Weights];
             weightCurrent = new double[Weights];
+            int ini = 1;
             for (int i = 0; i < Weights; i++)
             {
-                weightCurrent[i] = 1;
+                weightCurrent[i] = ini;
+                ini *= -1;
                 weightOpt[i] = weightCurrent[i];
             }
         }

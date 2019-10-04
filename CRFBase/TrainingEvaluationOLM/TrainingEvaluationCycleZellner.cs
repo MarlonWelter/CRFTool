@@ -14,7 +14,7 @@ namespace CRFBase
         private Random random = new Random();
         // Graph Visualization: false = orignial, true = created
         private const bool GraphVisalization = false;
-        private const bool UseIsingModel = true;
+        private const bool UseIsingModel = false;
 
         /*
 *  Die mit Herrn Waack besprochene Version des Projektzyklus zum Testen der verschiedenen Trainingsvarianten von OLM 
