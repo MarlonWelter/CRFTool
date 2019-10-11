@@ -31,6 +31,7 @@ namespace CRFBase
         // realer Fehler
         private double realdev = 2 * eps;
         private double delta = 0.2;
+        private bool debugOutputEnabled = false;
 
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
         {
@@ -92,6 +93,44 @@ namespace CRFBase
                 int[] labeling = graph.Data.ReferenceLabeling;
                 train[g] = labeling;
 
+
+
+
+
+                if (debugOutputEnabled)
+                {
+                    // debug output to visualize labelings with given weigths
+                    var labelings = new LinkedList<int[]>();
+                    labelings.Add(vit[g]);
+                    labelings.Add(mcmc[g]);
+                    labelings.Add(train[g]);
+                    String outLabel = "Graph " + g + Environment.NewLine;
+                    outLabel += "vit:  ";
+                    foreach (int label in vit[g])
+                    {
+                        outLabel += label.ToString() + " ";
+                    }
+                    outLabel += Environment.NewLine + "mcmc: ";
+                    foreach (int label in mcmc[g])
+                    {
+                        outLabel += label.ToString() + " ";
+                    }
+                    outLabel += Environment.NewLine + "real: ";
+                    foreach (int label in train[g])
+                    {
+                        outLabel += label.ToString() + " ";
+                    }
+                    outLabel += Environment.NewLine;
+
+
+                    System.IO.File.AppendAllText("labelsForVisualization.txt", outLabel); //label_list.Select(label=>label.ToString()));
+                }
+
+
+
+
+
+
                 devT = 0;
                 for (int n = 0; n < graph.Nodes.Count(); n++)
                 {
@@ -152,20 +191,33 @@ namespace CRFBase
 
         protected override bool CheckCancelCriteria()
         {
-            if ((realdev <= middev + eps) && (realdev >= middev - eps))
-                Log.Post("first cancel criteria triggered");
-            return ((realdev <= middev + eps) && (realdev >= middev - eps) && realdev <= delta);
+            //if ((realdev <= middev + eps) && (realdev >= middev - eps))
+            //    Log.Post("first cancel criteria triggered");
+            return ((realdev <= middev + eps) && (realdev >= middev - eps));// && (realdev <= delta));
         }
 
         internal override void SetStartingWeights()
         {
             weightOpt = new double[Weights];
             weightCurrent = new double[Weights];
-            int ini = 1;
+            //for (int i = 0; i < Weights; i++)
+            //{
+            //    weightCurrent[i] = 1;
+            //    weightOpt[i] = weightCurrent[i];
+            //}
+            weightCurrent[0] = 0.37063735330373;
+            weightCurrent[1] = -0.249352290684578;
+            weightCurrent[2] = 0.189166780536891;
+            weightCurrent[3] = -0.127888166944729;
+            weightCurrent[4] = -0.0620998016452184;
+            weightCurrent[5] = -0.0795569307936851;
+            weightCurrent[6] = -0.105550610876693;
+            weightCurrent[7] = 0.106094140789776;
+            weightCurrent[8] = -0.305889588032072;
+            weightCurrent[9] = 0.297364630542605;
+            weightCurrent[10] = 0.297364630542605;
             for (int i = 0; i < Weights; i++)
             {
-                weightCurrent[i] = ini;
-                ini *= -1;
                 weightOpt[i] = weightCurrent[i];
             }
         }
