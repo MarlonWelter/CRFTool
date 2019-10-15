@@ -138,8 +138,7 @@ namespace CRFBase
                 }
                 devgesT += devT / mx;
 
-                // calculate Basismerkmale 
-                // TODO: check if correct
+                // calculate Basismerkmale
                 int[] countsRef = CountPred(graph, train[g]);
                 int[] countsMCMC = CountPred(graph, mcmc[g]);
 

@@ -19,6 +19,7 @@ namespace CRFBase.OLM
         
         public override int Count(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph, int[] labeling)
         {
+            var amplifier = CalculateAmplifierNodes(graph);
             int count = 0;
             foreach (var node in graph.Nodes)
             {
@@ -33,6 +34,13 @@ namespace CRFBase.OLM
                 }
             }
             return count;
+        }
+
+        private double CalculateAmplifierNodes(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph)
+        {
+            var I = graph.Data.ReferenceLabeling.Sum();
+            var N = graph.Nodes.Count() - I;
+            return N/I - 1;
         }
 
         public override double Score(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> node, int label)

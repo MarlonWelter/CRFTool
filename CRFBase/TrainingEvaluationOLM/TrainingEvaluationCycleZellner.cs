@@ -100,12 +100,13 @@ namespace CRFBase
             for (int i = 0; i < separation; i++)
             {
                 trainingGraphs[i] = randomizedGraphList[i];
-                //evaluationGraphs[i] = graphList[i];
+                //trainingGraphs[i] = graphList[i];
             }
             int k = 0;
             for (int j = separation; j < inputParameters.NumberOfGraphInstances; j++, k++)
             {
                 evaluationGraphs[k] = randomizedGraphList[j];
+                //evaluationGraphs[i] = graphList[i];
             }
 
             Log.Post("Evaluation Graph ID: " + evaluationGraphs[0].Id);
