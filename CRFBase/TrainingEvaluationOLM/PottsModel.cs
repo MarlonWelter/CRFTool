@@ -10,14 +10,16 @@ namespace CRFBase
 {
     public class PottsModel
     {
-        public PottsModel(double[] conformityParameter, double correlationParameter)
+        public PottsModel(double[] conformityParameter, double correlationParameter, double amplifierControlParameter)
         {
             ConformityParameter = conformityParameter;
             CorrelationParameter = correlationParameter;
+            AmplifierControlParameter = amplifierControlParameter;
         }
         public double[] ConformityParameter { get; set; }
         public double CorrelationParameter { get; set; }
-        
+        public double AmplifierControlParameter { get; set; }
+
         public const int NumberOfLabels = 2;
 
         public List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> AddNodeFeatures(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs, int intervalsCount, int labels)
@@ -52,7 +54,7 @@ namespace CRFBase
 
                 for (int label = 0; label < labels; label++)
                 {
-                    var merkmal = new PottsMerkmalNode(lowerBoundary, upperBoundary, label);
+                    var merkmal = new PottsMerkmalNode(lowerBoundary, upperBoundary, label, AmplifierControlParameter);
                     basisMerkmale.Add(merkmal);
                 }
                 lowerBoundary = upperBoundary;

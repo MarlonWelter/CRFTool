@@ -18,7 +18,7 @@ namespace ProjectLaura
     {
         private const int NumberOfIntervals = 5;
         private static double[] PottsConformityParameters = new double[NumberOfIntervals*2];
-       
+        private const double amplifierControlParameter = 0.5;
         private const int IsingConformityParameter = 1;
         private const int IsingCorrelationParameter = 1;
         private const int NumberOfLabels = 2;
@@ -70,8 +70,8 @@ namespace ProjectLaura
             // take OLM variants we want to test, ISING and OLM_III (Default)
             List<OLMVariant> variants = new List<OLMVariant>
             {
-                OLMVariant.Ising
-                //OLMVariant.Default
+                //OLMVariant.Ising
+                OLMVariant.Default
             };            
 
             // setting of transition probabilities to create observation from reference labeling
@@ -105,7 +105,7 @@ namespace ProjectLaura
 
             // set parameters for the training cycle
             parameters = new TrainingEvaluationCycleInputParameters(crfGraphList, crfGraphList.Count, variants,
-                IsingConformityParameter, PottsConformityParameters, IsingCorrelationParameter, NumberOfIntervals, transition, NumberOfLabels, BufferSizeViterbi);
+                IsingConformityParameter, PottsConformityParameters, IsingCorrelationParameter, NumberOfIntervals, transition, NumberOfLabels, BufferSizeViterbi, amplifierControlParameter);
 
             // running the cycle
             trainingCycle.RunCycle(parameters);

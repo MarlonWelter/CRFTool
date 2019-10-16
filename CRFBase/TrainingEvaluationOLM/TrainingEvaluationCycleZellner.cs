@@ -63,7 +63,7 @@ namespace CRFBase
                 Log.Post("Potts-Model with " + inputParameters.NumberOfIntervals + " Intervals");
 
             var isingModel = new IsingModel(inputParameters.IsingConformityParameter, inputParameters.IsingCorrelationParameter);
-            var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter);
+            var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter, inputParameters.AmplifierControlParameter);
 
             for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
             {
@@ -75,7 +75,7 @@ namespace CRFBase
                     isingModel.CreateCRFScore(graph);
                     
                 else
-                    pottsModel.InitCRFScore(graph);
+                    pottsModel.InitCRFScore(graph);                
 
                 if (i == 0)
                 {
@@ -158,7 +158,7 @@ namespace CRFBase
                     {
                         for (int i = 0; i < numberOfIntervals * 2; i++)
                             pottsModel.ConformityParameter[i] = olmResult.ResultingWeights[i];
-                        pottsModel.CorrelationParameter = olmResult.ResultingWeights[numberOfIntervals * 2 - 1];
+                        pottsModel.CorrelationParameter = olmResult.ResultingWeights[numberOfIntervals * 2];
                     }
 
                     // zugehörige Scores erzeugen für jeden Graphen (auch Evaluation)

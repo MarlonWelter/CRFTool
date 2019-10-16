@@ -25,7 +25,7 @@ namespace CRFBase
             BasisMerkmale = basisMerkmale.ToArray();
         }
 
-        private const double eps = 0.01;
+        private const double eps = 0.02;
         // mittlerer Fehler
         private double middev = 0;
         // realer Fehler
@@ -192,7 +192,7 @@ namespace CRFBase
         {
             //if ((realdev <= middev + eps) && (realdev >= middev - eps))
             //    Log.Post("first cancel criteria triggered");
-            return ((realdev <= middev + eps) && (realdev >= middev - eps));// && (realdev <= delta));
+            return ((realdev <= middev + eps) && (realdev >= middev - eps) && (realdev <= delta));
         }
 
         internal override void SetStartingWeights()
@@ -204,17 +204,17 @@ namespace CRFBase
             //    weightCurrent[i] = 1;
             //    weightOpt[i] = weightCurrent[i];
             //}
-            weightCurrent[0] = 0.37063735330373;
-            weightCurrent[1] = -0.249352290684578;
-            weightCurrent[2] = 0.189166780536891;
-            weightCurrent[3] = -0.127888166944729;
-            weightCurrent[4] = -0.0620998016452184;
-            weightCurrent[5] = -0.0795569307936851;
-            weightCurrent[6] = -0.105550610876693;
-            weightCurrent[7] = 0.106094140789776;
-            weightCurrent[8] = -0.305889588032072;
-            weightCurrent[9] = 0.297364630542605;
-            weightCurrent[10] = 0.297364630542605;
+            weightCurrent[0] = 0.326012149578101;
+            weightCurrent[1] = -0.0620863349898328;
+            weightCurrent[2] = 0.108133301132036;
+            weightCurrent[3] = 0.0688973941829641;
+            weightCurrent[4] = -0.150157976300518;
+            weightCurrent[5] = 0.0987262559955031;
+            weightCurrent[6] = -0.175907969025356;
+            weightCurrent[7] = 0.218943475756862;
+            weightCurrent[8] = -0.37337863816368;
+            weightCurrent[9] = 0.381353594514563;
+            weightCurrent[10] = -0.0280679323609904;
             for (int i = 0; i < Weights; i++)
             {
                 weightOpt[i] = weightCurrent[i];

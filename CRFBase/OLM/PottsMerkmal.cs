@@ -9,14 +9,16 @@ namespace CRFBase.OLM
 {
     public class PottsMerkmalNode : BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>
     {
-        public PottsMerkmalNode(double lowerBoundary, double upperBoundary, int label)
+        public PottsMerkmalNode(double lowerBoundary, double upperBoundary, int label, double amplifierControlParameter)
         {
             Label = label;
             LowerBoundary = lowerBoundary;
             UpperBoundary = upperBoundary;
+            AmplifierControlParameter = amplifierControlParameter;
         }
         public int Label { get; set; }
-        
+        public double AmplifierControlParameter { get; private set; }
+
         public override int Count(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph, int[] labeling)
         {
             var amplifier = CalculateAmplifierNodes(graph);
@@ -29,7 +31,7 @@ namespace CRFBase.OLM
                     // Characteristics[0] contains Zellner Score
                     if (node.Data.Characteristics[0] > LowerBoundary && node.Data.Characteristics[0] <= UpperBoundary)
                     {
-                        count++;
+                        count += label == 0 ? 1 : (int)(1+AmplifierControlParameter*amplifier);
                     }
                 }
             }
