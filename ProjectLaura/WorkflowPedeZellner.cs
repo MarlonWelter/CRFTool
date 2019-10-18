@@ -70,9 +70,11 @@ namespace ProjectLaura
             // take OLM variants we want to test, ISING and OLM_III (Default)
             List<OLMVariant> variants = new List<OLMVariant>
             {
-                //OLMVariant.Ising
-                OLMVariant.Default
-            };            
+                OLMVariant.Ising
+                //OLMVariant.Default
+            };
+
+            Log.Post("Training variant: " + variants[0]);
 
             // setting of transition probabilities to create observation from reference labeling
             double[,] transition = SetTransitionProbabilities();

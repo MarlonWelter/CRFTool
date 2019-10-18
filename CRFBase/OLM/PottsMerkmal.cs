@@ -32,6 +32,7 @@ namespace CRFBase.OLM
                     if (node.Data.Characteristics[0] > LowerBoundary && node.Data.Characteristics[0] <= UpperBoundary)
                     {
                         count += label == 0 ? 1 : (int)(1+AmplifierControlParameter*amplifier);
+                        //count++;
                     }
                 }
             }

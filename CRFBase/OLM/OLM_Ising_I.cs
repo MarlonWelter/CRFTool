@@ -25,7 +25,7 @@ namespace CRFBase
             BasisMerkmale = basisMerkmale.ToArray();
         }
 
-        private const double eps = 0.02;
+        private const double eps = 0.01;
         // mittlerer Fehler
         private double middev = 0;
         // realer Fehler
@@ -78,20 +78,22 @@ namespace CRFBase
                 }
                 mcmc[g] = labelingMCMC;
 
+
+                // reales labeling
+                int[] labeling = graph.Data.ReferenceLabeling;
+                train[g] = labeling;
+
                 // Berechnung des typischen/mittleren Fehlers
                 dev = 0;
                 for (int n = 0; n < TrainingGraphs[g].Nodes.Count(); n++)
                 {
-                    dev += vit[g][n] == mcmc[g][n] ? 0 : 1;
+                    dev += train[g][n] == mcmc[g][n] ? 0 : 1;
                 }
                 devges += ((double)dev) / mx;
 
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
 
-                // reales labeling
-                int[] labeling = graph.Data.ReferenceLabeling;
-                train[g] = labeling;
 
 
 
@@ -192,33 +194,33 @@ namespace CRFBase
         {
             //if ((realdev <= middev + eps) && (realdev >= middev - eps))
             //    Log.Post("first cancel criteria triggered");
-            return ((realdev <= middev + eps) && (realdev >= middev - eps) && (realdev <= delta));
+            return ((realdev <= middev + eps) && (realdev >= middev - eps));// && (realdev <= delta));
         }
 
         internal override void SetStartingWeights()
         {
             weightOpt = new double[Weights];
             weightCurrent = new double[Weights];
-            //for (int i = 0; i < Weights; i++)
-            //{
-            //    weightCurrent[i] = 1;
-            //    weightOpt[i] = weightCurrent[i];
-            //}
-            weightCurrent[0] = 0.326012149578101;
-            weightCurrent[1] = -0.0620863349898328;
-            weightCurrent[2] = 0.108133301132036;
-            weightCurrent[3] = 0.0688973941829641;
-            weightCurrent[4] = -0.150157976300518;
-            weightCurrent[5] = 0.0987262559955031;
-            weightCurrent[6] = -0.175907969025356;
-            weightCurrent[7] = 0.218943475756862;
-            weightCurrent[8] = -0.37337863816368;
-            weightCurrent[9] = 0.381353594514563;
-            weightCurrent[10] = -0.0280679323609904;
             for (int i = 0; i < Weights; i++)
             {
+                weightCurrent[i] = 0.0 + 0.2 * rdm.NextDouble() - 0.1;
                 weightOpt[i] = weightCurrent[i];
             }
+            //weightCurrent[0] = 0.326012149578101;
+            //weightCurrent[1] = -0.0620863349898328;
+            //weightCurrent[2] = 0.108133301132036;
+            //weightCurrent[3] = 0.0688973941829641;
+            //weightCurrent[4] = -0.150157976300518;
+            //weightCurrent[5] = 0.0987262559955031;
+            //weightCurrent[6] = -0.175907969025356;
+            //weightCurrent[7] = 0.218943475756862;
+            //weightCurrent[8] = -0.37337863816368;
+            //weightCurrent[9] = 0.381353594514563;
+            //weightCurrent[10] = -0.0280679323609904;
+            //for (int i = 0; i < Weights; i++)
+            //{
+            //    weightOpt[i] = weightCurrent[i];
+            //}
         }
     }
 }
