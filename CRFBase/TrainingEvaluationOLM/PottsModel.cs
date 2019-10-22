@@ -25,27 +25,7 @@ namespace CRFBase
         public List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> AddNodeFeatures(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs, int intervalsCount, int labels)
         {
             var basisMerkmale = new List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
-            // Observation = Zellner Scores -> use for different features -> Zellner Score in different intervals
-            var zscores = graphs.SelectMany(g => g.Nodes.Select(n => n.Data.Characteristics[0]));
-            var zscore_list = zscores.ToList();
-            var label_list = graphs.SelectMany((g => g.Nodes.Select(n => n.Data.ReferenceLabel))).ToList();
-            int multiplier = 3;
-
-            //System.IO.File.AppendAllLines("listForIntervalVisualisation_artificial.txt", zscore_list.Select(score => score.ToString())); //label_list.Select(label=>label.ToString()));
-
-            for (int i=0; i<label_list.Count; i++)
-            {
-                if(label_list[i] == 1)
-                {
-                    for(int j=0; j<multiplier; j++)
-                    {
-                        zscore_list.Add(zscore_list[i]);
-                    }
-                }
-            }
-
-            var intervals = zscore_list.OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
-            //var intervals = zscores.OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
+            var intervals = getIntervals(graphs, intervalsCount);
 
             var lowerBoundary = -0.1;
             for (int k = 0; k < intervalsCount; k++)
@@ -61,6 +41,33 @@ namespace CRFBase
             }
 
             return basisMerkmale;
+        }
+
+        private IEnumerable<double>[] getIntervals(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs, int intervalsCount)
+        {
+            // Observation = Zellner Scores -> use for different features -> Zellner Score in different intervals
+            var zscores = graphs.SelectMany(g => g.Nodes.Select(n => n.Data.Characteristics[0]));
+            var zscore_list = zscores.ToList();
+            var label_list = graphs.SelectMany((g => g.Nodes.Select(n => n.Data.ReferenceLabel))).ToList();
+            int multiplier = 3;
+
+            //System.IO.File.AppendAllLines("listForIntervalVisualisation_artificial.txt", zscore_list.Select(score => score.ToString())); //label_list.Select(label=>label.ToString()));
+
+            for (int i = 0; i < label_list.Count; i++)
+            {
+                if (label_list[i] == 1)
+                {
+                    for (int j = 0; j < multiplier; j++)
+                    {
+                        zscore_list.Add(zscore_list[i]);
+                    }
+                }
+            }
+
+            var intervals = zscore_list.OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
+            //var intervals = zscores.OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
+
+            return intervals;
         }
 
         public void InitCRFScore(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph)
