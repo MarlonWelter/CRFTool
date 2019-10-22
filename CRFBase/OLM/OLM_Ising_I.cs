@@ -94,44 +94,10 @@ namespace CRFBase
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
 
-
-
-
-
-
                 if (debugOutputEnabled)
                 {
-                    // debug output to visualize labelings with given weigths
-                    var labelings = new LinkedList<int[]>();
-                    labelings.Add(vit[g]);
-                    labelings.Add(mcmc[g]);
-                    labelings.Add(train[g]);
-                    String outLabel = "Graph " + g + Environment.NewLine;
-                    outLabel += "vit:  ";
-                    foreach (int label in vit[g])
-                    {
-                        outLabel += label.ToString() + " ";
-                    }
-                    outLabel += Environment.NewLine + "mcmc: ";
-                    foreach (int label in mcmc[g])
-                    {
-                        outLabel += label.ToString() + " ";
-                    }
-                    outLabel += Environment.NewLine + "real: ";
-                    foreach (int label in train[g])
-                    {
-                        outLabel += label.ToString() + " ";
-                    }
-                    outLabel += Environment.NewLine;
-
-
-                    System.IO.File.AppendAllText("labelsForVisualization.txt", outLabel); //label_list.Select(label=>label.ToString()));
+                    printLabelings(vit[g], mcmc[g], train[g]);
                 }
-
-
-
-
-
 
                 devT = 0;
                 for (int n = 0; n < graph.Nodes.Count(); n++)
@@ -140,7 +106,7 @@ namespace CRFBase
                 }
                 devgesT += devT / mx;
 
-                // calculate Basismerkmale
+                // calculate equation 6.13 and 6.14
                 int[] countsRef = CountPred(graph, train[g]);
                 int[] countsMCMC = CountPred(graph, mcmc[g]);
 
@@ -151,10 +117,10 @@ namespace CRFBase
                 }
             }
 
-            // mittlerer (typischer) Fehler
+            // mittlerer (typischer) Fehler (Summen-Gibbs-Score)
             middev = devges / u;
 
-            // realer Fehler fuer diese Runde
+            // realer Fehler fuer diese Runde (Summen-Trainings-Score)
             realdev = devgesT / u;
 
             var loss = (realdev - middev) * mu;
@@ -221,6 +187,30 @@ namespace CRFBase
             //{
             //    weightOpt[i] = weightCurrent[i];
             //}
+        }
+
+
+        // debug output to visualize labelings with given weigths
+        private void printLabelings(int[] vit, int[] mcmc, int[] train)
+        {
+            String outLabel = "Graph " + g + Environment.NewLine;
+            outLabel += "vit:  ";
+            foreach (int label in vit)
+            {
+                outLabel += label.ToString() + " ";
+            }
+            outLabel += Environment.NewLine + "mcmc: ";
+            foreach (int label in mcmc)
+            {
+                outLabel += label.ToString() + " ";
+            }
+            outLabel += Environment.NewLine + "real: ";
+            foreach (int label in train)
+            {
+                outLabel += label.ToString() + " ";
+            }
+            outLabel += Environment.NewLine;
+            System.IO.File.AppendAllText("labelsForVisualization.txt", outLabel); //label_list.Select(label=>label.ToString()));
         }
     }
 }
