@@ -96,7 +96,7 @@ namespace CRFBase
 
                 if (debugOutputEnabled)
                 {
-                    printLabelings(vit[g], mcmc[g], train[g]);
+                    printLabelings(vit[g], mcmc[g], train[g], g);
                 }
 
                 devT = 0;
@@ -191,7 +191,7 @@ namespace CRFBase
 
 
         // debug output to visualize labelings with given weigths
-        private void printLabelings(int[] vit, int[] mcmc, int[] train)
+        private void printLabelings(int[] vit, int[] mcmc, int[] train, int g)
         {
             String outLabel = "Graph " + g + Environment.NewLine;
             outLabel += "vit:  ";
