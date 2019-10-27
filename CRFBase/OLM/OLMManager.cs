@@ -30,6 +30,11 @@ namespace CRFBase.OLM
                     olmIsing.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);
                     request.Result = new OLMRequestResult(olmIsing.ResultingWeights.ToArray());
                     break;
+                case OLMVariant.IsingII:
+                    var olmIsingII = new OLM_Ising_II<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF, request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 0.02, "OLM_Default");
+                    olmIsingII.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);
+                    request.Result = new OLMRequestResult(olmIsingII.ResultingWeights.ToArray());
+                    break;
                 default:
                     Log.Post("unknown OLM variante", LogCategory.Critical);
                     break;

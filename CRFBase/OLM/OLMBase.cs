@@ -253,7 +253,8 @@ namespace CRFBase
         AverageDistCriteria,
         LastTwoMax,
         Test,
-        Ising
+        Ising,
+        IsingII
     }
 
     public class CharacteristicFeature : BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>
