@@ -64,4 +64,103 @@ namespace CRFBase.OLM
             return 0.0;
         }
     }
+
+    public class MaxEdgeBasisMerkmal : BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>
+    {
+        public MaxEdgeBasisMerkmal(double lowerBoundary, double upperBoundary, int labelhead, int labelFoot)
+        {
+            LabelHead = labelhead;
+            LabelFoot = labelFoot;
+            LowerBoundary = lowerBoundary;
+            UpperBoundary = upperBoundary;
+        }
+        public int LabelHead { get; set; }
+        public int LabelFoot { get; set; }
+
+        public override int Count(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph, int[] labeling)
+        {
+            int count = 0;
+            foreach (var edge in graph.Edges)
+            {
+                var labelHead = labeling[edge.Head.GraphId];
+                var labelFoot = labeling[edge.Foot.GraphId];
+
+                //    if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
+                //        (labelHead == LabelFoot && labelFoot == LabelHead))
+                //    {
+                //        if (edge.Data.Max > LowerBoundary && edge.Data.Max <= UpperBoundary)
+                //        {
+                //            count++;
+                //        }
+                //    }
+            }
+            return count;
+        }
+        public override double Score(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> node, int label)
+        {
+            return 0.0;
+        }
+
+        public override double Score(IGWEdge<ICRFNodeData, ICRFEdgeData, ICRFGraphData> edge, int labelHead, int labelFoot)
+        {
+            //if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
+            //       (labelHead == LabelFoot && labelFoot == LabelHead))
+            //{
+            //    if (edge.Data.Max > LowerBoundary && edge.Data.Max <= UpperBoundary)
+            //    {
+            //        return 1.0;
+            //    }
+            //}
+            return 0.0;
+        }
+    }
+    public class RASADiffEdgeBasisMerkmal : BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>
+    {
+        public RASADiffEdgeBasisMerkmal(double lowerBoundary, double upperBoundary, int labelhead, int labelFoot)
+        {
+            LabelHead = labelhead;
+            LabelFoot = labelFoot;
+            LowerBoundary = lowerBoundary;
+            UpperBoundary = upperBoundary;
+        }
+        public int LabelHead { get; set; }
+        public int LabelFoot { get; set; }
+
+        public override int Count(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph, int[] labeling)
+        {
+            int count = 0;
+            //foreach (var edge in graph.Edges)
+            //{
+            //    var labelHead = labeling[edge.Head.Data.Ordinate];
+            //    var labelFoot = labeling[edge.Foot.Data.Ordinate];
+
+            //    if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
+            //        (labelHead == LabelFoot && labelFoot == LabelHead))
+            //    {
+            //        if (edge.Data.Diff > LowerBoundary && edge.Data.Diff <= UpperBoundary)
+            //        {
+            //            count++;
+            //        }
+            //    }
+            //}
+            return count;
+        }
+        public override double Score(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> node, int label)
+        {
+            return 0.0;
+        }
+
+        public override double Score(IGWEdge<ICRFNodeData, ICRFEdgeData, ICRFGraphData> edge, int labelHead, int labelFoot)
+        {
+            //if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
+            //       (labelHead == LabelFoot && labelFoot == LabelHead))
+            //{
+            //    if (edge.Data.Diff > LowerBoundary && edge.Data.Diff <= UpperBoundary)
+            //    {
+            //        return 1.0;
+            //    }
+            //}
+            return 0.0;
+        }
+    }
 }
