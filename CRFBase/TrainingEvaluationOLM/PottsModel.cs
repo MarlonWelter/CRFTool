@@ -10,19 +10,19 @@ namespace CRFBase
 {
     public class PottsModel
     {
-        public PottsModel(double[] conformityParameter, double correlationParameter, double amplifierControlParameter)
+        public PottsModel(double[] conformityParameter, double correlationParameter, double amplifierControlParameter, int numberOfLabels)
         {
             ConformityParameter = conformityParameter;
             CorrelationParameter = correlationParameter;
             AmplifierControlParameter = amplifierControlParameter;
+            NumberOfLabels = numberOfLabels;
         }
         public double[] ConformityParameter { get; set; }
         public double CorrelationParameter { get; set; }
         public double AmplifierControlParameter { get; set; }
+        public int NumberOfLabels { get; set; }
 
-        public const int NumberOfLabels = 2;
-
-        public List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> AddNodeFeatures(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs, int intervalsCount, int labels)
+        public List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> AddNodeFeatures(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs, int intervalsCount)
         {
             var basisMerkmale = new List<BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
             var intervals = getIntervals(graphs, intervalsCount);
@@ -32,7 +32,7 @@ namespace CRFBase
             {
                 var upperBoundary = intervals[k].Max();
 
-                for (int label = 0; label < labels; label++)
+                for (int label = 0; label < NumberOfLabels; label++)
                 {
                     var merkmal = new PottsMerkmalNode(lowerBoundary, upperBoundary, label, AmplifierControlParameter);
                     basisMerkmale.Add(merkmal);
@@ -84,7 +84,7 @@ namespace CRFBase
             }
             foreach (var edge in graph.Edges)
             {
-                edge.Data.Scores = new double[NumberOfLabels, NumberOfLabels] { { CorrelationParameter, -CorrelationParameter }, { -CorrelationParameter, CorrelationParameter } };
+                edge.Data.Scores = new double[,] {{ CorrelationParameter, -CorrelationParameter }, { -CorrelationParameter, CorrelationParameter } };
             }
         }
 
@@ -104,7 +104,7 @@ namespace CRFBase
             }
             foreach (var edge in graph.Edges)
             {
-                edge.Data.Scores = new double[NumberOfLabels, NumberOfLabels] { { CorrelationParameter, -CorrelationParameter }, { -CorrelationParameter, CorrelationParameter } };
+                edge.Data.Scores = new double[,] { { CorrelationParameter, -CorrelationParameter }, { -CorrelationParameter, CorrelationParameter } };
             }
         }
     }
