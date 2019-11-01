@@ -63,7 +63,8 @@ namespace CRFBase
                 Log.Post("Potts-Model with " + inputParameters.NumberOfIntervals + " Intervals");
 
             var isingModel = new IsingModel(inputParameters.IsingConformityParameter, inputParameters.IsingCorrelationParameter);
-            var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter, inputParameters.AmplifierControlParameter);
+            var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter, 
+                inputParameters.AmplifierControlParameter, inputParameters.NumberOfLabels);
 
             for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
             {
@@ -128,7 +129,7 @@ namespace CRFBase
                         request.BasisMerkmale.AddRange(new IsingMerkmalNode(), new IsingMerkmalEdge());
                     else
                     {
-                        request.BasisMerkmale.AddRange(pottsModel.AddNodeFeatures(graphList, numberOfIntervals, numberOfLabels));
+                        request.BasisMerkmale.AddRange(pottsModel.AddNodeFeatures(graphList, numberOfIntervals));
                         request.BasisMerkmale.Add(new IsingMerkmalEdge());
                     }
 

@@ -122,7 +122,7 @@ namespace CRFBase
             // realer Fehler fuer diese Runde (Summen-Trainings-Score)
             realdev = devgesT / u;
 
-            var loss = middev * mu;
+            var loss = realdev * mu;
 
             // Scores berechnen?? Im Skript so, aber nicht notwendig
 
