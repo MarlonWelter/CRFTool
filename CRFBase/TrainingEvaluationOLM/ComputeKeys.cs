@@ -16,8 +16,8 @@ namespace CRFBase
             int[] referenceLabel = graph.Data.ReferenceLabeling;
 
             // für jeden graphen: true positives / false positives / true negatives / false negatives   || 0: negative 1: positive
-            int[] tps = computeClassification(referenceLabel, predicitionLabeling);
-            int tp = tps[0], tn = tps[1], fp = tps[2], fn = tps[3];
+            long[] tps = computeClassification(referenceLabel, predicitionLabeling);
+            long tp = tps[0], tn = tps[1], fp = tps[2], fn = tps[3];
 
             // Sensitivität / Spezifität / MCC Matthew Correlation Coefficient
             sensitivity = computeTPR(tp, fn);
@@ -30,9 +30,9 @@ namespace CRFBase
             return result;
         }
 
-        private int[] computeClassification(int[] referenceLabel, int[] trainingLabel)
+        private long[] computeClassification(int[] referenceLabel, int[] trainingLabel)
         {
-            int tp = 0, fn = 0, fp = 0, tn = 0;
+            long tp = 0, fn = 0, fp = 0, tn = 0;
 
             for (int j = 0; j < trainingLabel.Length; j++)
             {
@@ -52,12 +52,12 @@ namespace CRFBase
                 }
             }
 
-            int[] rates = { tp, tn, fp, fn };
+            long[] rates = { tp, tn, fp, fn };
 
             return rates;
         }
 
-        private double computeMCC(int tp, int tn, int fp, int fn)
+        public double computeMCC(long tp, long tn, long fp, long fn)
         {
             double mcc = 0.0;
             mcc = (tp * tn - fp * fn) / System.Math.Sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn));
@@ -68,21 +68,21 @@ namespace CRFBase
             return mcc;
         }
 
-        private double computeSPC(int tn, int fp)
+        public double computeSPC(long tn, long fp)
         {
             double spc = 0.0;
             spc = (double)tn / (tn + fp);
             return spc;
         }
 
-        private double computeTPR(int tp, int fn)
+        public double computeTPR(long tp, long fn)
         {
             double tpr = 0.0;
             tpr = (double)tp / (tp + fn);
             return tpr;
         }
 
-        private double computeAcc(int tp, int tn, int fp, int fn)
+        public double computeAcc(long tp, long tn, long fp, long fn)
         {
             double acc = 0.0;
             acc = (double)(tp + tn) / (tp + fp + fn + tn);

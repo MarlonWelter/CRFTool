@@ -222,9 +222,10 @@ namespace CRFBase
         {
             using (var writer = new StreamWriter(Name + "_Results.txt", true))
             {
-                var sensitivity = (double)tp / (tp + fn);
-                var specificity = (double)tn / (tn + fp);
-                var mcc = (tp * tn - fp * fn) / Math.Sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn));
+                var keys = new ComputeKeys();
+                var sensitivity = keys.computeTPR(tp, fn);
+                var specificity = keys.computeSPC(tn, fp);
+                var mcc = keys.computeMCC(tp, tn, fp, fn);
                 Log.Post("MCC: " + mcc);
 
                 writer.WriteLine("" + tp + "_" + tn + "_" + fp + "_" + fn);

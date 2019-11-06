@@ -52,7 +52,8 @@ namespace CRFBase
     public class OLMEvaluationGraphResult
     {
         public OLMEvaluationGraphResult() { }
-        public OLMEvaluationGraphResult(GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph, int[] prediction, int tp, int tn, int fp, int fn, double sensitivity, double specificity, double mcc, double accuracy)
+        public OLMEvaluationGraphResult(GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph, int[] prediction, long tp, long tn, long fp, long fn, 
+            double sensitivity, double specificity, double mcc, double accuracy)
         {
             Graph = graph;
             Prediction = prediction;
@@ -66,13 +67,13 @@ namespace CRFBase
             Accuracy = accuracy;
         }
         // amount of the true positives
-        public int TP { get; set; }
+        public long TP { get; set; }
         // amount of the true negatives
-        public int TN { get; set; }
+        public long TN { get; set; }
         // amount of false positives
-        public int FP { get; set; }
+        public long FP { get; set; }
         // amount of false negatives
-        public int FN { get; set; }
+        public long FN { get; set; }
         //  true positive rate (TPR)
         public double Sensitivity { get; set; }
         // true negative rate
