@@ -230,7 +230,7 @@ namespace CRFBase
             //else
 
             //return (dist-200) * 0.5;
-            return  Math.Pow(Math.Log(dist), 1.2);
+            return  Math.Pow(Math.Log(dist), 2);
         }
 
         public void Start()

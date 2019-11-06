@@ -16,6 +16,7 @@ namespace ProjectLaura
 {
     class WorkflowPedeZellner
     {
+        private const bool GraphVisualization = false;
         private const int NumberOfIntervals = 5;
         private static double[] PottsConformityParameters = new double[NumberOfIntervals*2];
         private const double amplifierControlParameter = 0.5;
@@ -63,6 +64,7 @@ namespace ProjectLaura
             // erzeugt die RequestListener
             CRFToolApp.Build.Do();
             CRFBase.Build.Do();
+            CRFGraphVis.Build.Do();
 
             // starting of TrainingCycle:
             var trainingCycle = new TrainingEvaluationCycleZellner();
@@ -102,6 +104,7 @@ namespace ProjectLaura
 
                 // set real reference label of the graph
                 var crfGraph = SetReferenceLabel(trimmedGraph);
+                SetEdgeMaxDiffValues(crfGraph);
                 crfGraph.Id = id++;
                 crfGraphList.Add(crfGraph);
             }
@@ -116,10 +119,17 @@ namespace ProjectLaura
             trainingCycle.RunCycle(parameters);
         }
 
-        private static GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> SetReferenceLabel(ProteinGraph trimmedGraph)
+        private static void SetEdgeMaxDiffValues(GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> crfGraph)
         {
+            foreach(var edge in crfGraph.Edges)
+            {
+                edge.Data.MaxZellnerScore = edge.Head.Data.Characteristics[0] >= edge.Foot.Data.Characteristics[0] ? edge.Head.Data.Characteristics[0] : edge.Foot.Data.Characteristics[0];
+                edge.Data.DiffZellnerScore = Math.Abs((edge.Head.Data.Characteristics[0] - edge.Foot.Data.Characteristics[0]));
+            }
+        }
 
-            
+        private static GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> SetReferenceLabel(ProteinGraph trimmedGraph)
+        {            
             var nameWithChain = RandomlySelectedPDBFile.Substring(fileFolder.Length + 1, 6);
             var interfacesList = new List<string>();
             using (var reader = new StreamReader(InterfaceDefLocation))
@@ -142,12 +152,12 @@ namespace ProjectLaura
             }
 
             //test
-            //if (GraphVisualization)
-            //{
-            //    var graph3D = trimmedGraph.Wrap3D(nd => new Node3DWrap<ResidueNodeData>(nd.Data) { ReferenceLabel = nd.Data.ReferenceLabel, X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z });
-            //    new ShowGraph3D(graph3D).Request(RequestRunType.Background);
-            //    Thread.Sleep(120000);
-            //}
+            if (GraphVisualization)
+            {
+                var graph3D = trimmedGraph.Wrap3D(nd => new Node3DWrap<ResidueNodeData>(nd.Data) { ReferenceLabel = nd.Data.ReferenceLabel, X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z });
+                new ShowGraph3D(graph3D).Request(RequestRunType.Background);
+                Thread.Sleep(120000);
+            }
 
             var crfGraph = trimmedGraph.Convert<ResidueNodeData, CRFNodeData, SimpleEdgeData, CRFEdgeData,
                 ProteinGraphData, CRFGraphData>(nd => new CRFNodeData(nd.Data.Residue.Id) { X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z, ReferenceLabel = nd.Data.ReferenceLabel, Characteristics = new double[] { nd.Data.ZScore } }, ed => new CRFEdgeData(),
@@ -200,7 +210,7 @@ namespace ProjectLaura
                 if (!edge.Head.Data.IsCore && !edge.Foot.Data.IsCore)
                 {
                     var newEdge = trimmedGraph.CreateEdge(dict[edge.Head], dict[edge.Foot]);
-                    newEdge.Data = edge.Data;
+                    newEdge.Data = edge.Data;                    
                 }
             }
 

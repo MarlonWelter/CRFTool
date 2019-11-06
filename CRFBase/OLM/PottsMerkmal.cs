@@ -85,14 +85,14 @@ namespace CRFBase.OLM
                 var labelHead = labeling[edge.Head.GraphId];
                 var labelFoot = labeling[edge.Foot.GraphId];
 
-                //    if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
-                //        (labelHead == LabelFoot && labelFoot == LabelHead))
-                //    {
-                //        if (edge.Data.Max > LowerBoundary && edge.Data.Max <= UpperBoundary)
-                //        {
-                //            count++;
-                //        }
-                //    }
+                if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
+                    (labelHead == LabelFoot && labelFoot == LabelHead))
+                {
+                    if (edge.Data.MaxZellnerScore > LowerBoundary && edge.Data.MaxZellnerScore <= UpperBoundary)
+                    {
+                        count++;
+                    }
+                }
             }
             return count;
         }
@@ -103,14 +103,14 @@ namespace CRFBase.OLM
 
         public override double Score(IGWEdge<ICRFNodeData, ICRFEdgeData, ICRFGraphData> edge, int labelHead, int labelFoot)
         {
-            //if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
-            //       (labelHead == LabelFoot && labelFoot == LabelHead))
-            //{
-            //    if (edge.Data.Max > LowerBoundary && edge.Data.Max <= UpperBoundary)
-            //    {
-            //        return 1.0;
-            //    }
-            //}
+            if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
+                   (labelHead == LabelFoot && labelFoot == LabelHead))
+            {
+                if (edge.Data.MaxZellnerScore > LowerBoundary && edge.Data.MaxZellnerScore <= UpperBoundary)
+                {
+                    return 1.0;
+                }
+            }
             return 0.0;
         }
     }
@@ -129,20 +129,20 @@ namespace CRFBase.OLM
         public override int Count(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph, int[] labeling)
         {
             int count = 0;
-            //foreach (var edge in graph.Edges)
-            //{
-            //    var labelHead = labeling[edge.Head.Data.Ordinate];
-            //    var labelFoot = labeling[edge.Foot.Data.Ordinate];
+            foreach (var edge in graph.Edges)
+            {
+                var labelHead = labeling[edge.Head.GraphId];
+                var labelFoot = labeling[edge.Foot.GraphId];
 
-            //    if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
-            //        (labelHead == LabelFoot && labelFoot == LabelHead))
-            //    {
-            //        if (edge.Data.Diff > LowerBoundary && edge.Data.Diff <= UpperBoundary)
-            //        {
-            //            count++;
-            //        }
-            //    }
-            //}
+                if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
+                    (labelHead == LabelFoot && labelFoot == LabelHead))
+                {
+                    if (edge.Data.DiffZellnerScore > LowerBoundary && edge.Data.DiffZellnerScore <= UpperBoundary)
+                    {
+                        count++;
+                    }
+                }
+            }
             return count;
         }
         public override double Score(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> node, int label)
@@ -152,14 +152,14 @@ namespace CRFBase.OLM
 
         public override double Score(IGWEdge<ICRFNodeData, ICRFEdgeData, ICRFGraphData> edge, int labelHead, int labelFoot)
         {
-            //if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
-            //       (labelHead == LabelFoot && labelFoot == LabelHead))
-            //{
-            //    if (edge.Data.Diff > LowerBoundary && edge.Data.Diff <= UpperBoundary)
-            //    {
-            //        return 1.0;
-            //    }
-            //}
+            if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
+                   (labelHead == LabelFoot && labelFoot == LabelHead))
+            {
+                if (edge.Data.DiffZellnerScore > LowerBoundary && edge.Data.DiffZellnerScore <= UpperBoundary)
+                {
+                    return 1.0;
+                }
+            }
             return 0.0;
         }
     }

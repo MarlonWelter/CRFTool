@@ -92,7 +92,6 @@ namespace CodeBase
         public double Z { get; set; }
         public int CommunityId { get; set; }
         public int Labelling { get; set; }
-
         public int Category { get; set; }
     }
     public class CRFNodeDataBinary : ICRFNodeDataBinary
@@ -120,8 +119,9 @@ namespace CodeBase
     public interface ICRFEdgeData
     {
         double Weight { get; set; }
-
         double[,] Scores { get; set; }
+        double MaxZellnerScore { get; set; }
+        double DiffZellnerScore { get; set; }
     }
     public interface ICRFEdgeDataBinary
     {
@@ -136,10 +136,10 @@ namespace CodeBase
     }
     public class CRFEdgeData : ICRFEdgeData, IEdge3DInfo
     {
-
         public double Weight { get; set; }
-
         public double[,] Scores { get; set; }
+        public double MaxZellnerScore { get; set; }
+        public double DiffZellnerScore { get; set; }
     }
     public class CRFEdgeDataBinary : ICRFEdgeDataBinary
     {

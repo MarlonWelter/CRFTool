@@ -79,7 +79,7 @@ namespace CRFBase
                 else
                     pottsModel.InitCRFScore(graph);                
 
-                if (i == 0)
+                if (i == 0 && GraphVisalization == true)
                 {
                     var graph3D = graph.Wrap3D();
                     new ShowGraph3D(graph3D).Request();
