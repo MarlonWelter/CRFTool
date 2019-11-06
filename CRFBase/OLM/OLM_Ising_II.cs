@@ -166,7 +166,7 @@ namespace CRFBase
             weightCurrent = new double[Weights];
             for (int i = 0; i < Weights; i++)
             {
-                weightCurrent[i] = 0.0 + 0.2 * rdm.NextDouble() - 0.1;
+                weightCurrent[i] = 1;
                 weightOpt[i] = weightCurrent[i];
             }
         }

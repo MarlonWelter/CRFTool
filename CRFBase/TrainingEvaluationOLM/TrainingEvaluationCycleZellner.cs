@@ -10,17 +10,16 @@ namespace CRFBase
 {
     public class TrainingEvaluationCycleZellner
     {
-        //private SeedingMethodPatchCreation seedingMethodPatchCreation;
         private Random random = new Random();
         // Graph Visualization: false = orignial, true = created
         private const bool GraphVisalization = false;
-        private const bool UseIsingModel = false;
+        private const bool UseIsingModel = true;
 
         /*
-*  Die mit Herrn Waack besprochene Version des Projektzyklus zum Testen der verschiedenen Trainingsvarianten von OLM 
-* 
-* 
-*/
+        *  Die mit Herrn Waack besprochene Version des Projektzyklus zum Testen der verschiedenen Trainingsvarianten von OLM 
+        * 
+        * 
+        */
         public void RunCycle(TrainingEvaluationCycleInputParameters inputParameters)
         {
             #region Schritt 0: Vorbereiten der Daten
@@ -133,16 +132,8 @@ namespace CRFBase
                         request.BasisMerkmale.Add(new IsingMerkmalEdge());
                     }
 
-                    //TODO: loss function auslagern
-                    request.LossFunctionValidation = (a, b) =>
-                    {
-                        var loss = 0.0;
-                        for (int i = 0; i < a.Length; i++)
-                        {
-                            loss += a[i] != b[i] ? 1 : 0;
-                        }
-                        return loss / a.Length;
-                    };
+                    // loss function
+                    request.LossFunctionValidation = OLM.OLM.LossRatio;
 
                     // execute training methods by calling OLMManager -> OLMBase
                     request.Request();

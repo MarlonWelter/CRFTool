@@ -70,8 +70,8 @@ namespace ProjectLaura
             // take OLM variants we want to test, ISING and OLM_III (Default)
             List<OLMVariant> variants = new List<OLMVariant>
             {
-                OLMVariant.IsingII
-                //OLMVariant.Ising
+                //OLMVariant.IsingII
+                OLMVariant.Ising
                 //OLMVariant.Default
             };
 
