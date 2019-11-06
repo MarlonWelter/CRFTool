@@ -23,6 +23,7 @@ namespace ProjectLaura
         private const int IsingCorrelationParameter = 1;
         private const int NumberOfLabels = 2;
         private const int BufferSizeViterbi = 1000;
+        private const double Threshold = 0.7;
         private static Random rdm = new Random();
         
         private static readonly string fileFolder = @"../../Data/ArtificialValue";
@@ -65,13 +66,13 @@ namespace ProjectLaura
 
             // starting of TrainingCycle:
             var trainingCycle = new TrainingEvaluationCycleZellner();
-            var parameters = new TrainingEvaluationCycleInputParameters();           
+            var parameters = new TrainingEvaluationCycleInputParameters();
 
             // take OLM variants we want to test, ISING and OLM_III (Default)
             List<OLMVariant> variants = new List<OLMVariant>
             {
-                //OLMVariant.IsingII
-                OLMVariant.Ising
+                OLMVariant.IsingII
+                //OLMVariant.Ising
                 //OLMVariant.Default
             };
 
@@ -108,7 +109,8 @@ namespace ProjectLaura
 
             // set parameters for the training cycle
             parameters = new TrainingEvaluationCycleInputParameters(crfGraphList, crfGraphList.Count, variants,
-                IsingConformityParameter, PottsConformityParameters, IsingCorrelationParameter, NumberOfIntervals, transition, NumberOfLabels, BufferSizeViterbi, amplifierControlParameter);
+                IsingConformityParameter, PottsConformityParameters, IsingCorrelationParameter, NumberOfIntervals, 
+                transition, NumberOfLabels, BufferSizeViterbi, amplifierControlParameter, Threshold);
 
             // running the cycle
             trainingCycle.RunCycle(parameters);

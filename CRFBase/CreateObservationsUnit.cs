@@ -13,9 +13,22 @@ namespace CRFBase
         {
             TransitionProbabilities = transitionProbabilities;
         }
+        public CreateObservationsUnit(double threshold)
+        {
+            Threshold = threshold;
+        }
 
         private Random Random = new Random();
         public double[,] TransitionProbabilities { get; set; }
+        private double Threshold { get; set; }
+
+        public void CreateObservationThresholding(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph)
+        {
+            foreach (var node in graph.Nodes)
+            {
+                node.Data.Observation = node.Data.Characteristics[0] >= Threshold ? 1 : 0;
+            }
+        }
 
         public void CreateObservation(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph)
         {
