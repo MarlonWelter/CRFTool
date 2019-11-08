@@ -73,8 +73,8 @@ namespace ProjectLaura
             // take OLM variants we want to test, ISING and OLM_III (Default)
             List<OLMVariant> variants = new List<OLMVariant>
             {
-                OLMVariant.IsingII
-                //OLMVariant.Ising
+                OLMVariant.Ising
+                //OLMVariant.IsingII
                 //OLMVariant.Default
             };
 
@@ -163,6 +163,19 @@ namespace ProjectLaura
                 ProteinGraphData, CRFGraphData>(nd => new CRFNodeData(nd.Data.Residue.Id) { X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z, ReferenceLabel = nd.Data.ReferenceLabel, Characteristics = new double[] { nd.Data.ZScore } }, ed => new CRFEdgeData(),
                 gd => new CRFGraphData());
             //crfGraph.SaveAsJSON("testGraph.txt");
+
+            crfGraph.Data.ReferenceLabeling = new int[crfGraph.Nodes.Count()];
+
+            foreach (var node in crfGraph.Nodes)
+            {
+                crfGraph.Data.ReferenceLabeling[node.GraphId] = node.Data.ReferenceLabel;
+            }
+
+            if (GraphVisualization == true)
+            {
+                var graph3D = crfGraph.Wrap3D(nd => new Node3DWrap<CRFNodeData>(nd.Data) { ReferenceLabel = nd.Data.ReferenceLabel, X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z }, (ed) => new Edge3DWrap<CRFEdgeData>(ed.Data) { Weight = 1.0 });
+                new ShowGraph3D(graph3D).Request();
+            }
 
             return crfGraph;
         }

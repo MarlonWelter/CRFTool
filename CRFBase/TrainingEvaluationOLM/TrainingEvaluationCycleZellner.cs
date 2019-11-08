@@ -12,8 +12,8 @@ namespace CRFBase
     {
         private Random random = new Random();
         // Graph Visualization: false = orignial, true = created
-        private const bool GraphVisalization = false;
-        private const bool UseIsingModel = false;
+        private const bool GraphVisualization = false;
+        private const bool UseIsingModel = true;
 
         /*
         *  Die mit Herrn Waack besprochene Version des Projektzyklus zum Testen der verschiedenen Trainingsvarianten von OLM 
@@ -22,34 +22,12 @@ namespace CRFBase
         */
         public void RunCycle(TrainingEvaluationCycleInputParameters inputParameters)
         {
-            #region Schritt 0: Vorbereiten der Daten
+            #region Schritt 1: Vorbereiten der Daten
             
             var graphList = inputParameters.Graphs;
             int numberOfLabels = inputParameters.NumberOfLabels;
             int numberOfIntervals = inputParameters.NumberOfIntervals;
             
-            #endregion
-
-
-            #region Schritt 1: Referenzlabelings setzen            
-
-            for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
-            {
-                var graph = graphList[i];
-                graph.Data.ReferenceLabeling = new int[graph.Nodes.Count()];
-                var nodes = graph.Nodes.ToList();
-
-                foreach (IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> node in nodes)
-                {
-                    graph.Data.ReferenceLabeling[node.GraphId] = node.Data.ReferenceLabel;
-                }
-
-                if (i == 0 && GraphVisalization == true)
-                {
-                    var graph3D = graphList[i].Wrap3D(nd => new Node3DWrap<CRFNodeData>(nd.Data) { ReferenceLabel = nd.Data.ReferenceLabel, X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z }, (ed) => new Edge3DWrap<CRFEdgeData>(ed.Data) { Weight = 1.0 });
-                    new ShowGraph3D(graph3D).Request();
-                }
-            }
             #endregion
 
             #region Schritt 2: Beobachtungen erzeugen (und Scores)
@@ -63,7 +41,7 @@ namespace CRFBase
                 Log.Post("Potts-Model with " + inputParameters.NumberOfIntervals + " Intervals");
 
             var isingModel = new IsingModel(inputParameters.IsingConformityParameter, inputParameters.IsingCorrelationParameter);
-            var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter, 
+            var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter,
                 inputParameters.AmplifierControlParameter, inputParameters.NumberOfLabels);
 
             for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
@@ -79,7 +57,7 @@ namespace CRFBase
                 else
                     pottsModel.InitCRFScore(graph);                
 
-                if (i == 0 && GraphVisalization == true)
+                if (i == 0 && GraphVisualization == true)
                 {
                     var graph3D = graph.Wrap3D();
                     new ShowGraph3D(graph3D).Request();
