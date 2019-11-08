@@ -18,11 +18,13 @@ namespace ProjectLaura
     {
         private const bool GraphVisualization = false;
         private const int NumberOfIntervals = 5;
-        private static double[] PottsConformityParameters = new double[NumberOfIntervals*2];
+        private const int NumberOfLabels = 2;
+        private const int NumberOfEdgeFeatures = 2;
+        private static double[] PottsConformityParameters = new double[NumberOfIntervals * NumberOfLabels];
         private const double amplifierControlParameter = 0.5;
         private const int IsingConformityParameter = 1;
         private const int IsingCorrelationParameter = 1;
-        private const int NumberOfLabels = 2;
+        private static double[] PottsCorrelationParameters = new double[NumberOfIntervals * (NumberOfLabels * NumberOfLabels) * NumberOfEdgeFeatures];
         private const int BufferSizeViterbi = 1000;
         private const double Threshold = 0.7;
         private static Random rdm = new Random();
@@ -48,15 +50,7 @@ namespace ProjectLaura
             Log.Post("End");
             //}
             Console.ReadKey();
-
             BaseProgram.Exit.Enter();
-        }
-
-        private static void ListFiles() {
-            foreach (String name in File.ReadLines(fileNames))
-            {
-                Console.WriteLine(fileFolder +"/"+ name +" : "+ name.Substring(0, 4));
-            }
         }
 
         private static void StartTrainingCycle()
@@ -70,7 +64,7 @@ namespace ProjectLaura
             var trainingCycle = new TrainingEvaluationCycleZellner();
             var parameters = new TrainingEvaluationCycleInputParameters();
 
-            // take OLM variants we want to test, ISING and OLM_III (Default)
+            // take OLM variants we want to test
             List<OLMVariant> variants = new List<OLMVariant>
             {
                 OLMVariant.Ising
@@ -83,7 +77,7 @@ namespace ProjectLaura
             // setting of transition probabilities to create observation from reference labeling
             double[,] transition = SetTransitionProbabilities();
 
-            #region modify graph
+            #region modify graphs
             // do this for all graphs (currently saved in form of pdbfiles)
             List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> crfGraphList = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>();
             var id = 0;
@@ -111,8 +105,8 @@ namespace ProjectLaura
             #endregion      
 
             // set parameters for the training cycle
-            parameters = new TrainingEvaluationCycleInputParameters(crfGraphList, crfGraphList.Count, variants,
-                IsingConformityParameter, PottsConformityParameters, IsingCorrelationParameter, NumberOfIntervals, 
+            parameters = new TrainingEvaluationCycleInputParameters(crfGraphList, crfGraphList.Count, variants, IsingConformityParameter, 
+                PottsConformityParameters, IsingCorrelationParameter, PottsCorrelationParameters, NumberOfIntervals, 
                 transition, NumberOfLabels, BufferSizeViterbi, amplifierControlParameter, Threshold);
 
             // running the cycle
@@ -228,6 +222,14 @@ namespace ProjectLaura
             }
 
             return trimmedGraph;
+        }
+
+        private static void ListFiles()
+        {
+            foreach (String name in File.ReadLines(fileNames))
+            {
+                Console.WriteLine(fileFolder + "/" + name + " : " + name.Substring(0, 4));
+            }
         }
     }
 }

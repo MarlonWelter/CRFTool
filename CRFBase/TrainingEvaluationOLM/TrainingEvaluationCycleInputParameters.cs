@@ -31,8 +31,8 @@ namespace CRFBase
 
         public TrainingEvaluationCycleInputParameters(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs, int numberOfGraphInstances,
             List<OLMVariant> trainingVariantsToTest, double isingConformityParameter, double[] pottsConformityParameters, double isingCorrelationParameter,
-            int numberOfIntervals, double[,] transitionProbabilities, int numberOfLabels, int bufferSizeViterbi, double amplifierControlParameter,
-            double threshold)
+            double[] pottsCorrelationParameters, int numberOfIntervals, double[,] transitionProbabilities, int numberOfLabels, int bufferSizeViterbi, 
+            double amplifierControlParameter, double threshold)
         {
             Graphs = graphs;
             NumberOfGraphInstances = numberOfGraphInstances;
@@ -40,6 +40,7 @@ namespace CRFBase
             IsingConformityParameter = isingConformityParameter;
             PottsConformityParameters = pottsConformityParameters;
             IsingCorrelationParameter = isingCorrelationParameter;
+            PottsCorrelationParameters = pottsCorrelationParameters;
             NumberOfIntervals = numberOfIntervals;
             TransitionProbabilities = transitionProbabilities;
             NumberOfLabels = numberOfLabels;
@@ -56,6 +57,7 @@ namespace CRFBase
         public double IsingConformityParameter { get; set; }
         public double[] PottsConformityParameters { get; set; }
         public double IsingCorrelationParameter { get; set; }
+        public double[] PottsCorrelationParameters { get; set; }
         public int NumberOfIntervals { get; set; }
 
         // Dieses Feld gibt an wie wahrscheinlich es ist bei welchem Labeling welche Beobachtung entsteht.
