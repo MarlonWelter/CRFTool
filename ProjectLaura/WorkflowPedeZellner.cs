@@ -67,8 +67,8 @@ namespace ProjectLaura
             // take OLM variants we want to test
             List<OLMVariant> variants = new List<OLMVariant>
             {
-                OLMVariant.Ising
-                //OLMVariant.IsingII
+                //OLMVariant.Ising
+                OLMVariant.IsingII
                 //OLMVariant.Default
             };
 

@@ -41,7 +41,9 @@ namespace CRFBase
                 Log.Post("Potts-Model with " + inputParameters.NumberOfIntervals + " Intervals");
 
             var isingModel = new IsingModel(inputParameters.IsingConformityParameter, inputParameters.IsingCorrelationParameter);
-            var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter,
+            //var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter,
+            //    inputParameters.AmplifierControlParameter, inputParameters.NumberOfLabels);
+            var pottsModel = new PottsModelComplex(inputParameters.PottsConformityParameters, inputParameters.PottsCorrelationParameters,
                 inputParameters.AmplifierControlParameter, inputParameters.NumberOfLabels);
 
             for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
@@ -109,7 +111,8 @@ namespace CRFBase
                     else
                     {
                         request.BasisMerkmale.AddRange(pottsModel.AddNodeFeatures(graphList, numberOfIntervals));
-                        request.BasisMerkmale.Add(new IsingMerkmalEdge());
+                        //request.BasisMerkmale.Add(new IsingMerkmalEdge());
+                        request.BasisMerkmale.AddRange(pottsModel.AddEdgeFeatures(graphList, numberOfIntervals));
                     }
 
                     // loss function
@@ -128,9 +131,12 @@ namespace CRFBase
                     }
                     else
                     {
-                        for (int i = 0; i < numberOfIntervals * 2; i++)
+                        int i = 0;
+                        for (i = 0; i < pottsModel.ConformityParameter.Length; i++)
                             pottsModel.ConformityParameter[i] = olmResult.ResultingWeights[i];
-                        pottsModel.CorrelationParameter = olmResult.ResultingWeights[numberOfIntervals * 2];
+                        //pottsModel.CorrelationParameter = olmResult.ResultingWeights[numberOfIntervals * 2];
+                        for (int j = 0; j < pottsModel.CorrelationParameter.Length; j++)
+                            pottsModel.CorrelationParameter[j] = olmResult.ResultingWeights[i++];
                     }
 
                     // zugehörige Scores erzeugen für jeden Graphen (auch Evaluation)
@@ -160,7 +166,8 @@ namespace CRFBase
                     results = new OLMEvaluationResult
                     {
                         ConformityParameters = pottsModel.ConformityParameter,
-                        CorrelationParameter = pottsModel.CorrelationParameter
+                        //  CorrelationParameter = pottsModel.CorrelationParameter
+                        CorrelationParameters = pottsModel.CorrelationParameter
                     };
                 }
 
@@ -211,7 +218,10 @@ namespace CRFBase
             }
 
             #endregion
+        }
 
+        private void PresentResults()
+        {
             #region Schritt 5: Ergebnisse präsentieren und speichern
             // output of the keys
             //outputKeys(evaluation, inputParameters, evaluationGraphs);

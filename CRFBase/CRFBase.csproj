@@ -109,6 +109,7 @@
     <Compile Include="InferenceHeuristik\ViterbiHeuristic.cs" />
     <Compile Include="OLM\WeightObservationUnit.cs" />
     <Compile Include="OLM\WOU_II.cs" />
+    <Compile Include="TrainingEvaluationOLM\PottsModelComplex.cs" />
     <Compile Include="TrainingEvaluationOLM\PottsModel.cs" />
     <Compile Include="TrainingEvaluationOLM\SeedingMethodPatchCreation.cs" />
     <Compile Include="ShowGraphs.cs" />

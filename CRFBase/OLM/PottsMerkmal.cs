@@ -85,8 +85,7 @@ namespace CRFBase.OLM
                 var labelHead = labeling[edge.Head.GraphId];
                 var labelFoot = labeling[edge.Foot.GraphId];
 
-                if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
-                    (labelHead == LabelFoot && labelFoot == LabelHead))
+                if (labelHead == LabelHead && labelFoot == LabelFoot)
                 {
                     if (edge.Data.MaxZellnerScore > LowerBoundary && edge.Data.MaxZellnerScore <= UpperBoundary)
                     {
@@ -103,8 +102,7 @@ namespace CRFBase.OLM
 
         public override double Score(IGWEdge<ICRFNodeData, ICRFEdgeData, ICRFGraphData> edge, int labelHead, int labelFoot)
         {
-            if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
-                   (labelHead == LabelFoot && labelFoot == LabelHead))
+            if (labelHead == LabelHead && labelFoot == LabelFoot)
             {
                 if (edge.Data.MaxZellnerScore > LowerBoundary && edge.Data.MaxZellnerScore <= UpperBoundary)
                 {
@@ -114,9 +112,9 @@ namespace CRFBase.OLM
             return 0.0;
         }
     }
-    public class RASADiffEdgeBasisMerkmal : BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>
+    public class DiffEdgeBasisMerkmal : BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>
     {
-        public RASADiffEdgeBasisMerkmal(double lowerBoundary, double upperBoundary, int labelhead, int labelFoot)
+        public DiffEdgeBasisMerkmal(double lowerBoundary, double upperBoundary, int labelhead, int labelFoot)
         {
             LabelHead = labelhead;
             LabelFoot = labelFoot;
@@ -134,8 +132,7 @@ namespace CRFBase.OLM
                 var labelHead = labeling[edge.Head.GraphId];
                 var labelFoot = labeling[edge.Foot.GraphId];
 
-                if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
-                    (labelHead == LabelFoot && labelFoot == LabelHead))
+                if (labelHead == LabelHead && labelFoot == LabelFoot)
                 {
                     if (edge.Data.DiffZellnerScore > LowerBoundary && edge.Data.DiffZellnerScore <= UpperBoundary)
                     {
@@ -152,8 +149,7 @@ namespace CRFBase.OLM
 
         public override double Score(IGWEdge<ICRFNodeData, ICRFEdgeData, ICRFGraphData> edge, int labelHead, int labelFoot)
         {
-            if ((labelHead == LabelHead && labelFoot == LabelFoot) ||
-                   (labelHead == LabelFoot && labelFoot == LabelHead))
+            if (labelHead == LabelHead && labelFoot == LabelFoot)
             {
                 if (edge.Data.DiffZellnerScore > LowerBoundary && edge.Data.DiffZellnerScore <= UpperBoundary)
                 {
