@@ -77,16 +77,12 @@ namespace CRFBase
             var edges = graphs.SelectMany(g => g.Edges);
             var maxFeatures = edges.Select(e => e.Data.MaxZellnerScore).ToList().OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
             var diffFeatures = edges.Select(e => e.Data.DiffZellnerScore).ToList().OrderBy(r => r).ToList().SplitToIntervals(intervalsCount);
-
-            var lowerBoundaryMax = -0.1;
-            var lowerBoundaryDiff = -0.1;
-
-
-            
+                                             
             for (int label1 = 0; label1 < NumberOfLabels; label1++)
             {
                 for (int label2 = 0; label2 < NumberOfLabels; label2++)
                 {
+                    var lowerBoundaryMax = -0.1;
                     for (int k = 0; k < intervalsCount; k++)
                     {
                         var upperBoundaryMax = maxFeatures[k].Max();
@@ -102,6 +98,7 @@ namespace CRFBase
             {
                 for (int label2 = 0; label2 < NumberOfLabels; label2++)
                 {
+                    var lowerBoundaryDiff = -0.1;
                     for (int k = 0; k < intervalsCount; k++)
                     {
                         var upperBoundaryDiff = diffFeatures[k].Max();
