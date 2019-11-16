@@ -138,7 +138,7 @@ namespace CRFToolAppBase
                 {
                     var request = new SolveInference(graph, 2);
                     request.Request();
-                    graph.Data.AssginedLabeling = request.Solution.Labeling;
+                    graph.Data.AssginedLabeling = request.Result.Labeling;
                 }
 
                 //show results in 3D Viewer

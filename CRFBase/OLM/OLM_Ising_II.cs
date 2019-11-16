@@ -64,7 +64,7 @@ namespace CRFBase
                 // Labeling mit Viterbi (MAP)
                 var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                 request.RequestInDefaultContext();
-                int[] labelingVit = request.Solution.Labeling;
+                int[] labelingVit = request.Result.Labeling;
                 vit[g] = labelingVit;
                 // Labeling mit MCMC basierend auf MAP
                 var requestMCMC = new GiveProbableLabelings(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>) { StartingPoints = 1, PreRunLength = 100000, RunLength = 1 };

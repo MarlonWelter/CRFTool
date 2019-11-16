@@ -136,7 +136,7 @@ namespace CRFBase
                     //compute labeling with viterbi algorithm
                     var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                     request.RequestInDefaultContext();
-                    int[] labeling = request.Solution.Labeling;
+                    int[] labeling = request.Result.Labeling;
                     //check nonequality
 
                     iteration++;
@@ -214,7 +214,7 @@ namespace CRFBase
                     //compute labeling with viterbi algorithm
                     var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                     request.RequestInDefaultContext();
-                    int[] labeling = request.Solution.Labeling;
+                    int[] labeling = request.Result.Labeling;
                     //check nonequality
 
                     for (int k = 0; k < labeling.Length; k++)

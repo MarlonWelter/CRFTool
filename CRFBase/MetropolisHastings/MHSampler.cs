@@ -217,7 +217,7 @@ namespace CRFBase
         {
             var request = new SolveInference(graph, NumberLabels);
             request.RequestInDefaultContext();
-            var resultLabeling = request.Solution.Labeling;
+            var resultLabeling = request.Result.Labeling;
 
             foreach(var item in graph.Nodes)
             {

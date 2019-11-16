@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CodeBase;
-using System.Collections;
+﻿using CodeBase;
+using System;
 
 namespace CRFBase
 {
@@ -21,11 +17,14 @@ namespace CRFBase
         //this array holds the labellings for all nodes. The index for a node is its GraphId
         public int[] AssignedLabels { get; set; }
 
-        public double Score { get; set; }
+        public double GlobalScore { get; set; }
+        public double LocalScore { get; set; }
+
+        public double Score => LocalScore + GlobalScore;
         public double LastAddedScore { get; set; }
         public long BorderFingerPrint { get; set; }
         public IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> LastNodeAdded { get; set; }
-        public void AddScore(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> chosenVertex, int state)
+        public void AssignLabel(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> chosenVertex, int state)
         {
             var addedScore = 0.0;
 
@@ -37,11 +36,13 @@ namespace CRFBase
                 var headData = edge.Head.Data;
                 var footData = edge.Foot.Data;
                 if (!headData.IsChosen || !footData.IsChosen)
+                {
                     continue;
+                }
 
                 addedScore += edge.Score(AssignedLabels[edge.Head.GraphId], AssignedLabels[edge.Foot.GraphId]);
             }
-            Score += (addedScore);
+            LocalScore += (addedScore);
             LastAddedScore = (addedScore);
             LastNodeAdded = chosenVertex;
         }
@@ -58,10 +59,15 @@ namespace CRFBase
 
         public int CompareTo(CRFLabelling other)
         {
-            if (Score > other.Score)
+            if (LocalScore > other.LocalScore)
+            {
                 return 1;
-            else if (Score == other.Score)
+            }
+            else if (LocalScore == other.LocalScore)
+            {
                 return 0;
+            }
+
             return -1;
         }
     }

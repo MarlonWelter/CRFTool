@@ -166,7 +166,7 @@ namespace CRFBase
                         var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                         request.RequestInDefaultContext();
 
-                        var prediction = request.Solution.Labeling;
+                        var prediction = request.Result.Labeling;
                         lossCurrent += LossFunctionValidation(graph.Data.ReferenceLabeling, prediction);
 
                         TrackResults(graph.Data.ReferenceLabeling, prediction);

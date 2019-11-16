@@ -46,7 +46,7 @@ namespace ProtTestCase
                 var request = new SolveInference(graph, 2, 100);
                 request.Request();
 
-                foreach (var entry in request.Solution.Labeling)
+                foreach (var entry in request.Result.Labeling)
                 {
                     Console.Write(entry);
                     Console.ReadKey();

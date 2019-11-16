@@ -189,7 +189,7 @@ namespace CRFBase
                     request2.RequestInDefaultContext();
 
                     // 2) Ergebnis des request auswerten (request.Solution liefert ein Labeling)
-                    int[] predictionLabeling = request2.Solution.Labeling;
+                    int[] predictionLabeling = request2.Result.Labeling;
 
                     // 3) Ergebnisse aller Evaluationsgraphen auswerten (TP, TN, FP, FN, MCC) und zwischenspeichern 
                     // neues Objekt, damit in Schritt 5 darauf zugegriffen werden kann.

@@ -119,7 +119,7 @@ namespace CRFBase.MetropolisHastings
                         request.RequestInDefaultContext();
 
                         // sammeln der ergebnisse
-                        var resultingLabeling = request.Solution.Labeling;
+                        var resultingLabeling = request.Result.Labeling;
 
                         //labeling auf nodes mappen
                         var nodes = graph.Nodes.ToList();
@@ -166,7 +166,7 @@ namespace CRFBase.MetropolisHastings
                         request.RequestInDefaultContext();
 
                         // sammeln der ergebnisse
-                        resultingLabeling = request.Solution.Labeling;
+                        resultingLabeling = request.Result.Labeling;
 
                         //labeling auf nodes mappen
                         nodes = graph.Nodes.ToList();
@@ -283,7 +283,7 @@ namespace CRFBase.MetropolisHastings
                 isingModell.CreateCRFScore(graph);
                 var request = new SolveInference(graph, parameters.NumberLabels);
                 request.RequestInDefaultContext();
-                graph.Data.ReferenceLabeling = request.Solution.Labeling;
+                graph.Data.ReferenceLabeling = request.Result.Labeling;
             }
 
             var req = new OLMRequest(OLMVariant.Default, graphs);

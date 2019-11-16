@@ -160,12 +160,12 @@ namespace CRFToolApp
                 var request = new SolveInference(ViewModel.Graph, 2);
                 request.Request();
 
-                ViewModel.Graph.Data.Viterbi = request.Solution.Labeling;
+                ViewModel.Graph.Data.Viterbi = request.Result.Labeling;
 
                 // assign viterbi result node.assignedlabel
                 foreach (var node in ViewModel.Graph.Nodes)
                 {
-                    node.Data.AssignedLabel = request.Solution.Labeling[node.GraphId];
+                    node.Data.AssignedLabel = request.Result.Labeling[node.GraphId];
                 }
             }
             catch (Exception ex)

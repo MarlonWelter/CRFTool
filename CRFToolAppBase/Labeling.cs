@@ -35,7 +35,7 @@ namespace CRFToolAppBase
             var request = new SolveInference(cloneGraph, numberOfLabels, bufferSize);
             request.RequestInDefaultContext();
 
-            cloneGraph.Data.AssginedLabeling = request.Solution.Labeling;
+            cloneGraph.Data.AssginedLabeling = request.Result.Labeling;
         }
     }
 }

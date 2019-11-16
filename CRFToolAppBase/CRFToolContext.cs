@@ -1,21 +1,20 @@
 ﻿using CodeBase;
 using CRFBase;
+using CRFBase.InferenceHeuristik;
 using CRFBase.OLM;
 using CRFToolAppBase.Software_Graph;
 //using EmbedBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CRFToolAppBase
 {
     public class CRFToolContext
     {
-        private int numberOfLabels = 2;
+        private readonly int numberOfLabels = 2;
 
         public CRFToolData Data { get; set; } = new CRFToolData();
 
@@ -36,9 +35,14 @@ namespace CRFToolAppBase
                     }
 
                     if (args.Length > 0)
+                    {
                         method.Invoke(this, new object[] { args });
+                    }
                     else
+                    {
                         method.Invoke(this, null);
+                    }
+
                     commandRecognized = true;
                 }
             }
@@ -104,7 +108,7 @@ namespace CRFToolAppBase
         {
             var graph = Data.SelectedGraph;
             var request = new SolveInference(graph, numberOfLabels);
-            return request.Solution;
+            return request.Result;
         }
 
         public CRFResult TakeSampleLabelingOfSelectedGraph()
@@ -145,6 +149,25 @@ namespace CRFToolAppBase
 
             seedingMethodPatchCreation.CreatePatchAndSetAsReferenceLabel(graph);
 
+            // add some simple example observation
+            {
+                var random = new Random();
+                foreach (var node in graph.Nodes)
+                {
+                    var scores = new double[2];
+                    var rdmValue = random.NextDouble();
+                    scores[0] = node.Data.ReferenceLabel == 1 ? (rdmValue / (rdmValue + 1)) : (1 - (rdmValue / (rdmValue + 1)));
+                    scores[1] = node.Data.ReferenceLabel == 0 ? (rdmValue / (rdmValue + 1)) : (1 - (rdmValue / (rdmValue + 1)));
+                    node.Data.Scores = scores;
+                }
+                foreach (var edge in graph.Edges)
+                {
+                    var scores = new double[2, 2];
+                    var rdmValue = random.NextDouble();
+                    scores = new double[,] { { 0.01, 0.0 }, { 0.0, 0.01 } };
+                    edge.Data.Scores = scores;
+                }
+            }
 
             graph.SaveAsJSON("testgraph.crf");
 
@@ -157,6 +180,80 @@ namespace CRFToolAppBase
             //var bInterface = new BInterface();
             //bInterface.SimpleGraphEmbed(Data.SelectedGraph);
 
+        }
+
+        public void TestViterbi()
+        {
+            var graph = CreateTestGraphCRF();
+
+            var request = new SolveInference(graph, 2, 100);
+            request.Request();
+
+            var result = request.Result;
+            int tp = 0, tn = 0, fp = 0, fn = 0;
+            var score = result.Score;
+
+            foreach (var node in graph.Nodes)
+            {
+                if (node.Data.ReferenceLabel == 0)
+                {
+                    if (result.Labeling[node.GraphId] == 0)
+                    {
+                        tn++;
+                    }
+                    else
+                    {
+                        fp++;
+                    }
+                }
+                else
+                {
+                    if (result.Labeling[node.GraphId] == 0)
+                    {
+                        fn++;
+                    }
+                    else
+                    {
+                        tp++;
+                    }
+                }
+            }
+            Console.WriteLine("score: " + score);
+            Console.WriteLine("tp: " + tp + " fp: " + fp + " tn: " + tn + " fn: " + fn);
+
+            var viterbi2 = new Viterbi_Plus(100, 2);
+            var patchRatioFunction = new Func<double, double>((ratio) => { return -10000 * Math.Abs(0.25 - ratio); });
+            var result2 = viterbi2.Run(graph, result, patchRatioFunction);
+            tp = 0; tn = 0; fp = 0; fn = 0;
+            score = result2.Score;
+
+            foreach (var node in graph.Nodes)
+            {
+                if (node.Data.ReferenceLabel == 0)
+                {
+                    if (result2.Labeling[node.GraphId] == 0)
+                    {
+                        tn++;
+                    }
+                    else
+                    {
+                        fp++;
+                    }
+                }
+                else
+                {
+                    if (result2.Labeling[node.GraphId] == 0)
+                    {
+                        fn++;
+                    }
+                    else
+                    {
+                        tp++;
+                    }
+                }
+            }
+            Console.WriteLine("score: " + score);
+            Console.WriteLine("tp: " + tp + " fp: " + fp + " tn: " + tn + " fn: " + fn);
         }
 
         public void TestOlm()

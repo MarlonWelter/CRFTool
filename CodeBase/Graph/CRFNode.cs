@@ -13,6 +13,7 @@ namespace CodeBase
         string[] Characteristics { get; set; }
         int[] ReferenceLabeling { get; set; }
         int[] AssginedLabeling { get; set; }
+        double ViterbiScore { get; set; }
     }
     public class CRFGraphData : ICRFGraphData, ICategoryGraph
     {
@@ -23,6 +24,7 @@ namespace CodeBase
         public int[] Viterbi { get; set; }
         public int[] AssginedLabeling { get; set; }
         public string[] Characteristics { get; set; }
+        public double ViterbiScore { get; set; }
         //wird momentan nicht wirklich benutzt, da auch der CRFNodeData eien observation enthält. Kann eventuell entfernt werden.
         //public int[] Observations { get; set; }
     }

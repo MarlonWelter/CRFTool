@@ -61,9 +61,11 @@
     <Compile Include="Build.cs" />
     <Compile Include="GradientDescent\ExecuteGradientDescent.cs" />
     <Compile Include="GradientDescent\GradientDescentManager.cs" />
+    <Compile Include="InferenceHeuristik\Viterbi_2.cs" />
     <Compile Include="OLM\ExampleFeature1.cs" />
     <Compile Include="OLM\OLM_Ising_II.cs" />
     <Compile Include="OLM\PottsMerkmal.cs" />
+    <Compile Include="QueueHeuristic\RandomGrowing.cs" />
     <Compile Include="TrainingEvaluationOLM\ComputeKeys.cs" />
     <Compile Include="CRFResult.cs" />
     <Compile Include="MCMC\MCMCSamplingManager.cs" />

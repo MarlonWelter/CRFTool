@@ -22,7 +22,7 @@ namespace CRFBase
         {
             var heuristik = new ViterbiHeuristic(obj.BufferSize > 0 ? obj.BufferSize : MaxCombinationsBuffer, obj.NumberLabels);
             var result = heuristik.Run(obj.Graph, obj.PreAssignment);
-            obj.Solution = result;
+            obj.Result = result;
 
 
         }

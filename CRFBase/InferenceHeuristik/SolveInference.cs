@@ -27,7 +27,7 @@ namespace CRFBase
 
         public int NumberLabels { get; set; }
         public int BufferSize { get; set; }
-        public CRFResult Solution { get; set; }
+        public CRFResult Result { get; set; }
         public IDictionary<IGWNode, int> PreAssignment { get; set; }
         public CRFGraph Graph { get; set; }
     }
