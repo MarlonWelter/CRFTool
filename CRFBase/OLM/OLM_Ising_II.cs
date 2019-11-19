@@ -36,19 +36,15 @@ namespace CRFBase
 
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
         {
-
             var weights = weightCurrent.ToArray();
-
             int u = TrainingGraphs.Count;
             var vit = new int[u][];
             var mcmc = new int[u][];
-            var dev = 0;
             double devges = 0.0;
             // Anzahl Knoten
             double mx = 0;
             var refLabel = new int[u][];
             double devgesT = 0;
-            double devT = 0;
             // Summe aller Knoten aller Graphen
             double mu = 0;
 
@@ -83,30 +79,15 @@ namespace CRFBase
                 refLabel[g] = labeling;
 
                 // Berechnung des typischen/mittleren Fehlers
-                //dev = 0;
-                //for (int n = 0; n < graph.Nodes.Count(); n++)
-                //{
-                //    dev += refLabel[g][n] == mcmc[g][n] ? 0 : 1;
-                //}
-                //devges += ((double)dev) / mx;
                 devges += LossFunctionIteration(refLabel[g], mcmc[g]);
+                // Berechnung des realen Fehlers
+                devgesT += LossFunctionIteration(refLabel[g], vit[g]);
 
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
 
                 if (debugOutputEnabled)
-                {
                     printLabelings(vit[g], mcmc[g], refLabel[g], g);
-                }
-
-                //devT = 0;
-                //for (int n = 0; n < graph.Nodes.Count(); n++)
-                //{
-                //    devT += vit[g][n] == refLabel[g][n] ? 0 : 1;
-                //}
-                //devgesT += devT / mx;
-                devgesT += LossFunctionIteration(refLabel[g], vit[g]);
-
 
                 int[] countsRef = CountPred(graph, refLabel[g]);
                 int[] countsPred = CountPred(graph, vit[g]);
@@ -119,7 +100,6 @@ namespace CRFBase
 
             // mittlerer (typischer) Fehler (Summen-Gibbs-Score)
             middev = devges / u;
-
             // realer Fehler fuer diese Runde (Summen-Trainings-Score)
             realdev = devgesT / u;
 
