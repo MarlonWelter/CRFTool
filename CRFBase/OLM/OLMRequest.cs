@@ -13,7 +13,7 @@ namespace CRFBase.OLM
         public const double Alpha = 0.5;
         public const int NumberLabels = 2;
         public const int BufferSizeCRF = 200;
-        public const int OLMMaxIterations = 1000;
+        public const int OLMMaxIterations = 100;
     }
     public class OLMRequest : GWRequest<OLMRequest>
     {

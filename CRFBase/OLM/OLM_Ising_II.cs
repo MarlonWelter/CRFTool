@@ -51,7 +51,7 @@ namespace CRFBase
             double devT = 0;
             // Summe aller Knoten aller Graphen
             double mu = 0;
-            
+
             int[] countsRefMinusPred = new int[weightCurrent.Length];
 
             Log.Post("#Iteration: " + globalIteration);
@@ -61,21 +61,20 @@ namespace CRFBase
                 var graph = TrainingGraphs[g];
                 mx = graph.Nodes.Count();
                 mu += mx;
+
                 // Labeling mit Viterbi (MAP)
                 var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                 request.RequestInDefaultContext();
                 int[] labelingVit = request.Solution.Labeling;
                 vit[g] = labelingVit;
+
                 // Labeling mit MCMC basierend auf MAP
                 var requestMCMC = new GiveProbableLabelings(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>) { StartingPoints = 1, PreRunLength = 100000, RunLength = 1 };
                 requestMCMC.RequestInDefaultContext();
                 var result = requestMCMC.Result;
                 int[] labelingMCMC = new int[labelingVit.Length];
                 foreach (var item in result)
-                {
                     labelingMCMC[item.Key.GraphId] = (int)item.Value;
-                    //TODO: check not all 0's
-                }
                 mcmc[g] = labelingMCMC;
 
 
@@ -84,12 +83,13 @@ namespace CRFBase
                 refLabel[g] = labeling;
 
                 // Berechnung des typischen/mittleren Fehlers
-                dev = 0;
-                for (int n = 0; n < TrainingGraphs[g].Nodes.Count(); n++)
-                {
-                    dev += refLabel[g][n] == mcmc[g][n] ? 0 : 1;
-                }
-                devges += ((double)dev) / mx;
+                //dev = 0;
+                //for (int n = 0; n < graph.Nodes.Count(); n++)
+                //{
+                //    dev += refLabel[g][n] == mcmc[g][n] ? 0 : 1;
+                //}
+                //devges += ((double)dev) / mx;
+                devges += LossFunctionIteration(refLabel[g], mcmc[g]);
 
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
@@ -99,13 +99,14 @@ namespace CRFBase
                     printLabelings(vit[g], mcmc[g], refLabel[g], g);
                 }
 
-                devT = 0;
-                for (int n = 0; n < graph.Nodes.Count(); n++)
-                {
-                    devT += vit[g][n] == refLabel[g][n] ? 0 : 1;
-                }
-                devgesT += devT / mx;
-                
+                //devT = 0;
+                //for (int n = 0; n < graph.Nodes.Count(); n++)
+                //{
+                //    devT += vit[g][n] == refLabel[g][n] ? 0 : 1;
+                //}
+                //devgesT += devT / mx;
+                devgesT += LossFunctionIteration(refLabel[g], vit[g]);
+
 
                 int[] countsRef = CountPred(graph, refLabel[g]);
                 int[] countsPred = CountPred(graph, vit[g]);
@@ -127,7 +128,7 @@ namespace CRFBase
             // Scores berechnen?? Im Skript so, aber nicht notwendig
 
             double l2norm = (countsRefMinusPred.Sum(entry => entry * entry));
-            
+
             var deltaomega = new double[weights.Length];
             var weightedScore = 0.0;
 
@@ -145,7 +146,7 @@ namespace CRFBase
                 {
                     Log.Post("wiu wiu");
                     deltaomega[k] = 0;
-                }                    
+                }
                 weights[k] += deltaomega[k];
             }
 
@@ -157,7 +158,7 @@ namespace CRFBase
 
         protected override bool CheckCancelCriteria()
         {
-            return (middev <= delta);
+            return ((middev <= delta) || (Iteration >= MaxIterations));
         }
 
         internal override void SetStartingWeights()

@@ -116,6 +116,7 @@ namespace CRFBase
                     }
 
                     // loss function
+                    request.LossFunctionIteration = OLM.OLM.LossRatio;
                     request.LossFunctionValidation = OLM.OLM.LossRatio;
 
                     // execute training methods by calling OLMManager -> OLMBase

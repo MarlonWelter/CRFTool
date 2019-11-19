@@ -44,7 +44,7 @@ namespace CRFBase
             double devges = 0.0;
             // Anzahl Knoten
             double mx = 0;
-            var train = new int[u][];
+            var refLabel = new int[u][];
             double devgesT = 0;
             double devT = 0;
             // Summe aller Knoten aller Graphen
@@ -65,48 +65,32 @@ namespace CRFBase
                 request.RequestInDefaultContext();
                 int[] labelingVit = request.Solution.Labeling;
                 vit[g] = labelingVit;
+
                 // Labeling mit MCMC basierend auf MAP
                 var requestMCMC = new GiveProbableLabelings(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>) { StartingPoints = 1, PreRunLength = 100000, RunLength = 1 };
                 requestMCMC.RequestInDefaultContext();
                 var result = requestMCMC.Result;
                 int[] labelingMCMC = new int[labelingVit.Length];
                 foreach (var item in result)
-                {
                     labelingMCMC[item.Key.GraphId] = (int)item.Value;
-                    //TODO: check not all 0's
-                }
                 mcmc[g] = labelingMCMC;
-
 
                 // reales labeling
                 int[] labeling = graph.Data.ReferenceLabeling;
-                train[g] = labeling;
+                refLabel[g] = labeling;
 
                 // Berechnung des typischen/mittleren Fehlers
-                dev = 0;
-                for (int n = 0; n < TrainingGraphs[g].Nodes.Count(); n++)
-                {
-                    dev += train[g][n] == mcmc[g][n] ? 0 : 1;
-                }
-                devges += ((double)dev) / mx;
+                devges += LossFunctionIteration(refLabel[g], mcmc[g]);
+                devgesT += LossFunctionIteration(refLabel[g], vit[g]);
 
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
 
                 if (debugOutputEnabled)
-                {
-                    printLabelings(vit[g], mcmc[g], train[g], g);
-                }
-
-                devT = 0;
-                for (int n = 0; n < graph.Nodes.Count(); n++)
-                {
-                    devT += vit[g][n] == train[g][n] ? 0 : 1;
-                }
-                devgesT += devT / mx;
+                    printLabelings(vit[g], mcmc[g], refLabel[g], g);
 
                 // calculate equation 6.13 and 6.14
-                int[] countsRef = CountPred(graph, train[g]);
+                int[] countsRef = CountPred(graph, refLabel[g]);
                 int[] countsMCMC = CountPred(graph, mcmc[g]);
 
                 for (int k = 0; k < countsRef.Length; k++)

@@ -45,9 +45,9 @@ namespace ProjectLaura
 
             //for(int i=0; i<20; i++)
             //{
-            Log.Post("Begin");
-            StartTrainingCycle();
-            Log.Post("End");
+                Log.Post("Begin");
+                StartTrainingCycle();
+                Log.Post("End");
             //}
             Console.ReadKey();
             BaseProgram.Exit.Enter();
@@ -67,8 +67,8 @@ namespace ProjectLaura
             // take OLM variants we want to test
             List<OLMVariant> variants = new List<OLMVariant>
             {
-                OLMVariant.Ising
-                //OLMVariant.IsingII
+                //OLMVariant.Ising
+                OLMVariant.IsingII
                 //OLMVariant.Default
             };
 

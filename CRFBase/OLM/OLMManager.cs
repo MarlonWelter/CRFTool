@@ -14,7 +14,8 @@ namespace CRFBase.OLM
             switch (request.Variante)
             {
                 case OLMVariant.Default:
-                    var olm = new OLM_III<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF, request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 0.02, "OLM_Default");
+                    var olm = new OLM_III<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF, 
+                        request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 0.02, "OLM_Default");
                     olm.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);
                     request.Result = new OLMRequestResult(olm.ResultingWeights.ToArray());
                     break;
@@ -26,12 +27,14 @@ namespace CRFBase.OLM
                     request.Result = new OLMRequestResult(new double[2] { Build.Random.NextDouble(), Build.Random.NextDouble() });
                     break;
                 case OLMVariant.Ising:
-                    var olmIsing = new OLM_Ising_I<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF, request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 0.02, "OLM_Default");
+                    var olmIsing = new OLM_Ising_I<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF, 
+                        request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 0.02, "OLM_Ising");
                     olmIsing.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);
                     request.Result = new OLMRequestResult(olmIsing.ResultingWeights.ToArray());
                     break;
                 case OLMVariant.IsingII:
-                    var olmIsingII = new OLM_Ising_II<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF, request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 0.02, "OLM_Default");
+                    var olmIsingII = new OLM_Ising_II<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF, 
+                        request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 0.02, "OLM_IsingII");
                     olmIsingII.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);
                     request.Result = new OLMRequestResult(olmIsingII.ResultingWeights.ToArray());
                     break;
