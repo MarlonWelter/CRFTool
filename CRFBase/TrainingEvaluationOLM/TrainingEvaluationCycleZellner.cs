@@ -69,9 +69,9 @@ namespace CRFBase
 
             #region Schritt 3: Aufteilen der Daten in Evaluation und Training
             // Verhaeltnis: 80 20
-            //int separation = inputParameters.NumberOfGraphInstances - inputParameters.NumberOfGraphInstances/5;
+            int separation = inputParameters.NumberOfGraphInstances - inputParameters.NumberOfGraphInstances/5;
             // Verhältnis Leave-one-out
-            int separation = inputParameters.NumberOfGraphInstances - 1;
+            //int separation = inputParameters.NumberOfGraphInstances - 1;
 
             var trainingGraphs = new List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>
                 (new IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>[separation]);

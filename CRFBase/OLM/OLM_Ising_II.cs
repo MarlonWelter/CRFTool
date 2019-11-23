@@ -26,8 +26,8 @@ namespace CRFBase
             BasisMerkmale = basisMerkmale.ToArray();
         }
 
-        private const double eps = 0.01;
-        private const double delta = 0.2;
+        private const double eps = 0.02;
+        private const double delta = 0.22;
         // mittlerer Fehler
         private double middev = delta * 2;
         // realer Fehler
@@ -131,14 +131,14 @@ namespace CRFBase
             }
 
             // debug output
-            Log.Post("Loss: " + (int)loss + " Realdev: " + realdev + " Middev: " + middev);
+            Log.Post("Loss: " + loss + " Realdev: " + realdev + " Middev: " + middev);
 
             return weights;
         }
 
         protected override bool CheckCancelCriteria()
         {
-            return ((middev <= delta) || (Iteration >= MaxIterations));
+            return ((middev <= delta));
         }
 
         internal override void SetStartingWeights()

@@ -255,7 +255,8 @@ namespace CRFBase
         LastTwoMax,
         Test,
         Ising,
-        IsingII
+        IsingII,
+        IsingIII
     }
 
     public class CharacteristicFeature : BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>

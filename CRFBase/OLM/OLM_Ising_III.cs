@@ -27,15 +27,14 @@ namespace CRFBase
             NumberOfSamples = numberOfSamples;
         }
 
-        private const double eps = 0.01;
+        private const double eps = 0.001;
         private const double delta = 0.2;
         // mittlerer Fehler
         private double middev = delta * 2;
         // realer Fehler
         private double realdev = 2 * eps;
-        private bool debugOutputEnabled = false;
         private double MCMCDeviations = 0;
-        private double refMCMCDeviations = 0;
+        private double refMCMCDeviations = 2* eps;
         private int NumberOfSamples;
 
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
@@ -43,7 +42,7 @@ namespace CRFBase
             var weights = weightCurrent.ToArray();
             int u = TrainingGraphs.Count;
             var vit = new int[u][];
-            var mcmc = new int[u][];
+            var samplesMCMC = new int[NumberOfSamples][];
             double devges = 0.0;
             // Anzahl Knoten
             double mx = 0;
@@ -51,6 +50,8 @@ namespace CRFBase
             double devgesT = 0;
             // Summe aller Knoten aller Graphen
             double mu = 0;
+            MCMCDeviations = 0.0;
+            refMCMCDeviations = 0.0;
 
             int[] countsRefMinusPred = new int[weightCurrent.Length];
 
@@ -70,34 +71,32 @@ namespace CRFBase
 
                 // Labeling mit MCMC basierend auf MAP
                 // TODO generate not 1 but k labelings for each graph
-                var requestMCMC = new GiveProbableLabelings(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>) { StartingPoints = 1, PreRunLength = 100000, RunLength = 1 };
-                requestMCMC.RequestInDefaultContext();
-                var result = requestMCMC.Result;
-                int[] labelingMCMC = new int[labelingVit.Length];
-                foreach (var item in result)
-                    labelingMCMC[item.Key.GraphId] = (int)item.Value;
-                mcmc[g] = labelingMCMC;
+                for (int i = 0; i < NumberOfSamples; i++)
+                {
+                    var requestMCMC = new GiveProbableLabelings(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>) { StartingPoints = 1, PreRunLength = 100000, RunLength = 1 };
+                    requestMCMC.RequestInDefaultContext();
+                    var result = requestMCMC.Result;
+                    int[] labelingMCMC = new int[labelingVit.Length];
+                    foreach (var item in result)
+                        labelingMCMC[item.Key.GraphId] = (int)item.Value;
+                    samplesMCMC[i] = labelingMCMC; 
+                }
 
                 // TODO function to sum the deviations in mcmc labelings
-                MCMCDeviations += 0;
+                CalculateMCMCDeviations(samplesMCMC);
 
                 // reales labeling
                 int[] labeling = graph.Data.ReferenceLabeling;
                 refLabel[g] = labeling;
 
                 // TODO function to sum deviations from reflabel to MCMC labelings
-                refMCMCDeviations += 0;
-
-                // Berechnung des typischen/mittleren Fehlers
-                devges += LossFunctionIteration(refLabel[g], mcmc[g]);
+                CalculateRefMCMCDeviations(samplesMCMC, labeling);
+                
                 // Berechnung des realen Fehlers
                 devgesT += LossFunctionIteration(refLabel[g], vit[g]);
 
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
-
-                if (debugOutputEnabled)
-                    printLabelings(vit[g], mcmc[g], refLabel[g], g);
 
                 int[] countsRef = CountPred(graph, refLabel[g]);
                 int[] countsPred = CountPred(graph, vit[g]);
@@ -112,6 +111,8 @@ namespace CRFBase
             middev = devges / u;
             // realer Fehler fuer diese Runde (Summen-Trainings-Score)
             realdev = devgesT / u;
+            MCMCDeviations /= u;
+            refMCMCDeviations /= u;
 
             var loss = realdev * mu;
 
@@ -141,9 +142,31 @@ namespace CRFBase
             }
 
             // debug output
-            Log.Post("Loss: " + (int)loss + " Realdev: " + realdev + " Middev: " + middev);
+            Log.Post("Loss: " + (int)loss + " refMCMCDeviations: " + refMCMCDeviations + " MCMCDeviations: " + MCMCDeviations);
 
             return weights;
+        }
+
+        private void CalculateMCMCDeviations(int[][] samplesMCMC)
+        {
+            for (int i=0; i < NumberOfSamples; i++)
+            {
+                for(int j=i+1; j<NumberOfSamples; j++)
+                {
+                    MCMCDeviations += LossFunctionIteration(samplesMCMC[i], samplesMCMC[j]);
+                }
+            }
+            var normalization = NumberOfSamples * (NumberOfSamples - 1) / 2;
+            MCMCDeviations /= normalization;
+        }
+
+        private void CalculateRefMCMCDeviations(int[][] samplesMCMC, int[] refLabel)
+        {
+            for(int i=0; i<NumberOfSamples; i++)
+            {
+                refMCMCDeviations += LossFunctionIteration(samplesMCMC[i], refLabel);
+            }
+            refMCMCDeviations /= NumberOfSamples;
         }
 
         protected override bool CheckCancelCriteria()
