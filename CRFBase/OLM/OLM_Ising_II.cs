@@ -32,21 +32,20 @@ namespace CRFBase
         private double middev = delta * 2;
         // realer Fehler
         private double realdev = 2 * eps;
-        private bool debugOutputEnabled = false;
 
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
         {
             var weights = weightCurrent.ToArray();
-            int u = TrainingGraphs.Count;
-            var vit = new int[u][];
-            var mcmc = new int[u][];
+            int NumberOfGraphs = TrainingGraphs.Count;
+            var vit = new int[NumberOfGraphs][];
+            var mcmc = new int[NumberOfGraphs][];
             double devges = 0.0;
             // Anzahl Knoten
-            double mx = 0;
-            var refLabel = new int[u][];
+            double NumberOfNodes = 0;
+            var refLabel = new int[NumberOfGraphs][];
             double devgesT = 0;
             // Summe aller Knoten aller Graphen
-            double mu = 0;
+            double CumulativeNumberOfNodes = 0;
 
             int[] countsRefMinusPred = new int[weightCurrent.Length];
 
@@ -55,8 +54,8 @@ namespace CRFBase
             for (int g = 0; g < TrainingGraphs.Count; g++)
             {
                 var graph = TrainingGraphs[g];
-                mx = graph.Nodes.Count();
-                mu += mx;
+                NumberOfNodes = graph.Nodes.Count();
+                CumulativeNumberOfNodes += NumberOfNodes;
 
                 // Labeling mit Viterbi (MAP)
                 var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
@@ -79,59 +78,58 @@ namespace CRFBase
                 refLabel[g] = labeling;
 
                 // Berechnung des typischen/mittleren Fehlers
-                devges += LossFunctionIteration(refLabel[g], mcmc[g]);
+                devges = LossFunctionIteration(refLabel[g], mcmc[g]);
                 // Berechnung des realen Fehlers
-                devgesT += LossFunctionIteration(refLabel[g], vit[g]);
+                devgesT = LossFunctionIteration(refLabel[g], vit[g]);
 
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
-
-                if (debugOutputEnabled)
-                    printLabelings(vit[g], mcmc[g], refLabel[g], g);
 
                 int[] countsRef = CountPred(graph, refLabel[g]);
                 int[] countsPred = CountPred(graph, vit[g]);
 
                 for (int k = 0; k < countsRef.Length; k++)
-                {
                     countsRefMinusPred[k] += countsRef[k] - countsPred[k];
-                }
-            }
 
-            // mittlerer (typischer) Fehler (Summen-Gibbs-Score)
-            middev = devges / u;
-            // realer Fehler fuer diese Runde (Summen-Trainings-Score)
-            realdev = devgesT / u;
+                // mittlerer (typischer) Fehler (Summen-Gibbs-Score)
+                middev = devges;
+                // realer Fehler fuer diese Runde (Summen-Trainings-Score)
+                realdev = devgesT;
 
-            var loss = realdev * mu;
+                var loss = realdev;
 
-            // Scores berechnen?? Im Skript so, aber nicht notwendig
+                // Scores berechnen?? Im Skript so, aber nicht notwendig
 
-            double l2norm = (countsRefMinusPred.Sum(entry => entry * entry));
+                double l2norm = (countsRefMinusPred.Sum(entry => entry * entry));
 
-            var deltaomega = new double[weights.Length];
-            var weightedScore = 0.0;
+                var deltaomega = new double[weights.Length];
+                var weightedScore = 0.0;
 
-            for (int k = 0; k < weights.Length; k++)
-            {
-                weightedScore += weights[k] * countsRefMinusPred[k];
-            }
-            var deltaomegaFactor = (loss - weightedScore) / l2norm;
-
-            for (int k = 0; k < weights.Length; k++)
-            {
-                if (l2norm > 0)
-                    deltaomega[k] = deltaomegaFactor * countsRefMinusPred[k];
-                else
+                for (int k = 0; k < weights.Length; k++)
                 {
-                    Log.Post("wiu wiu");
-                    deltaomega[k] = 0;
+                    weightedScore += weights[k] * countsRefMinusPred[k];
                 }
-                weights[k] += deltaomega[k];
+                var deltaomegaFactor = (loss - weightedScore) / l2norm;
+
+                for (int k = 0; k < weights.Length; k++)
+                {
+                    if (l2norm > 0)
+                        deltaomega[k] = deltaomegaFactor * countsRefMinusPred[k];
+                    else
+                    {
+                        Log.Post("wiu wiu");
+                        deltaomega[k] = 0;
+                    }
+                    weights[k] += deltaomega[k];
+                }
+
+                // debug output
+                Log.Post("Loss: " + loss + " Realdev: " + realdev + " Middev: " + middev);
             }
 
-            // debug output
-            Log.Post("Loss: " + loss + " Realdev: " + realdev + " Middev: " + middev);
+            // normalize weights
+            foreach(int i in weights)
+                weights[i] /= NumberOfGraphs;
 
             return weights;
         }

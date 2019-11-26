@@ -68,8 +68,8 @@ namespace ProjectLaura
             List<OLMVariant> variants = new List<OLMVariant>
             {
                 //OLMVariant.Ising
-                //OLMVariant.IsingII
-                OLMVariant.IsingIII
+                OLMVariant.IsingII
+                //OLMVariant.IsingIII
                 //OLMVariant.Default
             };
 
