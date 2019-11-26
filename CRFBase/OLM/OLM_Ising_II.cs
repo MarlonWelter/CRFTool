@@ -39,13 +39,9 @@ namespace CRFBase
             int NumberOfGraphs = TrainingGraphs.Count;
             var vit = new int[NumberOfGraphs][];
             var mcmc = new int[NumberOfGraphs][];
-            double devges = 0.0;
+            var refLabel = new int[NumberOfGraphs][];
             // Anzahl Knoten
             double NumberOfNodes = 0;
-            var refLabel = new int[NumberOfGraphs][];
-            double devgesT = 0;
-            // Summe aller Knoten aller Graphen
-            double CumulativeNumberOfNodes = 0;
 
             int[] countsRefMinusPred = new int[weightCurrent.Length];
 
@@ -55,7 +51,6 @@ namespace CRFBase
             {
                 var graph = TrainingGraphs[g];
                 NumberOfNodes = graph.Nodes.Count();
-                CumulativeNumberOfNodes += NumberOfNodes;
 
                 // Labeling mit Viterbi (MAP)
                 var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
@@ -78,9 +73,9 @@ namespace CRFBase
                 refLabel[g] = labeling;
 
                 // Berechnung des typischen/mittleren Fehlers
-                devges = LossFunctionIteration(refLabel[g], mcmc[g]);
+                middev = LossFunctionIteration(refLabel[g], mcmc[g]);
                 // Berechnung des realen Fehlers
-                devgesT = LossFunctionIteration(refLabel[g], vit[g]);
+                realdev = LossFunctionIteration(refLabel[g], vit[g]);
 
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
@@ -90,12 +85,7 @@ namespace CRFBase
 
                 for (int k = 0; k < countsRef.Length; k++)
                     countsRefMinusPred[k] += countsRef[k] - countsPred[k];
-
-                // mittlerer (typischer) Fehler (Summen-Gibbs-Score)
-                middev = devges;
-                // realer Fehler fuer diese Runde (Summen-Trainings-Score)
-                realdev = devgesT;
-
+                
                 var loss = realdev;
 
                 // Scores berechnen?? Im Skript so, aber nicht notwendig
@@ -115,11 +105,6 @@ namespace CRFBase
                 {
                     if (l2norm > 0)
                         deltaomega[k] = deltaomegaFactor * countsRefMinusPred[k];
-                    else
-                    {
-                        Log.Post("wiu wiu");
-                        deltaomega[k] = 0;
-                    }
                     weights[k] += deltaomega[k];
                 }
 
