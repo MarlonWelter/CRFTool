@@ -36,6 +36,7 @@ namespace CRFBase
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
         {
             var weights = weightCurrent.ToArray();
+            TrainingGraphs = TrainingGraphs.RandomizeOrder().ToList();
             int NumberOfGraphs = TrainingGraphs.Count;
             var vit = new int[NumberOfGraphs][];
             var mcmc = new int[NumberOfGraphs][];
@@ -96,9 +97,8 @@ namespace CRFBase
                 var weightedScore = 0.0;
 
                 for (int k = 0; k < weights.Length; k++)
-                {
                     weightedScore += weights[k] * countsRefMinusPred[k];
-                }
+
                 var deltaomegaFactor = (loss - weightedScore) / l2norm;
 
                 for (int k = 0; k < weights.Length; k++)
