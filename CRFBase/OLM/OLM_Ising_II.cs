@@ -30,6 +30,7 @@ namespace CRFBase
         private const double delta = 0.22;
         // mittlerer Fehler
         private double middev = delta * 2;
+        private double middevCumulated = delta * 2;
         // realer Fehler
         private double realdev = 2 * eps;
 
@@ -43,6 +44,7 @@ namespace CRFBase
             var refLabel = new int[NumberOfGraphs][];
             // Anzahl Knoten
             double NumberOfNodes = 0;
+            middevCumulated = 0;
 
             int[] countsRefMinusPred = new int[weightCurrent.Length];
 
@@ -75,6 +77,7 @@ namespace CRFBase
 
                 // Berechnung des typischen/mittleren Fehlers
                 middev = LossFunctionIteration(refLabel[g], mcmc[g]);
+                middevCumulated += middev;
                 // Berechnung des realen Fehlers
                 realdev = LossFunctionIteration(refLabel[g], vit[g]);
 
@@ -115,13 +118,14 @@ namespace CRFBase
             // normalize weights
             foreach(int i in weights)
                 weights[i] /= NumberOfGraphs;
-
+            middevCumulated /= NumberOfGraphs;
+            Log.Post("Middev normalized: " + middevCumulated);
             return weights;
         }
 
         protected override bool CheckCancelCriteria()
         {
-            return ((middev <= delta));
+            return ((middevCumulated <= delta));
         }
 
         internal override void SetStartingWeights()
