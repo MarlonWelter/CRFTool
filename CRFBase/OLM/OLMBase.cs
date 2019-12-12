@@ -174,7 +174,7 @@ namespace CRFBase
                     WriterResults();
                     lossCurrent /= sitesValid;
 
-                    Log.Post("Current loss: " + lossCurrent);
+                    //Log.Post("Current loss: " + lossCurrent);
 
                     if (lossCurrent < lossOpt)
                     {
@@ -226,7 +226,7 @@ namespace CRFBase
                 var sensitivity = keys.computeTPR(tp, fn);
                 var specificity = keys.computeSPC(tn, fp);
                 var mcc = keys.computeMCC(tp, tn, fp, fn);
-                Log.Post("MCC: " + mcc);
+                Log.Post("MCC: " + mcc + " Specificity: "+specificity);
 
                 writer.WriteLine("" + tp + "_" + tn + "_" + fp + "_" + fn);
                 writer.WriteLine(sensitivity);
@@ -256,7 +256,8 @@ namespace CRFBase
         Test,
         Ising,
         IsingII,
-        IsingIII
+        IsingIII,
+        Torsten
     }
 
     public class CharacteristicFeature : BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>

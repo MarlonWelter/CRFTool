@@ -49,8 +49,8 @@ namespace CRFBase
             for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
             {
                 var graph = graphList[i];
-                createObservationsUnit.CreateObservation(graph);
-                //createObservationsUnit.CreateObservationThresholding(graph);
+                //createObservationsUnit.CreateObservation(graph);
+                createObservationsUnit.CreateObservationThresholding(graph);
 
                 // zugehörige Scores erzeugen
                 if (UseIsingModel)

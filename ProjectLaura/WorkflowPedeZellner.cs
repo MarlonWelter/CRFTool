@@ -68,9 +68,10 @@ namespace ProjectLaura
             List<OLMVariant> variants = new List<OLMVariant>
             {
                 //OLMVariant.Ising
-                OLMVariant.IsingII
+                //OLMVariant.IsingII
                 //OLMVariant.IsingIII
                 //OLMVariant.Default
+                OLMVariant.Torsten
             };
 
             Log.Post("Training variant: " + variants[0]);

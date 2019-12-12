@@ -44,6 +44,12 @@ namespace CRFBase.OLM
                     olmIsingIII.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);
                     request.Result = new OLMRequestResult(olmIsingIII.ResultingWeights.ToArray());
                     break;
+                case OLMVariant.Torsten:
+                    var olmVit = new OLM_Vit<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF,
+                        request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 4, "OLM_Vit");
+                    olmVit.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);
+                    request.Result = new OLMRequestResult(olmVit.ResultingWeights.ToArray());
+                    break;
                 default:
                     Log.Post("unknown OLM variante", LogCategory.Critical);
                     break;
