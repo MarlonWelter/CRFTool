@@ -44,7 +44,7 @@ namespace CRFBase.OLM
                     olmIsingIII.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);
                     request.Result = new OLMRequestResult(olmIsingIII.ResultingWeights.ToArray());
                     break;
-                case OLMVariant.Torsten:
+                case OLMVariant.Vit:
                     var olmVit = new OLM_Vit<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF,
                         request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 4, "OLM_Vit");
                     olmVit.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);

@@ -257,7 +257,7 @@ namespace CRFBase
         Ising,
         IsingII,
         IsingIII,
-        Torsten
+        Vit
     }
 
     public class CharacteristicFeature : BasisMerkmal<ICRFNodeData, ICRFEdgeData, ICRFGraphData>

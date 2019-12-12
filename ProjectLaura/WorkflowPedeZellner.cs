@@ -71,7 +71,7 @@ namespace ProjectLaura
                 //OLMVariant.IsingII
                 //OLMVariant.IsingIII
                 //OLMVariant.Default
-                OLMVariant.Torsten
+                OLMVariant.Vit
             };
 
             Log.Post("Training variant: " + variants[0]);
