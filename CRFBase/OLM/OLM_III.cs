@@ -49,7 +49,7 @@ namespace CRFBase
                 SetWeightsCRF(weights, graph);
 
                 //compute labeling with viterbi algorithm
-                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>,  Labels, BufferSizeInference);
+                var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                 request.RequestInDefaultContext();
                 int[] labeling = request.Solution.Labeling;
                 //check nonequality
@@ -74,7 +74,7 @@ namespace CRFBase
                             tn += 1;
                     }
                 }
-                
+
                 int[] countsPred = CountPred(graph, labeling);
                 int[] countsRef = CountPred(graph, graph.Data.ReferenceLabeling);
                 for (int k = 0; k < countsPred.Length; k++)
@@ -82,27 +82,25 @@ namespace CRFBase
                     countsRefMinusPred[k] += countsRef[k] - countsPred[k];
                 }
 
-            }
+                var weightedScore = 0.0;
+                for (int k = 0; k < weights.Length; k++)
+                {
+                    weightedScore += weights[k] * countsRefMinusPred[k];
+                }
+                double l2normsq = (countsRefMinusPred.Sum(entry => entry * entry));
 
-            var weightedScore = 0.0;
-            for (int k = 0; k < weights.Length; k++)
-            {
-                weightedScore += weights[k] * countsRefMinusPred[k];
-            }
-            double l2normsq = (countsRefMinusPred.Sum(entry => entry * entry));
-            
-            var loss = (fp + fn);
+                var loss = (fp + fn);
 
-            var deltaomegaFactor = (loss - weightedScore) / l2normsq;
-            var deltaomega = new double[weights.Length];
-            for (int k = 0; k < weights.Length; k++)
-            {
-                if (l2normsq > 0)
-                    deltaomega[k] = deltaomegaFactor * countsRefMinusPred[k];
-                weights[k] += deltaomega[k];
-                weightsSum[k] = weights[k] + deltaomega[k];
+                var deltaomegaFactor = (loss - weightedScore) / l2normsq;
+                var deltaomega = new double[weights.Length];
+                for (int k = 0; k < weights.Length; k++)
+                {
+                    if (l2normsq > 0)
+                        deltaomega[k] = deltaomegaFactor * countsRefMinusPred[k];
+                    weights[k] += deltaomega[k];
+                    weightsSum[k] = weights[k] + deltaomega[k];
+                }
             }
-            
             return weights;
         }
 
@@ -112,7 +110,7 @@ namespace CRFBase
             weightCurrent = new double[Weights];
             for (int i = 0; i < Weights; i++)
             {
-                weightCurrent[i] = 0.0 + 0.2 * rdm.NextDouble() - 0.1;
+                weightCurrent[i] = 1;
                 weightOpt[i] = weightCurrent[i];
             }
         }

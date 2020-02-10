@@ -26,7 +26,7 @@ namespace ProjectLaura
         private const int IsingCorrelationParameter = 1;
         private static double[] PottsCorrelationParameters = new double[NumberOfIntervals * (NumberOfLabels * NumberOfLabels) * NumberOfEdgeFeatures];
         private const int BufferSizeViterbi = 1000;
-        private const double Threshold = 0.7;
+        private const double Threshold = 0.575;
         private static Random rdm = new Random();
         
         private static readonly string fileFolder = @"../../Data/ArtificialValue";

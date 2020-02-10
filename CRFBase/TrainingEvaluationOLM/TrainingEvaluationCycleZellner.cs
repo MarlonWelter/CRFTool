@@ -13,7 +13,7 @@ namespace CRFBase
         private Random random = new Random();
         // Graph Visualization: false = orignial, true = created
         private const bool GraphVisualization = false;
-        private const bool UseIsingModel = false;
+        private const bool UseIsingModel = true;
 
         /*
         *  Die mit Herrn Waack besprochene Version des Projektzyklus zum Testen der verschiedenen Trainingsvarianten von OLM 
@@ -32,8 +32,8 @@ namespace CRFBase
 
             #region Schritt 2: Beobachtungen erzeugen (und Scores)
 
-            // var createObservationsUnit = new CreateObservationsUnit(inputParameters.Threshold);
-            var createObservationsUnit = new CreateObservationsUnit(inputParameters.TransitionProbabilities);
+            var createObservationsUnit = new CreateObservationsUnit(inputParameters.Threshold);
+            //var createObservationsUnit = new CreateObservationsUnit(inputParameters.TransitionProbabilities);
 
             if (UseIsingModel)
                 Log.Post("Ising-Model");
@@ -167,7 +167,7 @@ namespace CRFBase
                     results = new OLMEvaluationResult
                     {
                         ConformityParameters = pottsModel.ConformityParameter,
-                        //  CorrelationParameter = pottsModel.CorrelationParameter
+                        //CorrelationParameter = pottsModel.CorrelationParameter
                         CorrelationParameters = pottsModel.CorrelationParameter
                     };
                 }
@@ -178,7 +178,9 @@ namespace CRFBase
                 {
                     for (int i = 0; i < results.ConformityParameters.Length; i++)
                         Log.Post("Conformity " + i + ": " + results.ConformityParameters[i] + "\t");
-                    Log.Post("Correlation: " + results.CorrelationParameter);
+                    //Log.Post("Correlation: " + results.CorrelationParameter);
+                    for (int i = 0; i < results.CorrelationParameters.Length; i++)
+                        Log.Post("Correlation " + i + ": " + results.CorrelationParameters[i] + "\t");
                 }
 
                 // 1) Viterbi-Heuristik starten (request: SolveInference) + zusätzliche Parameter hinzufügen
@@ -206,14 +208,15 @@ namespace CRFBase
                 // debug output
                 Log.Post("Average Values");
                 Log.Post("Sensitivity: " + evaluationResults[trainingVariant].AverageSensitivity +
-                    "\t Specificy: " + evaluationResults[trainingVariant].AverageSpecificity +
+                    "\t Specificity: " + evaluationResults[trainingVariant].AverageSpecificity +
                     "\t MCC: " + evaluationResults[trainingVariant].AverageMCC +
-                    //"\t Accuracy: " + evaluationResults[trainingVariant].AverageAccuracy +
+                    "\t Accuracy: " + evaluationResults[trainingVariant].AverageAccuracy +
                     "\t TotalTP: " + evaluationResults[trainingVariant].TotalTP +
                     "\t TotalFP: " + evaluationResults[trainingVariant].TotalFP +
                     "\t TotalTN: " + evaluationResults[trainingVariant].TotalTN +
                     "\t TotalFN: " + evaluationResults[trainingVariant].TotalFN);
-
+                System.IO.File.AppendAllText("resuts.txt", evaluationResults[trainingVariant].AverageSensitivity + ";"+
+                    evaluationResults[trainingVariant].AverageSpecificity + ";" + evaluationResults[trainingVariant].AverageMCC + ";" + evaluationResults[trainingVariant].AverageAccuracy + "\r\n");
                 #endregion
 
             }

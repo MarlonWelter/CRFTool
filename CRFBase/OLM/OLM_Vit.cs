@@ -93,10 +93,10 @@ namespace CRFBase
             }
 
             // normalize weights
-            foreach (int i in weights)
+            for (int k = 0; k < weights.Length; k++)
             {
-                weights[i] /= NumberOfGraphs;
-                Log.Post("Weight: "+weights[i]);
+                //weights[i] /= NumberOfGraphs;
+                Log.Post("Weight: "+weights[k]);
             }
             lossCumulated /= NumberOfGraphs;
             Log.Post("Loss normalized: " + lossCumulated);
@@ -114,7 +114,7 @@ namespace CRFBase
             weightCurrent = new double[Weights];
             for (int i = 0; i < Weights; i++)
             {
-                weightCurrent[i] = 0;
+                weightCurrent[i] = 1;
                 weightOpt[i] = weightCurrent[i];
             }
         }
