@@ -61,9 +61,12 @@
     <Compile Include="Build.cs" />
     <Compile Include="GradientDescent\ExecuteGradientDescent.cs" />
     <Compile Include="GradientDescent\GradientDescentManager.cs" />
+    <Compile Include="OLM\BLM_Ising_I.cs" />
+    <Compile Include="OLM\BLM_Ising_II.cs" />
+    <Compile Include="OLM\BLM_Ising_III.cs" />
     <Compile Include="OLM\ExampleFeature1.cs" />
     <Compile Include="OLM\OLM_Vit.cs" />
-    <Compile Include="OLM\OLM_Ising_III.cs" />
+    <Compile Include="OLM\OLM_Ising_III_deprecated.cs" />
     <Compile Include="OLM\OLM_Ising_II.cs" />
     <Compile Include="OLM\PottsMerkmal.cs" />
     <Compile Include="TrainingEvaluationOLM\ComputeKeys.cs" />

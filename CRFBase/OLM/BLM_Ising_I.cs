@@ -9,13 +9,13 @@ using CRFBase.GibbsSampling;
 
 namespace CRFBase
 {
-    // olm training with cancel criterium based on difference between mcmc and ref, vector correction based on viterbi
-    public class OLM_Ising_II<NodeData, EdgeData, GraphData> : OLMBase<NodeData, EdgeData, GraphData>
+    // first variant of batch large margin training (bachelor thesis) with cancel criterion based on mcmc deviations, vector correction based on mcmc deviations
+    public class BLM_Ising_I<NodeData, EdgeData, GraphData> : OLMBase<NodeData, EdgeData, GraphData>
         where NodeData : ICRFNodeData
         where EdgeData : ICRFEdgeData
         where GraphData : ICRFGraphData
     {
-        public OLM_Ising_II(int labels, int bufferSizeInference, IList<BasisMerkmal<NodeData, EdgeData, GraphData>> basisMerkmale,
+        public BLM_Ising_I(int labels, int bufferSizeInference, IList<BasisMerkmal<NodeData, EdgeData, GraphData>> basisMerkmale,
             Func<int[], int[], double> lossfunctionIteration, Func<int[], int[], double> lossfunctionValidation, double sensitivityFactor, string name)
         {
             Name = name;
@@ -26,35 +26,37 @@ namespace CRFBase
             BasisMerkmale = basisMerkmale.ToArray();
         }
 
-        private const double eps = 0.02;
-        private const double delta = 0.22;
+        private const double eps = 0.01;
         // mittlerer Fehler
-        private double middev = delta * 2;
-        private double middevCumulated = delta * 2;
+        private double middev = 0;
         // realer Fehler
         private double realdev = 2 * eps;
+        private bool debugOutputEnabled = false;
 
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
         {
             var weights = weightCurrent.ToArray();
-            TrainingGraphs = TrainingGraphs.RandomizeOrder().ToList();
-            int NumberOfGraphs = TrainingGraphs.Count;
-            var vit = new int[NumberOfGraphs][];
-            var mcmc = new int[NumberOfGraphs][];
-            var refLabel = new int[NumberOfGraphs][];
+            int u = TrainingGraphs.Count;
+            var vit = new int[u][];
+            var mcmc = new int[u][];
+            double devges = 0.0;
             // Anzahl Knoten
-            double NumberOfNodes = 0;
-            middevCumulated = 0;
+            double mx = 0;
+            var refLabel = new int[u][];
+            double devgesT = 0;
+            // Summe aller Knoten aller Graphen
+            double mu = 0;
 
-            int[] countsRefMinusPred = new int[weightCurrent.Length];
+            int[] countsMCMCMinusRef = new int[weightCurrent.Length];
+            int[] countsRefMinusMCMC = new int[weightCurrent.Length];
 
             Log.Post("#Iteration: " + globalIteration);
 
             for (int g = 0; g < TrainingGraphs.Count; g++)
             {
                 var graph = TrainingGraphs[g];
-                NumberOfNodes = graph.Nodes.Count();
-
+                mx = graph.Nodes.Count();
+                mu += mx;
                 // Labeling mit Viterbi (MAP)
                 var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                 request.RequestInDefaultContext();
@@ -70,60 +72,73 @@ namespace CRFBase
                     labelingMCMC[item.Key.GraphId] = (int)item.Value;
                 mcmc[g] = labelingMCMC;
 
-
                 // reales labeling
                 int[] labeling = graph.Data.ReferenceLabeling;
                 refLabel[g] = labeling;
 
                 // Berechnung des typischen/mittleren Fehlers
-                middev = LossFunctionIteration(refLabel[g], mcmc[g]);
-                middevCumulated += middev;
-                // Berechnung des realen Fehlers
-                realdev = LossFunctionIteration(refLabel[g], vit[g]);
+                devges += LossFunctionIteration(refLabel[g], mcmc[g]);
+                devgesT += LossFunctionIteration(refLabel[g], vit[g]);
 
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
 
+                if (debugOutputEnabled)
+                    printLabelings(vit[g], mcmc[g], refLabel[g], g);
+
+                // calculate equation 6.13 and 6.14
                 int[] countsRef = CountPred(graph, refLabel[g]);
-                int[] countsPred = CountPred(graph, vit[g]);
+                int[] countsMCMC = CountPred(graph, mcmc[g]);
 
                 for (int k = 0; k < countsRef.Length; k++)
-                    countsRefMinusPred[k] += countsRef[k] - countsPred[k];
-                
-                var loss = realdev;
-
-                double l2norm = (countsRefMinusPred.Sum(entry => entry * entry));
-
-                var deltaomega = new double[weights.Length];
-                var weightedScore = 0.0;
-
-                for (int k = 0; k < weights.Length; k++)
-                    weightedScore += weights[k] * countsRefMinusPred[k];
-
-                var deltaomegaFactor = (loss - weightedScore) / l2norm;
-
-                for (int k = 0; k < weights.Length; k++)
                 {
-                    if (l2norm > 0)
-                        deltaomega[k] = deltaomegaFactor * countsRefMinusPred[k];
-                    weights[k] += deltaomega[k];
+                    countsMCMCMinusRef[k] += countsMCMC[k] - countsRef[k];
+                    countsRefMinusMCMC[k] += countsRef[k] - countsMCMC[k];
                 }
-
-                // debug output
-                Log.Post("Loss: " + loss + " Realdev: " + realdev + " Middev: " + middev);
             }
 
-            // normalize weights
-            foreach(int i in weights)
-                weights[i] /= NumberOfGraphs;
-            middevCumulated /= NumberOfGraphs;
-            Log.Post("Middev normalized: " + middevCumulated);
+            // mittlerer (typischer) Fehler (Summen-Gibbs-Score)
+            middev = devges / u;
+
+            // realer Fehler fuer diese Runde (Summen-Trainings-Score)
+            realdev = devgesT / u;
+
+            var loss = (realdev - middev) * mu;
+
+            // Scores berechnen?? Im Skript so, aber nicht notwendig
+
+            double l2norm = (countsRefMinusMCMC.Sum(entry => entry * entry));
+
+            var deltaomegaFactor = 0.0;
+            var deltaomega = new double[weights.Length];
+            var weightedScore = 0.0;
+
+            for (int k = 0; k < weights.Length; k++)
+            {
+                if (l2norm > 0)
+                {
+                    weightedScore += weights[k] * countsMCMCMinusRef[k];
+                    deltaomegaFactor = (loss + weightedScore) / l2norm;
+                    deltaomega[k] = deltaomegaFactor * countsRefMinusMCMC[k];
+                }
+                else
+                {
+                    weightedScore += weights[k] * countsRefMinusMCMC[k];
+                    deltaomegaFactor = (loss + weightedScore) / l2norm;
+                    deltaomega[k] = deltaomegaFactor * countsMCMCMinusRef[k];
+                }
+                weights[k] += deltaomega[k];
+            }
+
+            // debug output
+            Log.Post("Loss: " + (int)loss + " Realdev: " + realdev + " Middev: " + middev);
+
             return weights;
         }
 
         protected override bool CheckCancelCriteria()
         {
-            return ((middevCumulated <= delta));
+            return ((realdev <= middev + eps) && (realdev >= middev - eps));
         }
 
         internal override void SetStartingWeights()

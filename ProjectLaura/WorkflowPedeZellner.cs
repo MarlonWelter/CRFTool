@@ -71,6 +71,7 @@ namespace ProjectLaura
                 //OLMVariant.IsingII
                 //OLMVariant.IsingIII
                 //OLMVariant.Default
+                //OLMVariant.Batch_IsingI
                 OLMVariant.Vit
             };
 

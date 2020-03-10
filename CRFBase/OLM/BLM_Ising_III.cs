@@ -9,13 +9,13 @@ using CRFBase.GibbsSampling;
 
 namespace CRFBase
 {
-    // olm training with cancel criterium based on difference between mcmc deviations and mcmc-ref deviations, vector correction based on viterbi
-    public class OLM_Ising_III<NodeData, EdgeData, GraphData> : OLMBase<NodeData, EdgeData, GraphData>
+    // batch large margin training with cancel criterion based on difference between mcmc deviations and mcmc-ref deviations, vector correction based on viterbi
+    public class BLM_Ising_III<NodeData, EdgeData, GraphData> : OLMBase<NodeData, EdgeData, GraphData>
         where NodeData : ICRFNodeData
         where EdgeData : ICRFEdgeData
         where GraphData : ICRFGraphData
     {
-        public OLM_Ising_III(int labels, int bufferSizeInference, IList<BasisMerkmal<NodeData, EdgeData, GraphData>> basisMerkmale,
+        public BLM_Ising_III(int labels, int bufferSizeInference, IList<BasisMerkmal<NodeData, EdgeData, GraphData>> basisMerkmale,
             Func<int[], int[], double> lossfunctionIteration, Func<int[], int[], double> lossfunctionValidation, int numberOfSamples, string name)
         {
             Name = name;

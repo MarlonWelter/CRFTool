@@ -26,6 +26,12 @@ namespace CRFBase.OLM
                 case OLMVariant.Test: // this is a dummy for testing purposes
                     request.Result = new OLMRequestResult(new double[2] { Build.Random.NextDouble(), Build.Random.NextDouble() });
                     break;
+                case OLMVariant.Batch_IsingI:
+                    var blmIsing = new BLM_Ising_I<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF,
+                        request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 0.02, "BLM_Ising");
+                    blmIsing.Do(request.BasisMerkmale.Count, request.Graphs, request.MaxIterations, request);
+                    request.Result = new OLMRequestResult(blmIsing.ResultingWeights.ToArray());
+                    break;
                 case OLMVariant.Ising:
                     var olmIsing = new OLM_Ising_I<ICRFNodeData, ICRFEdgeData, ICRFGraphData>(request.NumberLabels, request.BufferSizeCRF, 
                         request.BasisMerkmale, request.LossFunctionIteration, request.LossFunctionValidation, 0.02, "OLM_Ising");

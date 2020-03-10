@@ -9,6 +9,7 @@ using CRFBase.GibbsSampling;
 
 namespace CRFBase
 {
+    // online version of large margin training (bachelor thesis) with cancel criterion based on mcmc deviations, vector correction based on mcmc deviations
     public class OLM_Ising_I<NodeData, EdgeData, GraphData> : OLMBase<NodeData, EdgeData, GraphData>
         where NodeData : ICRFNodeData
         where EdgeData : ICRFEdgeData
@@ -35,14 +36,14 @@ namespace CRFBase
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
         {
             var weights = weightCurrent.ToArray();
-            int u = TrainingGraphs.Count;
-            var vit = new int[u][];
-            var mcmc = new int[u][];
-            double devges = 0.0;
+            int NumberOfGraphs = TrainingGraphs.Count;
+            var vit = new int[NumberOfGraphs][];
+            var mcmc = new int[NumberOfGraphs][];
+            double middevCumulated = 0.0;
             // Anzahl Knoten
             double mx = 0;
-            var refLabel = new int[u][];
-            double devgesT = 0;
+            var refLabel = new int[NumberOfGraphs][];
+            double realdevCumulated = 0;
             // Summe aller Knoten aller Graphen
             double mu = 0;
 
@@ -76,8 +77,10 @@ namespace CRFBase
                 refLabel[g] = labeling;
 
                 // Berechnung des typischen/mittleren Fehlers
-                devges += LossFunctionIteration(refLabel[g], mcmc[g]);
-                devgesT += LossFunctionIteration(refLabel[g], vit[g]);
+                middev = LossFunctionIteration(refLabel[g], mcmc[g]);
+                middevCumulated += middev;
+                realdev = LossFunctionIteration(refLabel[g], vit[g]);
+                realdevCumulated += realdev;
 
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
@@ -94,43 +97,42 @@ namespace CRFBase
                     countsMCMCMinusRef[k] += countsMCMC[k] - countsRef[k];
                     countsRefMinusMCMC[k] += countsRef[k] - countsMCMC[k];
                 }
+
+                var loss = realdev - middev;
+
+                double l2norm = (countsRefMinusMCMC.Sum(entry => entry * entry));
+
+                var deltaomegaFactor = 0.0;
+                var deltaomega = new double[weights.Length];
+                var weightedScore = 0.0;
+
+                for (int k = 0; k < weights.Length; k++)
+                {
+                    if (l2norm > 0)
+                    {
+                        weightedScore += weights[k] * countsMCMCMinusRef[k];
+                        deltaomegaFactor = (loss + weightedScore) / l2norm;
+                        deltaomega[k] = deltaomegaFactor * countsRefMinusMCMC[k];
+                    }
+                    else
+                    {
+                        weightedScore += weights[k] * countsRefMinusMCMC[k];
+                        deltaomegaFactor = (loss + weightedScore) / l2norm;
+                        deltaomega[k] = deltaomegaFactor * countsMCMCMinusRef[k];
+                    }
+                    weights[k] += deltaomega[k];
+                }
+
+                // debug output
+                Log.Post("Loss: " + (int)loss + " Realdev: " + realdev + " Middev: " + middev);
             }
 
-            // mittlerer (typischer) Fehler (Summen-Gibbs-Score)
-            middev = devges / u;
-
-            // realer Fehler fuer diese Runde (Summen-Trainings-Score)
-            realdev = devgesT / u;
-
-            var loss = (realdev - middev) * mu;
-
-            // Scores berechnen?? Im Skript so, aber nicht notwendig
-
-            double l2norm = (countsRefMinusMCMC.Sum(entry => entry * entry));
-
-            var deltaomegaFactor = 0.0;
-            var deltaomega = new double[weights.Length];
-            var weightedScore = 0.0;
-
-            for (int k = 0; k < weights.Length; k++)
-            {
-                if (l2norm > 0)
-                {
-                    weightedScore += weights[k] * countsMCMCMinusRef[k];
-                    deltaomegaFactor = (loss + weightedScore) / l2norm;
-                    deltaomega[k] = deltaomegaFactor * countsRefMinusMCMC[k];
-                }
-                else
-                {
-                    weightedScore += weights[k] * countsRefMinusMCMC[k];
-                    deltaomegaFactor = (loss + weightedScore) / l2norm;
-                    deltaomega[k] = deltaomegaFactor * countsMCMCMinusRef[k];
-                }
-                weights[k] += deltaomega[k];
-            }
-
-            // debug output
-            Log.Post("Loss: " + (int)loss + " Realdev: " + realdev + " Middev: " + middev);
+            // normalize weights
+            foreach (int i in weights)
+                weights[i] /= NumberOfGraphs;
+            middevCumulated /= NumberOfGraphs;
+            realdevCumulated /= NumberOfGraphs;
+            Log.Post("Middev normalized: " + middevCumulated + "Realdev normalized: " + realdevCumulated);
 
             return weights;
         }
