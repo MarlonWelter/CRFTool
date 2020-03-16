@@ -186,7 +186,7 @@ namespace CRFBase
 
                     OLMTracker.Track(weightCurrent, lossCurrent);
                     var iterationResult = new OLMIterationResult(weightOpt.ToArray(), lossOpt);
-                    //var iterationResult = new OLMIterationResult(weightCurrent.ToArray(), lossCurrent);
+                    ////var iterationResult = new OLMIterationResult(weightCurrent.ToArray(), lossCurrent);
                     olmrequest.Result.ResultsHistory.IterationResultHistory.Add(iterationResult);
                 }
             }

@@ -105,8 +105,6 @@ namespace CRFBase
 
             var loss = (realdev - middev) * mu;
 
-            // Scores berechnen?? Im Skript so, aber nicht notwendig
-
             double l2norm = (countsRefMinusMCMC.Sum(entry => entry * entry));
 
             var deltaomegaFactor = 0.0;

@@ -27,13 +27,13 @@ namespace CRFBase
             var graphList = inputParameters.Graphs;
             int numberOfLabels = inputParameters.NumberOfLabels;
             int numberOfIntervals = inputParameters.NumberOfIntervals;
-            
+
             #endregion
 
             #region Schritt 2: Beobachtungen erzeugen (und Scores)
 
-            var createObservationsUnit = new CreateObservationsUnit(inputParameters.Threshold);
-            //var createObservationsUnit = new CreateObservationsUnit(inputParameters.TransitionProbabilities);
+            //var createObservationsUnit = new CreateObservationsUnit(inputParameters.Threshold);
+            var createObservationsUnit = new CreateObservationsUnit(inputParameters.TransitionProbabilities);
 
             if (UseIsingModel)
                 Log.Post("Ising-Model");
@@ -49,8 +49,8 @@ namespace CRFBase
             for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
             {
                 var graph = graphList[i];
-                //createObservationsUnit.CreateObservation(graph);
-                createObservationsUnit.CreateObservationThresholding(graph);
+                createObservationsUnit.CreateObservation(graph);
+                //createObservationsUnit.CreateObservationThresholding(graph);
 
                 // zugehörige Scores erzeugen
                 if (UseIsingModel)
