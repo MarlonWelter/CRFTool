@@ -24,7 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPIBase", "PPIBase\PPIBase.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtTestCase", "ProtTestCase\ProtTestCase.csproj", "{D2165C6B-3DF0-46AB-ADFB-DAEB15F01AB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRFLearning", "ProjectLaura\CRFLearning.csproj", "{21DC6E1E-E1A6-437C-AE31-9AC48BDBC60A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRFLearning", "CRFLearning\CRFLearning.csproj", "{21DC6E1E-E1A6-437C-AE31-9AC48BDBC60A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

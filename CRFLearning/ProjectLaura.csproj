@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{21DC6E1E-E1A6-437C-AE31-9AC48BDBC60A}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ProjectLaura</RootNamespace>
-    <AssemblyName>ProjectLaura</AssemblyName>
+    <RootNamespace>CRFLearning</RootNamespace>
+    <AssemblyName>CRFLearning</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
