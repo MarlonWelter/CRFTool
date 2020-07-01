@@ -32,7 +32,7 @@ namespace CRFBase
         public TrainingEvaluationCycleInputParameters(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> graphs, int numberOfGraphInstances,
             List<OLMVariant> trainingVariantsToTest, double isingConformityParameter, double[] pottsConformityParameters, double isingCorrelationParameter,
             double[] pottsCorrelationParameters, int numberOfIntervals, double[,] transitionProbabilities, int numberOfLabels, int bufferSizeViterbi, 
-            double amplifierControlParameter, double threshold)
+            double amplifierControlParameter, double threshold, int cloneFactor)
         {
             Graphs = graphs;
             NumberOfGraphInstances = numberOfGraphInstances;
@@ -47,6 +47,7 @@ namespace CRFBase
             BufferSizeViterbi = bufferSizeViterbi;
             AmplifierControlParameter = amplifierControlParameter;
             Threshold = threshold;
+            CloneFactor = cloneFactor;
         }
         public List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> Graphs { get; set; }
         public GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> Graph { get; set; }
@@ -66,5 +67,6 @@ namespace CRFBase
         public int BufferSizeViterbi { get; set; }
         public double AmplifierControlParameter { get; set; }
         public double Threshold { get; set; }
+        public int CloneFactor { get; set; }
     }
 }

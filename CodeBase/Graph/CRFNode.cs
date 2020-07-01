@@ -13,9 +13,11 @@ namespace CodeBase
         string[] Characteristics { get; set; }
         int[] ReferenceLabeling { get; set; }
         int[] AssginedLabeling { get; set; }
+        int Id { get; set; }
     }
     public class CRFGraphData : ICRFGraphData, ICategoryGraph
     {
+        public int Id { get; set; }
         public int NumberCategories { get; set; }
         public int NumberOfLabels { get; set; }
         public List<int[]> Sample { get; set; }

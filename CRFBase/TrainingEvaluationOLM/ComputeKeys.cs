@@ -9,10 +9,10 @@ namespace CRFBase
 {
     class ComputeKeys
     {
-        public OLMEvaluationGraphResult computeEvalutionGraphResult(GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph,
+        public OLMEvaluationGraphResult computeEvalutionGraphResult(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph,
             int[] predicitionLabeling)
         {
-            double sensitivity = 0.0, specificity = 0.0, mcc = 0.0, accuracy = 0.0;
+            double sensitivity = 0.0, specificity = 0.0, mcc = 0.0, accuracy = 0.0, fmeasure = 0.0;
             int[] referenceLabel = graph.Data.ReferenceLabeling;
 
             // für jeden graphen: true positives / false positives / true negatives / false negatives   || 0: negative 1: positive
@@ -24,8 +24,9 @@ namespace CRFBase
             specificity = computeSPC(tn, fp);
             mcc = computeMCC(tp, tn, fp, fn);
             accuracy = computeAcc(tp, tn, fp, fn);
+            fmeasure = computeFMeasure(tp, fp, fn);
 
-            OLMEvaluationGraphResult result = new OLMEvaluationGraphResult(graph, predicitionLabeling, tp, tn, fp, fn, sensitivity, specificity, mcc, accuracy);
+            OLMEvaluationGraphResult result = new OLMEvaluationGraphResult(graph, predicitionLabeling, tp, tn, fp, fn, sensitivity, specificity, mcc, accuracy, fmeasure);
 
             return result;
         }
@@ -87,6 +88,25 @@ namespace CRFBase
             double acc = 0.0;
             acc = (double)(tp + tn) / (tp + fp + fn + tn);
             return acc;
+        }
+
+        private double computePrecision(long tp, long fp)
+        {
+            return (double)tp / (tp + fp);
+        }
+
+        private double computeRecall(long tp, long fn)
+        {
+            return (double)tp / (tp + fn);
+        }
+
+        public double computeFMeasure(long tp, long fp, long fn)
+        {
+            double f1 = 0.0;
+            f1 = (double)2 / (1 / computePrecision(tp, fp) + 1 / computeRecall(tp, fn));
+            if (f1.ToString() == "NaN")
+                f1 = 0;
+            return f1;
         }
     }
 }

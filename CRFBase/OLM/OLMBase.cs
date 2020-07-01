@@ -184,9 +184,11 @@ namespace CRFBase
                         Log.Post("opt");
                     }
 
+                    ResultingWeights = weightOpt;
+
                     OLMTracker.Track(weightCurrent, lossCurrent);
                     var iterationResult = new OLMIterationResult(weightOpt.ToArray(), lossOpt);
-                    ////var iterationResult = new OLMIterationResult(weightCurrent.ToArray(), lossCurrent);
+                    //var iterationResult = new OLMIterationResult(weightCurrent.ToArray(), lossCurrent);
                     olmrequest.Result.ResultsHistory.IterationResultHistory.Add(iterationResult);
                 }
             }
@@ -229,7 +231,8 @@ namespace CRFBase
                 var specificity = keys.computeSPC(tn, fp);
                 var mcc = keys.computeMCC(tp, tn, fp, fn);
                 var acc = keys.computeAcc(tp, tn, fp, fn);
-                Log.Post("MCC: " + mcc + " Accuracy: "+acc);
+                var fmeasure = keys.computeFMeasure(tp, fp, fn);
+                Log.Post("MCC: " + mcc + " Accuracy: "+acc + " F-Measure: " + fmeasure);
 
                 writer.WriteLine("" + tp + "_" + tn + "_" + fp + "_" + fn);
                 writer.WriteLine(sensitivity);

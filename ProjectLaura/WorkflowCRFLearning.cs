@@ -11,10 +11,10 @@ using PPIBase;
 using System.Threading;
 using System.IO;
 
-namespace ProjectLaura
+namespace CRFLearning
 
 {
-    class WorkflowPedeZellner
+    class WorkflowCRFLearning
     {
         private const bool GraphVisualization = false;
         private const int NumberOfIntervals = 5;
@@ -26,13 +26,15 @@ namespace ProjectLaura
         private const int IsingCorrelationParameter = 1;
         private static double[] PottsCorrelationParameters = new double[NumberOfIntervals * (NumberOfLabels * NumberOfLabels) * NumberOfEdgeFeatures];
         private const int BufferSizeViterbi = 1000;
+        private const int cloneFactor = 10;
         private const double Threshold = 0.575;
+        private const double neighbourDistance = 7.0;
         private static Random rdm = new Random();
         
         private static readonly string fileFolder = @"../../Data/ArtificialValue";
         private static readonly string fileNames = @"../../Data/myFiles.txt";
         public static string InterfaceDefLocation = @"../../Data/nuss.iface.2012.txt";
-        private static string RandomlySelectedPDBFile;
+        private static string PDBFile;
         private static string RandomlySelectedPDBFileName;
 
         public static void Main(string[] args)
@@ -43,11 +45,10 @@ namespace ProjectLaura
             new RasaManager("../../Data/RASA/", @"../../Data/ArtificialValue/");
             new PDBFileManager(@"../../Data/ArtificialValue/");
 
-            //for(int i=0; i<20; i++)
+            //for (int i = 0; i < 20; i++)
             //{
-                Log.Post("Begin");
-                StartTrainingCycle();
-                Log.Post("End");
+            Log.Post("Begin");
+            StartTrainingCycle();
             //}
             Console.ReadKey();
             BaseProgram.Exit.Enter();
@@ -87,10 +88,10 @@ namespace ProjectLaura
 
             foreach (String file in File.ReadLines(fileNames))
             {
-                RandomlySelectedPDBFile = fileFolder + "/" + file;
+                PDBFile = fileFolder + "/" + file;
                 RandomlySelectedPDBFileName = file.Substring(0, 4);
 
-                var pdbFile = PDBExt.Parse(RandomlySelectedPDBFile);
+                var pdbFile = PDBExt.Parse(PDBFile);
                 pdbFile.Name = RandomlySelectedPDBFileName;
 
                 // set IsCore nodes, cuz we only need the interface nodes (the core nodes cannot interact)
@@ -102,15 +103,22 @@ namespace ProjectLaura
                 // set real reference label of the graph
                 var crfGraph = SetReferenceLabel(trimmedGraph);
                 SetEdgeMaxDiffValues(crfGraph);
-                crfGraph.Id = id++;
+                crfGraph.Data.Id = id++;
                 crfGraphList.Add(crfGraph);
             }
-            #endregion      
+            #endregion
+
+            // check zscores
+            //var zscores = crfGraphList.SelectMany(g => g.Nodes.Select(n => n.Data.Characteristics[0]));
+            //var zscore_list = zscores.ToList();
+            //var label_list = crfGraphList.SelectMany((g => g.Nodes.Select(n => n.Data.ReferenceLabel))).ToList();
+            //System.IO.File.AppendAllLines("listForIntervalVisualisation_test3.txt", label_list.Select(label => label.ToString()));
+            //System.IO.File.AppendAllLines("listForIntervalVisualisation_test3.txt", zscore_list.Select(score => score.ToString()));
 
             // set parameters for the training cycle
             parameters = new TrainingEvaluationCycleInputParameters(crfGraphList, crfGraphList.Count, variants, IsingConformityParameter, 
                 PottsConformityParameters, IsingCorrelationParameter, PottsCorrelationParameters, NumberOfIntervals, 
-                transition, NumberOfLabels, BufferSizeViterbi, amplifierControlParameter, Threshold);
+                transition, NumberOfLabels, BufferSizeViterbi, amplifierControlParameter, Threshold, cloneFactor);
 
             // running the cycle
             trainingCycle.RunCycle(parameters);
@@ -127,7 +135,7 @@ namespace ProjectLaura
 
         private static GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> SetReferenceLabel(ProteinGraph trimmedGraph)
         {            
-            var nameWithChain = RandomlySelectedPDBFile.Substring(fileFolder.Length + 1, 6);
+            var nameWithChain = PDBFile.Substring(fileFolder.Length + 1, 6);
             var interfacesList = new List<string>();
             using (var reader = new StreamReader(InterfaceDefLocation))
             {
@@ -168,10 +176,11 @@ namespace ProjectLaura
                 crfGraph.Data.ReferenceLabeling[node.GraphId] = node.Data.ReferenceLabel;
             }
 
-            if (GraphVisualization == true)
+            if (GraphVisualization)
             {
                 var graph3D = crfGraph.Wrap3D(nd => new Node3DWrap<CRFNodeData>(nd.Data) { ReferenceLabel = nd.Data.ReferenceLabel, X = nd.Data.X, Y = nd.Data.Y, Z = nd.Data.Z }, (ed) => new Edge3DWrap<CRFEdgeData>(ed.Data) { Weight = 1.0 });
-                new ShowGraph3D(graph3D).Request();
+                new ShowGraph3D(graph3D).Request(RequestRunType.Background);
+                Thread.Sleep(120000);
             }
 
             return crfGraph;
@@ -186,7 +195,7 @@ namespace ProjectLaura
             {
                 rasa.Key.IsCore = rasa.Value <= 0.15;
             }
-            var proteinGraph = CreateProteinGraph.Do(pdbFile, 7.0, ResidueNodeCenterDefinition.CAlpha).Values.First();
+            var proteinGraph = CreateProteinGraph.Do(pdbFile, neighbourDistance, ResidueNodeCenterDefinition.CAlpha).Values.First();
             return proteinGraph;
         }
 

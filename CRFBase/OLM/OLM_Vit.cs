@@ -27,8 +27,9 @@ namespace CRFBase
         }
 
         private const double eps = 0.02;
-        private const double delta = 0.2;
+        private const double delta = 0.25;
         private double lossCumulated = delta * 2;
+        private double NumberOfNodes = 0;
 
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
         {
@@ -38,16 +39,12 @@ namespace CRFBase
             var vit = new int[NumberOfGraphs][];
             var mcmc = new int[NumberOfGraphs][];
             var refLabel = new int[NumberOfGraphs][];
-            // Anzahl Knoten
-            double NumberOfNodes = 0;
             lossCumulated = 0;
-
-            int[] countsRefMinusPred = new int[weightCurrent.Length];
 
             Log.Post("#Iteration: " + globalIteration);
 
             for (int g = 0; g < TrainingGraphs.Count; g++)
-            {
+            {       
                 var graph = TrainingGraphs[g];
                 NumberOfNodes = graph.Nodes.Count();
 
@@ -63,13 +60,14 @@ namespace CRFBase
 
                 // Berechnung des realen Fehlers
                 var loss = LossFunctionIteration(refLabel[g], vit[g]);
-                lossCumulated += loss;
+                lossCumulated += loss/NumberOfNodes;
 
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
 
                 int[] countsRef = CountPred(graph, refLabel[g]);
                 int[] countsPred = CountPred(graph, vit[g]);
+                int[] countsRefMinusPred = new int[weightCurrent.Length];
 
                 for (int k = 0; k < countsRef.Length; k++)
                     countsRefMinusPred[k] += countsRef[k] - countsPred[k];
@@ -88,6 +86,7 @@ namespace CRFBase
                 {
                     if (l2norm > 0)
                         deltaomega[k] = deltaomegaFactor * countsRefMinusPred[k];
+                    deltaomega[k] /= NumberOfGraphs;
                     weights[k] += deltaomega[k];
                 }
             }
@@ -95,7 +94,7 @@ namespace CRFBase
             // normalize weights
             for (int k = 0; k < weights.Length; k++)
             {
-                //weights[i] /= NumberOfGraphs;
+                //weights[k] /= NumberOfGraphs;
                 Log.Post("Weight: "+weights[k]);
             }
             lossCumulated /= NumberOfGraphs;
@@ -105,7 +104,8 @@ namespace CRFBase
 
         protected override bool CheckCancelCriteria()
         {
-            return ((lossCumulated <= delta));
+            //return (lossCumulated <= delta) && Iteration>1;
+            return Iteration >= MaxIterations;
         }
 
         internal override void SetStartingWeights()

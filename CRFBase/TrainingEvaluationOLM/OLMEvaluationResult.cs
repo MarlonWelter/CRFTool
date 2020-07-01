@@ -17,6 +17,7 @@ namespace CRFBase
         public double AverageMCC { get; set; }
         public double TotalTP { get; set; }
         public double AverageAccuracy { get; private set; }
+        public double AverageFmeasure { get; set; }
         public double TotalTN { get; private set; }
         public double TotalFP { get; private set; }
         public double TotalFN { get; private set; }
@@ -26,7 +27,7 @@ namespace CRFBase
         public void ComputeValues(OLMEvaluationResult result)
         {
             //hier die Liste von GraphResults durchgehen und die Average-Werte etc berechnen
-            double avSensitivity = 0, avSpecificity = 0, avMCC = 0, totalTP = 0, totalTN = 0, totalFP = 0, totalFN = 0, avAccuracy = 0;
+            double avSensitivity = 0, avSpecificity = 0, avMCC = 0, totalTP = 0, totalTN = 0, totalFP = 0, totalFN = 0, avAccuracy = 0, avFmeasure = 0;
             int i = 0;
             foreach (OLMEvaluationGraphResult graph in result.GraphResults)
             {
@@ -34,6 +35,7 @@ namespace CRFBase
                 avSpecificity += graph.Specificity;
                 avMCC += graph.MCC;
                 avAccuracy += graph.Accuracy;
+                avFmeasure += graph.Fmeasure;
                 totalTP += graph.TP;
                 totalTN += graph.TN;
                 totalFP += graph.FP;
@@ -44,6 +46,7 @@ namespace CRFBase
             result.AverageSpecificity = Math.Round(avSpecificity / result.GraphResults.Count, 3);
             result.AverageMCC = Math.Round(avMCC / result.GraphResults.Count, 3);
             result.AverageAccuracy = Math.Round(avAccuracy / result.GraphResults.Count, 3);
+            result.AverageFmeasure = Math.Round(avFmeasure / result.GraphResults.Count, 3);
             result.TotalTP = totalTP;
             result.TotalTN = totalTN;
             result.TotalFP = totalFP;
@@ -53,8 +56,8 @@ namespace CRFBase
     public class OLMEvaluationGraphResult
     {
         public OLMEvaluationGraphResult() { }
-        public OLMEvaluationGraphResult(GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> graph, int[] prediction, long tp, long tn, long fp, long fn, 
-            double sensitivity, double specificity, double mcc, double accuracy)
+        public OLMEvaluationGraphResult(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph, int[] prediction, long tp, long tn, long fp, long fn, 
+            double sensitivity, double specificity, double mcc, double accuracy, double fmeasure)
         {
             Graph = graph;
             Prediction = prediction;
@@ -66,6 +69,7 @@ namespace CRFBase
             Specificity = specificity;
             MCC = mcc;
             Accuracy = accuracy;
+            Fmeasure = fmeasure;
         }
         // amount of the true positives
         public long TP { get; set; }
@@ -82,9 +86,11 @@ namespace CRFBase
         // Matthew Correlation Coefficient
         public double MCC { get; set; }
 
-        public GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData> Graph { get; set; }
+        public IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> Graph { get; set; }
         public int[] Prediction { get; set; }
 
         public double Accuracy { get; private set; }
+
+        public double Fmeasure { get; set; }
     }
 }

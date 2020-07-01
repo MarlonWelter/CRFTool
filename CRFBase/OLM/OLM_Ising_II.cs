@@ -77,9 +77,9 @@ namespace CRFBase
 
                 // Berechnung des typischen/mittleren Fehlers
                 middev = LossFunctionIteration(refLabel[g], mcmc[g]);
-                middevCumulated += middev;
+                middevCumulated += middev/NumberOfNodes;
                 // Berechnung des realen Fehlers
-                realdev = LossFunctionIteration(refLabel[g], vit[g]);
+                realdev = LossFunctionIteration(refLabel[g], vit[g])/NumberOfNodes;
 
                 // set scores according to weights
                 SetWeightsCRF(weights, graph);
@@ -110,12 +110,12 @@ namespace CRFBase
                 }
 
                 // debug output
-                Log.Post("Loss: " + loss + " Realdev: " + realdev + " Middev: " + middev);
+                //Log.Post("Loss: " + loss + " Realdev: " + realdev + " Middev: " + middev);
             }
 
             // normalize weights
-            foreach(int i in weights)
-                weights[i] /= NumberOfGraphs;
+            foreach (var weight in weights)
+                Log.Post("Weight: "+weight);
             middevCumulated /= NumberOfGraphs;
             Log.Post("Middev normalized: " + middevCumulated);
             return weights;
@@ -123,6 +123,7 @@ namespace CRFBase
 
         protected override bool CheckCancelCriteria()
         {
+            // does not work
             return ((middevCumulated <= delta));
         }
 

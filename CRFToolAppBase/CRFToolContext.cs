@@ -187,7 +187,7 @@ namespace CRFToolAppBase
 
                 }
                 //graph.Data.Pr
-                var olmGraphResult = new OLMEvaluationGraphResult(graph, prediction, 0, 0, 0, 0, 0, 0, 0, 0);
+                var olmGraphResult = new OLMEvaluationGraphResult(graph, prediction, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 olmresult.GraphResults.Add(olmGraphResult);
             }
 
@@ -207,7 +207,7 @@ namespace CRFToolAppBase
 
                 }
                 //graph.Data.Pr
-                var olmGraphResult = new OLMEvaluationGraphResult(graph, prediction, 0, 0, 0, 0, 0, 0, 0, 0);
+                var olmGraphResult = new OLMEvaluationGraphResult(graph, prediction, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 olmresult2.GraphResults.Add(olmGraphResult);
             }
 

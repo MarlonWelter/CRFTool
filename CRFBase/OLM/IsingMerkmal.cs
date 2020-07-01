@@ -12,7 +12,7 @@ namespace CRFBase.OLM
         public int[] Observations { get; set; }
         public override int Count(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph, int[] labeling)
         {
-            return graph.Nodes.Sum(n => n.Data.Observation == labeling[n.GraphId] ? 1 : -1);
+            return graph.Nodes.Sum(n => n.Data.Observation == labeling[n.GraphId] ? 1 : 0);
         }
 
         public override double Score(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> node, int label)
@@ -29,7 +29,7 @@ namespace CRFBase.OLM
     {
         public override int Count(IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData> graph, int[] labeling)
         {
-            return graph.Edges.Sum(e => labeling[e.Foot.GraphId] == labeling[e.Head.GraphId] ? 1 : -1);
+            return graph.Edges.Sum(e => labeling[e.Foot.GraphId] == labeling[e.Head.GraphId] ? 1 : 0);
         }
 
         public override double Score(IGWNode<ICRFNodeData, ICRFEdgeData, ICRFGraphData> node, int label)

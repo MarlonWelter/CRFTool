@@ -15,7 +15,7 @@ namespace CRFBase.OLM
             {
                 loss += a[i] != b[i] ? 1 : 0;
             }
-            return loss / a.Length;
+            return loss;// / a.Length;
         }
     }
 }

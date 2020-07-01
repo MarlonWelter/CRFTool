@@ -26,11 +26,13 @@ namespace CRFBase
             BasisMerkmale = basisMerkmale.ToArray();
         }
 
-        private const double eps = 0.01;
+        private const double eps = 0.02;
         // mittlerer Fehler
         private double middev = 0;
+        double middevCumulated = 0.0;
         // realer Fehler
         private double realdev = 2 * eps;
+        double realdevCumulated = 2 * eps;
         private bool debugOutputEnabled = false;
 
         protected override double[] DoIteration(List<IGWGraph<NodeData, EdgeData, GraphData>> TrainingGraphs, double[] weightCurrent, int globalIteration)
@@ -39,24 +41,24 @@ namespace CRFBase
             int NumberOfGraphs = TrainingGraphs.Count;
             var vit = new int[NumberOfGraphs][];
             var mcmc = new int[NumberOfGraphs][];
-            double middevCumulated = 0.0;
-            // Anzahl Knoten
-            double mx = 0;
             var refLabel = new int[NumberOfGraphs][];
-            double realdevCumulated = 0;
+            // Anzahl Knoten
+            double NumberOfNodes = 0;
+            realdevCumulated = 0.0;
+            middevCumulated = 0.0;
             // Summe aller Knoten aller Graphen
-            double mu = 0;
-
-            int[] countsMCMCMinusRef = new int[weightCurrent.Length];
-            int[] countsRefMinusMCMC = new int[weightCurrent.Length];
+            //double SumOfNodes = 0;
 
             Log.Post("#Iteration: " + globalIteration);
 
             for (int g = 0; g < TrainingGraphs.Count; g++)
             {
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                var elapsedMs = 0.0;
+
                 var graph = TrainingGraphs[g];
-                mx = graph.Nodes.Count();
-                mu += mx;
+                NumberOfNodes = graph.Nodes.Count();
+                //SumOfNodes += NumberOfNodes;
                 // Labeling mit Viterbi (MAP)
                 var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                 request.RequestInDefaultContext();
@@ -78,8 +80,10 @@ namespace CRFBase
 
                 // Berechnung des typischen/mittleren Fehlers
                 middev = LossFunctionIteration(refLabel[g], mcmc[g]);
+                middev /= NumberOfNodes;
                 middevCumulated += middev;
                 realdev = LossFunctionIteration(refLabel[g], vit[g]);
+                realdev /= NumberOfNodes;
                 realdevCumulated += realdev;
 
                 // set scores according to weights
@@ -92,15 +96,18 @@ namespace CRFBase
                 int[] countsRef = CountPred(graph, refLabel[g]);
                 int[] countsMCMC = CountPred(graph, mcmc[g]);
 
+                int[] countsMCMCMinusRef = new int[weightCurrent.Length];
+                int[] countsRefMinusMCMC = new int[weightCurrent.Length];
+
                 for (int k = 0; k < countsRef.Length; k++)
                 {
                     countsMCMCMinusRef[k] += countsMCMC[k] - countsRef[k];
                     countsRefMinusMCMC[k] += countsRef[k] - countsMCMC[k];
                 }
 
-                var loss = realdev - middev;
+                double loss = (realdev - middev);
 
-                double l2norm = (countsRefMinusMCMC.Sum(entry => entry * entry));
+                long l2norm = (countsRefMinusMCMC.Sum(entry => entry * entry));
 
                 var deltaomegaFactor = 0.0;
                 var deltaomega = new double[weights.Length];
@@ -120,26 +127,37 @@ namespace CRFBase
                         deltaomegaFactor = (loss + weightedScore) / l2norm;
                         deltaomega[k] = deltaomegaFactor * countsMCMCMinusRef[k];
                     }
+                    deltaomega[k] /= NumberOfGraphs;
                     weights[k] += deltaomega[k];
                 }
 
+                watch.Stop();
+                elapsedMs = watch.ElapsedMilliseconds;
+
                 // debug output
-                Log.Post("Loss: " + (int)loss + " Realdev: " + realdev + " Middev: " + middev);
+                Log.Post("Elapsed time: " + elapsedMs);
+                System.IO.File.AppendAllText("times.txt", elapsedMs.ToString());
+                System.IO.File.AppendAllText("times.txt", "\n");
+                //Log.Post("Loss: " + loss + " Realdev: " + realdev + " Middev: " + middev);
             }
 
             // normalize weights
-            foreach (int i in weights)
-                weights[i] /= NumberOfGraphs;
+            foreach (var weight in weights)
+            {
+                //weights[i] /= NumberOfGraphs;
+                Log.Post("Weight: " + weight);
+            }
             middevCumulated /= NumberOfGraphs;
             realdevCumulated /= NumberOfGraphs;
-            Log.Post("Middev normalized: " + middevCumulated + "Realdev normalized: " + realdevCumulated);
+            Log.Post("Middev normalized: " + middevCumulated + " Realdev normalized: " + realdevCumulated);
 
             return weights;
         }
 
         protected override bool CheckCancelCriteria()
         {
-            return ((realdev <= middev + eps) && (realdev >= middev - eps));
+            //return ((realdevCumulated <= middevCumulated + eps) && (realdevCumulated >= middevCumulated - eps)) && Iteration>1;
+            return Iteration >= MaxIterations;
         }
 
         internal override void SetStartingWeights()

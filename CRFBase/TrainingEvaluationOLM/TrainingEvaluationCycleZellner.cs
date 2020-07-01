@@ -14,6 +14,9 @@ namespace CRFBase
         // Graph Visualization: false = orignial, true = created
         private const bool GraphVisualization = false;
         private const bool UseIsingModel = true;
+        private CreateObservationsUnit createObservationsUnit;
+        private IsingModel isingModel;
+        private PottsModelComplex pottsModel;
 
         /*
         *  Die mit Herrn Waack besprochene Version des Projektzyklus zum Testen der verschiedenen Trainingsvarianten von OLM 
@@ -27,56 +30,20 @@ namespace CRFBase
             var graphList = inputParameters.Graphs;
             int numberOfLabels = inputParameters.NumberOfLabels;
             int numberOfIntervals = inputParameters.NumberOfIntervals;
+            int cloneFactor = inputParameters.CloneFactor;
 
             #endregion
 
-            #region Schritt 2: Beobachtungen erzeugen (und Scores)
-
-            //var createObservationsUnit = new CreateObservationsUnit(inputParameters.Threshold);
-            var createObservationsUnit = new CreateObservationsUnit(inputParameters.TransitionProbabilities);
-
-            if (UseIsingModel)
-                Log.Post("Ising-Model");
-            else
-                Log.Post("Potts-Model with " + inputParameters.NumberOfIntervals + " Intervals");
-
-            var isingModel = new IsingModel(inputParameters.IsingConformityParameter, inputParameters.IsingCorrelationParameter);
-            //var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter,
-            //    inputParameters.AmplifierControlParameter, inputParameters.NumberOfLabels);
-            var pottsModel = new PottsModelComplex(inputParameters.PottsConformityParameters, inputParameters.PottsCorrelationParameters,
-                inputParameters.AmplifierControlParameter, inputParameters.NumberOfLabels);
-
-            for (int i = 0; i < inputParameters.NumberOfGraphInstances; i++)
-            {
-                var graph = graphList[i];
-                createObservationsUnit.CreateObservation(graph);
-                //createObservationsUnit.CreateObservationThresholding(graph);
-
-                // zugehörige Scores erzeugen
-                if (UseIsingModel)
-                    isingModel.CreateCRFScore(graph);
-                    
-                else
-                    pottsModel.InitCRFScore(graph);                
-
-                if (i == 0 && GraphVisualization == true)
-                {
-                    var graph3D = graph.Wrap3D();
-                    new ShowGraph3D(graph3D).Request();
-                }
-            }
-            #endregion
-
-            #region Schritt 3: Aufteilen der Daten in Evaluation und Training
+            #region Schritt 2: Aufteilen der Daten in Evaluation und Training
             // Verhaeltnis: 80 20
-            int separation = inputParameters.NumberOfGraphInstances - inputParameters.NumberOfGraphInstances/5;
+            int separation = inputParameters.NumberOfGraphInstances - inputParameters.NumberOfGraphInstances / 5;
             // Verhältnis Leave-one-out
             //int separation = inputParameters.NumberOfGraphInstances - 1;
 
             var trainingGraphs = new List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>
                 (new IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>[separation]);
-            var evaluationGraphs = new List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>>
-                (new GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>[inputParameters.NumberOfGraphInstances - separation]);
+            var evaluationGraphs = new List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>
+                (new IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>[inputParameters.NumberOfGraphInstances - separation]);
             var randomizedGraphList = graphList.RandomizeOrder().ToList();
 
             for (int i = 0; i < separation; i++)
@@ -91,13 +58,56 @@ namespace CRFBase
                 //evaluationGraphs[i] = graphList[i];
             }
 
-            Log.Post("Evaluation Graph ID: " + evaluationGraphs[0].Id);
+            //Log.Post("Evaluation Graph ID: " + evaluationGraphs[0].Data.Id);
+            #endregion
+
+            #region Schritt 3: Beobachtungen erzeugen (und Scores)
+
+            // get Interface-Zellner scores and Non-Interface-Zellner scores of training data
+            var interfaceScores = new List<double>();
+            var noninterfaceScores = new List<double>();
+            foreach(var graph in trainingGraphs)
+            {
+                var nodes = graph.Nodes;
+                foreach(var node in nodes)
+                {
+                    if (node.Data.ReferenceLabel == 0 && node.Data.Characteristics[0] <= 0.5)
+                        noninterfaceScores.Add(node.Data.Characteristics[0]);
+                    else
+                        interfaceScores.Add(node.Data.Characteristics[0]);
+                }
+            }
+
+            //createObservationsUnit = new CreateObservationsUnit(inputParameters.Threshold);
+            //createObservationsUnit = new CreateObservationsUnit(inputParameters.TransitionProbabilities);
+            createObservationsUnit = new CreateObservationsUnit(new BetaDistribution(interfaceScores), new BetaDistribution(noninterfaceScores));
+
+            // debug output
+            if (UseIsingModel)
+                Log.Post("Ising-Model");
+            else
+                Log.Post("Potts-Model with " + inputParameters.NumberOfIntervals + " Intervals");
+
+            isingModel = new IsingModel(inputParameters.IsingConformityParameter, inputParameters.IsingCorrelationParameter);
+            //var pottsModel = new PottsModel(inputParameters.PottsConformityParameters, inputParameters.IsingCorrelationParameter,
+            //    inputParameters.AmplifierControlParameter, inputParameters.NumberOfLabels);
+            pottsModel = new PottsModelComplex(inputParameters.PottsConformityParameters, inputParameters.PottsCorrelationParameters,
+                inputParameters.AmplifierControlParameter, inputParameters.NumberOfLabels);
+
+            // duplicate graph instances for several different observations with same GraphID
+            //var trainingList = duplicateGraphs(trainingGraphs, cloneFactor);
+            //var evaluationList = duplicateGraphs(evaluationGraphs, cloneFactor);
+
+            //createObservationAndScores(trainingList);
+            //createObservationAndScores(evaluationList);
+            createObservationAndScores(graphList);
             #endregion
 
             #region Schritt 4: Die verschiedenen Varianten von OLM trainieren und evaluieren
 
             // object for evaluation
             var evaluationResults = new Dictionary<OLMVariant, OLMEvaluationResult>();
+            var elapsedMs = 0.0;
 
             foreach (var trainingVariant in inputParameters.TrainingVariantsToTest)
             {
@@ -105,6 +115,7 @@ namespace CRFBase
 
                 #region Schritt 4.1: Training der OLM-Variante
                 {
+                    //var request = new OLMRequest(trainingVariant, trainingList);
                     var request = new OLMRequest(trainingVariant, trainingGraphs);
                     if (UseIsingModel)
                         request.BasisMerkmale.AddRange(new IsingMerkmalNode(), new IsingMerkmalEdge());
@@ -120,11 +131,13 @@ namespace CRFBase
                     request.LossFunctionValidation = OLM.OLM.LossRatio;
 
                     // execute training methods by calling OLMManager -> OLMBase
+                    //var watch = System.Diagnostics.Stopwatch.StartNew();
                     request.Request();
-
                     var olmResult = request.Result;
+                    //watch.Stop();
+                    //elapsedMs = watch.ElapsedMilliseconds;
 
-                    // update parameters in PottsModel
+                    // update parameters
                     if (UseIsingModel)
                     {
                         isingModel.ConformityParameter = olmResult.ResultingWeights[0];
@@ -141,13 +154,9 @@ namespace CRFBase
                     }
 
                     // zugehörige Scores erzeugen für jeden Graphen (auch Evaluation)
-                    foreach (var graph in graphList)
-                    {
-                        if(UseIsingModel)
-                            isingModel.CreateCRFScore(graph);
-                        else
-                            pottsModel.CreateCRFScore(graph, request.BasisMerkmale);
-                    }
+                    //setScores(trainingList, request);
+                    //setScores(evaluationList, request);
+                    setScores(graphList, request);
                 }
                 #endregion
 
@@ -186,13 +195,32 @@ namespace CRFBase
                 // 1) Viterbi-Heuristik starten (request: SolveInference) + zusätzliche Parameter hinzufügen
                 for (int graph = 0; graph < evaluationGraphs.Count; graph++)
                 {
-                    var request2 = new SolveInference(evaluationGraphs[graph], inputParameters.NumberOfLabels,
-                    inputParameters.BufferSizeViterbi);
-
+                    var request2 = new SolveInference(evaluationGraphs[graph], inputParameters.NumberOfLabels, inputParameters.BufferSizeViterbi);
                     request2.RequestInDefaultContext();
-
                     // 2) Ergebnis des request auswerten (request.Solution liefert ein Labeling)
                     int[] predictionLabeling = request2.Solution.Labeling;
+
+
+                    //var graphID = evaluationGraphs[graph].Data.Id;
+                    //var clones = new List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
+                    //foreach(var clone in evaluationList)
+                    //{
+                    //    if (clone.Data.Id == graphID)
+                    //        clones.Add(clone);
+                    //}
+                    //int[] predictionLabeling = new int[evaluationGraphs[graph].Nodes.Count()];
+                    //foreach (var clone in clones)
+                    //{
+                    //    var request2 = new SolveInference(clone, inputParameters.NumberOfLabels, inputParameters.BufferSizeViterbi);
+                    //    request2.RequestInDefaultContext();
+                    //    // 2) Ergebnis des request auswerten (request.Solution liefert ein Labeling)
+                    //    var labeling = request2.Solution.Labeling;
+                    //    for (int i = 0; i < clone.Nodes.Count(); i++)
+                    //        predictionLabeling[i] += labeling[i];
+                    //}
+
+                    //for (int i = 0; i < evaluationGraphs[graph].Nodes.Count(); i++)
+                    //    predictionLabeling[i] = predictionLabeling[i] > cloneFactor / 2 ? 1 : 0;
 
                     // 3) Ergebnisse aller Evaluationsgraphen auswerten (TP, TN, FP, FN, MCC) und zwischenspeichern 
                     // neues Objekt, damit in Schritt 5 darauf zugegriffen werden kann.
@@ -211,17 +239,73 @@ namespace CRFBase
                     "\t Specificity: " + evaluationResults[trainingVariant].AverageSpecificity +
                     "\t MCC: " + evaluationResults[trainingVariant].AverageMCC +
                     "\t Accuracy: " + evaluationResults[trainingVariant].AverageAccuracy +
+                    "\t F-Measure: " + evaluationResults[trainingVariant].AverageFmeasure +
                     "\t TotalTP: " + evaluationResults[trainingVariant].TotalTP +
                     "\t TotalFP: " + evaluationResults[trainingVariant].TotalFP +
                     "\t TotalTN: " + evaluationResults[trainingVariant].TotalTN +
                     "\t TotalFN: " + evaluationResults[trainingVariant].TotalFN);
-                System.IO.File.AppendAllText("resuts.txt", evaluationResults[trainingVariant].AverageSensitivity + ";"+
-                    evaluationResults[trainingVariant].AverageSpecificity + ";" + evaluationResults[trainingVariant].AverageMCC + ";" + evaluationResults[trainingVariant].AverageAccuracy + "\r\n");
+                System.IO.File.AppendAllText("results.txt", evaluationResults[trainingVariant].AverageMCC + "&" + evaluationResults[trainingVariant].AverageFmeasure + 
+                    "&" + evaluationResults[trainingVariant].AverageAccuracy + "&" + elapsedMs + "\r\n");
                 #endregion
 
             }
 
             #endregion
+        }
+
+        private void setScores(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> list, OLMRequest request)
+        {
+            foreach (var graph in list)
+            {
+                if (UseIsingModel)
+                    isingModel.CreateCRFScore(graph);
+                else
+                    pottsModel.CreateCRFScore(graph, request.BasisMerkmale);
+            }
+        }
+
+        private void createObservationAndScores(List<GWGraph<CRFNodeData, CRFEdgeData, CRFGraphData>> list)
+        {
+            foreach (var graph in list)
+            {
+                //createObservationsUnit.CreateObservation(graph);
+                //createObservationsUnit.CreateObservationThresholding(graph);
+                createObservationsUnit.CreateObservationBetaDistribution(graph);
+
+                // zugehörige Scores erzeugen
+                if (UseIsingModel)
+                    isingModel.CreateCRFScore(graph);
+
+                else
+                    pottsModel.InitCRFScore(graph);
+
+                if (GraphVisualization)
+                {
+                    var graph3D = graph.Wrap3D();
+                    new ShowGraph3D(graph3D).Request();
+                }
+            }
+        }
+
+        private List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> duplicateGraphs(List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>> graphs, int cloneFactor)
+        {
+            var list = new List<IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>>();
+            foreach (var graph in graphs)
+            {
+                for (int i = 0; i < cloneFactor; i++)
+                {
+                    var newGraph = graph.Clone(nd => new CRFNodeData()
+                    {
+                        X = nd.Data.X,
+                        Y = nd.Data.Y,
+                        Z = nd.Data.Z,
+                        ReferenceLabel = nd.Data.ReferenceLabel,
+                        Characteristics = nd.Data.Characteristics
+                    }, ed => new CRFEdgeData(), gd => new CRFGraphData() { ReferenceLabeling = gd.Data.ReferenceLabeling, Id = gd.Data.Id });
+                    list.Add(newGraph);
+                }
+            }
+            return list;
         }
 
         private void PresentResults()

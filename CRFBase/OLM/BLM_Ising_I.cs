@@ -26,7 +26,7 @@ namespace CRFBase
             BasisMerkmale = basisMerkmale.ToArray();
         }
 
-        private const double eps = 0.01;
+        private const double eps = 0.02;
         // mittlerer Fehler
         private double middev = 0;
         // realer Fehler
@@ -41,11 +41,11 @@ namespace CRFBase
             var mcmc = new int[u][];
             double devges = 0.0;
             // Anzahl Knoten
-            double mx = 0;
+            double NumberOfNodes = 0;
             var refLabel = new int[u][];
             double devgesT = 0;
             // Summe aller Knoten aller Graphen
-            double mu = 0;
+            double SumOfNodes = 0;
 
             int[] countsMCMCMinusRef = new int[weightCurrent.Length];
             int[] countsRefMinusMCMC = new int[weightCurrent.Length];
@@ -54,9 +54,10 @@ namespace CRFBase
 
             for (int g = 0; g < TrainingGraphs.Count; g++)
             {
+                //Log.Post("Graph " + g + " von " + TrainingGraphs.Count);
                 var graph = TrainingGraphs[g];
-                mx = graph.Nodes.Count();
-                mu += mx;
+                NumberOfNodes = graph.Nodes.Count();
+                SumOfNodes += NumberOfNodes;
                 // Labeling mit Viterbi (MAP)
                 var request = new SolveInference(graph as IGWGraph<ICRFNodeData, ICRFEdgeData, ICRFGraphData>, Labels, BufferSizeInference);
                 request.RequestInDefaultContext();
@@ -98,12 +99,11 @@ namespace CRFBase
             }
 
             // mittlerer (typischer) Fehler (Summen-Gibbs-Score)
-            middev = devges / u;
-
+            middev = devges / SumOfNodes;
             // realer Fehler fuer diese Runde (Summen-Trainings-Score)
-            realdev = devgesT / u;
+            realdev = devgesT / SumOfNodes;
 
-            var loss = (realdev - middev) * mu;
+            var loss = (realdev - middev);
 
             double l2norm = (countsRefMinusMCMC.Sum(entry => entry * entry));
 
@@ -129,14 +129,19 @@ namespace CRFBase
             }
 
             // debug output
-            Log.Post("Loss: " + (int)loss + " Realdev: " + realdev + " Middev: " + middev);
+            foreach (var weight in weights)
+            {
+                Log.Post("Weight: " + weight);
+            }
+            Log.Post("Loss: " + loss + " Realdev: " + realdev + " Middev: " + middev);
 
             return weights;
         }
 
         protected override bool CheckCancelCriteria()
         {
-            return ((realdev <= middev + eps) && (realdev >= middev - eps));
+            //return ((realdev <= middev + eps) && (realdev >= middev - eps));
+            return Iteration >= MaxIterations;
         }
 
         internal override void SetStartingWeights()

@@ -25,7 +25,7 @@ namespace PPIBase
                 //Compute Nodes:
                 foreach (var residue in chain.Residues)
                 {
-                    if (residue.CAlpha != null)
+                    if (residue.CAlpha != null && residue.ZScore >= 0)
                     {
                         var node = graph.CreateNode();
                         node.Data = new ResidueNodeData(residue);
